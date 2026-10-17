@@ -1,0 +1,13 @@
+17. Country / Regional Events
+15 Feb — Liberation Day — Afghanistan — National — Completed.
+18 Feb — Ramadan begins — Afghanistan — Religious — Completed.19—
+21 Mar — Eid al-Fitr — Afghanistan — Religious — Completed.
+21 Mar — Nowruz — Afghanistan — Cultural — Completed/observed.
+28 Apr — Afghan Victory Day — Afghanistan — National — Completed.
+1 May — Labour Day — Afghanistan — National — Completed.
+26 May — Day of Arafat — Afghanistan — Religious — Completed.27—
+29 May — Eid al-Qurban — Afghanistan — Religious — Completed.
+26 Jun — Ashura — Afghanistan — Religious — Completed.
+19 Aug — Independence Day — Afghanistan — National — Upcoming.26 Aug (preliminary) — Prophet's Birthday — Afghanistan — Religious — Upcoming.
+31 Aug — Anniversary of Withdrawal of Foreign Troops — Afghanistan — Commemorative — Upcoming.
+9 Sep — Martyrs & Ahmad Shah Massoud Day — Afghanistan — Commemorative — Upcoming.Retain Event Date, Historical Date, Document Date, Location, City/Region, Category, Type, Historical Significance, Description, Notes, Status and Image separately.

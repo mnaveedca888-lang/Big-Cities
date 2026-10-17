@@ -1,0 +1,601 @@
+﻿{
+  "totalCountriesChecked": 49,
+  "totalHistoricalEventsChecked": 16,
+  "totalImagesAlreadyCorrect": 16,
+  "totalNewImagesDownloaded": 0,
+  "totalImagesReused": 0,
+  "totalIncorrectMappingsCorrected": 0,
+  "totalMissingImagesRemaining": 0,
+  "totalBrokenImagesRemaining": 0,
+  "totalIncorrectImagesRemaining": 0,
+  "countryCoverage": [
+    {
+      "country": "Afghanistan",
+      "code": "AF",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Armenia",
+      "code": "AM",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Azerbaijan",
+      "code": "AZ",
+      "historicalEvents": 15,
+      "withImages": 15,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": [
+        {
+          "title": "Azerbaijan Armed Forces Day",
+          "image": "/images/Asia%20historical%20events/AZ-victory-day-republic.webp",
+          "status": "valid",
+          "slug": "az-armed-forces-day"
+        },
+        {
+          "title": "Constitution Day",
+          "image": "/images/Asia%20historical%20events/AZ-azerbaijan-republic-day.webp",
+          "status": "valid",
+          "slug": "az-constitution-day"
+        },
+        {
+          "title": "Day of National Salvation",
+          "image": "/images/Asia%20historical%20events/AZ-martyrs-day-black-january.jpg",
+          "status": "valid",
+          "slug": "az-national-salvation-day"
+        },
+        {
+          "title": "International Women's Day",
+          "image": "/images/Asia%20historical%20events/AZ-international-women-s-day.jpg",
+          "status": "valid",
+          "slug": "az-womens-day"
+        },
+        {
+          "title": "Khojaly Genocide Memorial Day",
+          "image": "/images/Asia%20historical%20events/AZ-martyrs-day-black-january.jpg",
+          "status": "valid",
+          "slug": "az-khojaly-genocide-memorial"
+        },
+        {
+          "title": "Martyrs' Day (Black January)",
+          "image": "/images/Asia%20historical%20events/AZ-martyrs-day-black-january.jpg",
+          "status": "valid",
+          "slug": "az-martyrs-day"
+        },
+        {
+          "title": "National Independence Day",
+          "image": "/images/Asia%20historical%20events/AZ-azerbaijan-republic-day.webp",
+          "status": "valid",
+          "slug": "az-national-independence-day"
+        },
+        {
+          "title": "National Revival Day",
+          "image": "/images/Asia%20historical%20events/AZ-azerbaijan-republic-day.webp",
+          "status": "valid",
+          "slug": "az-national-revival-day"
+        },
+        {
+          "title": "New Year Holidays",
+          "image": "/images/Asia%20historical%20events/AZ-azerbaijan-republic-day.webp",
+          "status": "valid",
+          "slug": "az-new-year-holidays"
+        },
+        {
+          "title": "Novruz Bayram (Spring Festival)",
+          "image": "/images/Asia%20historical%20events/AZ-novruz-bayram-spring-festival.webp",
+          "status": "valid",
+          "slug": "az-novruz-bayram"
+        },
+        {
+          "title": "Republic Day",
+          "image": "/images/Asia%20historical%20events/AZ-azerbaijan-republic-day.webp",
+          "status": "valid",
+          "slug": "az-republic-day"
+        },
+        {
+          "title": "State Flag Day",
+          "image": "/images/Asia%20historical%20events/AZ-azerbaijan-republic-day.webp",
+          "status": "valid",
+          "slug": "az-state-flag-day"
+        },
+        {
+          "title": "Victory Day of the Republic",
+          "image": "/images/Asia%20historical%20events/AZ-victory-day-republic.webp",
+          "status": "valid",
+          "slug": "az-victory-day-republic"
+        },
+        {
+          "title": "Victory Day over Fascism",
+          "image": "/images/Asia%20historical%20events/Victory%20Day%20over%20Fascism.jpg",
+          "status": "valid",
+          "slug": "az-victory-day-fascism"
+        },
+        {
+          "title": "World Azerbaijanis Solidarity Day",
+          "image": "/images/Asia%20historical%20events/AZ-international-women-s-day.jpg",
+          "status": "valid",
+          "slug": "az-world-azerbaijanis-solidarity-day"
+        }
+      ]
+    },
+    {
+      "country": "Bahrain",
+      "code": "BH",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Bangladesh",
+      "code": "BD",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Bhutan",
+      "code": "BT",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Brunei Darussalam",
+      "code": "BN",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Cambodia",
+      "code": "KH",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Cyprus",
+      "code": "CY",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Georgia",
+      "code": "GE",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "India",
+      "code": "IN",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Indonesia",
+      "code": "ID",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Iraq",
+      "code": "IQ",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Islamic Republic of Iran",
+      "code": "IR",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Israel",
+      "code": "IL",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Japan",
+      "code": "JP",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Jordan",
+      "code": "JO",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Kazakhstan",
+      "code": "KZ",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Kuwait",
+      "code": "KW",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Kyrgyzstan",
+      "code": "KG",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Lao People's Democratic Republic",
+      "code": "LA",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Lebanon",
+      "code": "LB",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Malaysia",
+      "code": "MY",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Maldives",
+      "code": "MV",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Mongolia",
+      "code": "MN",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Myanmar",
+      "code": "MM",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Nepal",
+      "code": "NP",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "North Korea",
+      "code": "KP",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Oman",
+      "code": "OM",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Pakistan",
+      "code": "PK",
+      "historicalEvents": 1,
+      "withImages": 1,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": [
+        {
+          "title": "Karachi Ijtema 2026",
+          "image": "/images/Asia%20historical%20events/Karachi%20Literature%20Festival.webp",
+          "status": "valid",
+          "slug": "karachi-ijtema-2026-0a2969f0aa"
+        }
+      ]
+    },
+    {
+      "country": "People's Republic of China",
+      "code": "CN",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Philippines",
+      "code": "PH",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Qatar",
+      "code": "QA",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Russian Federation",
+      "code": "RU",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Saudi Arabia",
+      "code": "SA",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Singapore",
+      "code": "SG",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "South Korea",
+      "code": "KR",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Sri Lanka",
+      "code": "LK",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "State of Palestine",
+      "code": "PS",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Syrian Arab Republic",
+      "code": "SY",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Tajikistan",
+      "code": "TJ",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Thailand",
+      "code": "TH",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Timor-Leste",
+      "code": "TL",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "T├╝rkiye",
+      "code": "TR",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Turkmenistan",
+      "code": "TM",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "United Arab Emirates",
+      "code": "AE",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Uzbekistan",
+      "code": "UZ",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Vietnam",
+      "code": "VN",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    },
+    {
+      "country": "Yemen",
+      "code": "YE",
+      "historicalEvents": 0,
+      "withImages": 0,
+      "missing": 0,
+      "broken": 0,
+      "incorrect": 0,
+      "rows": []
+    }
+  ]
+}

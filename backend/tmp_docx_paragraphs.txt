@@ -1,0 +1,156 @@
+1: Afghanistan — Country &amp; 5-City Dataset
+2: Current-data research version | Verified: 8 August 2026
+3: 1. Country Basic Information
+4: Country Name: Afghanistan
+5: Short Description / Tagline: A landlocked South-Central Asian country at the crossroads of Central and South Asia, known for its mountainous geography, long history and diverse cultural heritage.
+6: Capital: Kabul
+7: Population: Approximately 45.1 million (2026 estimate; estimates vary because Afghanistan lacks a recent nationwide population census)
+8: Population Year / Estimate: 2026 estimate
+9: Continent: Asia
+10: Number of Big Cities: 5 in this dataset
+11: Total Area: Approximately 652,230 km²
+12: Area in Square Miles: Approximately 251,830 sq mi
+13: Currency: Afghan Afghani | Currency Code: AFN | Currency Symbol: ؋ / Af
+14: Official Languages: Dari and Pashto
+15: 2. Country About
+16: Overview: Afghanistan is a landlocked country bordered by Pakistan, Iran, Turkmenistan, Uzbekistan, Tajikistan and China. Kabul is the national capital and largest urban centre.
+17: Geography: The country has highly varied terrain, including the Hindu Kush, high plateaus, valleys, deserts and fertile river basins. Major river systems include the Amu Darya, Kabul River, Helmand River and Hari River.
+18: Economy: The economy remains heavily dependent on agriculture, trade, services, construction, mining and remittances. Economic activity has shown modest growth, but living standards remain under substantial pressure.
+19: Government: Afghanistan is currently governed de facto by the Taliban / Islamic Emirate of Afghanistan, which has exercised control since August 2021. International recognition remains contested.
+20: 3. Big Cities
+21: Total Number of Big Cities: 5
+22: Kabul — Kabul International Airport
+23: Kandahar — Ahmad Shah Baba International Airport
+24: Herat — Khwaja Abdullah Ansari International Airport
+25: Mazar-i-Sharif — Maulana Jalaluddin Balkhi International Airport
+26: Khost — Khost International Airport
+27: Important: City names belong in this section; airport names belong under City Transportation.
+28: 4. City Basic Information
+29: Kabul — Population ~5,635,737; Ranking #1; city-proper and metro figures not separately verified.
+30: Kandahar — Population ~799,015; Ranking #3; city-proper and metro figures not separately verified.
+31: Herat — Population ~1,259,425; Ranking #2; city-proper and metro figures not separately verified; traditional nickname: Pearl of Khorasan.
+32: Mazar-i-Sharif — Population ~651,287; Ranking #4; city-proper and metro figures not separately verified.
+33: Khost — Population ~188,579; city-proper and metro figures not separately verified; no universally standardized official nickname.
+34: Population figures are 2025 urban-area estimates, not fresh census counts.
+35: 5. City About
+36: Kabul — National capital and largest city; ancient settlement; long-standing political centre; exact founding date uncertain.
+37: Kandahar — Major southern city; ancient settlement; closely associated with Ahmad Shah Durrani and the Durrani state.
+38: Herat — Historic western city; ancient; major Silk Road and Timurid cultural centre; important Persianate heritage.
+39: Mazar-i-Sharif — Major northern city; developed around the Shrine of Hazrat Ali; modern urban development largely 19th century.
+40: Khost — Southeastern provincial centre; exact founding date not reliably established; historically important for regional trade and administration.
+41: 6. City Geography
+42: Kabul — Elevation ~1,790 m; Kabul River; cold semi-arid/continental; ~34.53°N, 69.17°E.
+43: Kandahar — Elevation ~1,010 m; Arghandab River region; arid/semi-arid; ~31.62°N, 65.72°E.
+44: Herat — Elevation ~920 m; Hari River; semi-arid continental; ~34.35°N, 62.20°E.
+45: Mazar-i-Sharif — Elevation ~357 m; Balkh River/regional irrigation; semi-arid continental; ~36.71°N, 67.11°E.
+46: Khost — Elevation ~1,150 m; Khost River; semi-arid highland; ~33.33°N, 69.92°E.
+47: City area figures vary by administrative boundary; store the boundary type with the area.
+48: 7. City Tourism
+49: Kabul — Bagh-e Babur, Darul Aman Palace, Kabul Citadel/Bala Hissar area, National Museum of Afghanistan, Qargha Reservoir and Paghman.
+50: Kandahar — Shrine of the Cloak, Kandahar Citadel/Old City heritage areas, Ahmad Shah Durrani Mausoleum, Arghandab Valley.
+51: Herat — Herat Citadel, Friday Mosque, Musalla Minarets, Khwaja Abdullah Ansari Shrine, Gazargah. Herat is on UNESCO's Tentative List, not currently an inscribed World Heritage Site.
+52: Mazar-i-Sharif — Shrine of Hazrat Ali / Blue Mosque, ancient Balkh and regional cultural sites.
+53: Khost — Local cultural/religious sites and mountain/valley landscapes; no UNESCO site currently inscribed in the city.
+54: 8. City Food
+55: Kabul — Traditional: Kabuli palaw, mantu, ashak, qorma. Street food: bolani, kebabs, naan, samosas.
+56: Kandahar — Traditional: Kandahari naan, meat kebabs, rice dishes, qorma. Street food: kebabs, bolani, naan.
+57: Herat — Traditional: Herati rice dishes, mantu, ashak, qorma. Street food: bolani, kebabs, naan.
+58: Mazar-i-Sharif — Traditional: palaw, kebabs, mantu and northern Afghan dishes. Street food: kebabs, naan, bolani.
+59: Khost — Traditional: Pashtun-style meat dishes, rice, naan and qorma. Street food: kebabs, naan, bolani.
+60: Restaurant names require current verification before publication.
+61: 9. City Culture
+62: Kabul — Eid, religious observances and cultural programmes; Dari/Pashto poetry, music, handicrafts; hospitality and traditional dress.
+63: Kandahar — Eid and religious/community events; Pashtun poetry and traditional music; Pashtunwali and jirga traditions.
+64: Herat — Eid, Nowruz-related traditions and religious events; Persian/Dari poetry, miniature and traditional arts.
+65: Mazar-i-Sharif — Nowruz, Eid and religious festivals; traditional music, poetry and crafts; Nowruz pilgrimage and celebrations.
+66: Khost — Eid and community/religious events; Pashto poetry and traditional music; Pashtunwali, jirga and hospitality.
+67: 10. City Economy
+68: Kabul — Services, government, trade, construction, telecommunications, IT/digital services, food processing, finance and national distribution.
+69: Kandahar — Agriculture, trade, construction, telecommunications, food/agricultural processing, banking and southern trade.
+70: Herat — Trade, agriculture, manufacturing, construction, telecommunications, tourism, textiles, food, banking and trade with Iran.
+71: Mazar-i-Sharif — Trade, agriculture, services, construction, telecommunications, tourism, food processing, banking and northern commerce.
+72: Khost — Trade, agriculture, construction, services, telecommunications, small manufacturing, banking and regional commerce.
+73: 11. City Transportation
+74: Kabul — No operational metro; Kabul International Airport; no operational passenger railway; buses/minibuses/taxis; Kabul–Jalalabad Road and Kabul–Kandahar Highway.
+75: Kandahar — No metro; Ahmad Shah Baba International Airport; no operational city passenger railway; buses/minibuses/taxis; Kandahar–Kabul Highway and Kandahar–Spin Boldak route.
+76: Herat — No metro; Khwaja Abdullah Ansari International Airport; no conventional city passenger railway; buses/minibuses/taxis; Herat–Kandahar Highway and Herat–Islam Qala route.
+77: Mazar-i-Sharif — No metro; Maulana Jalaluddin Balkhi International Airport; Hairatan–Mazar-i-Sharif rail connection is primarily regional/freight-oriented; buses/minibuses/taxis.
+78: Khost — No metro; Khost International Airport; no operational railway; minibuses/taxis; Khost–Gardez and regional roads.
+79: 12. City Entertainment
+80: Kabul — Afghan films/documentaries and television; football, cricket, volleyball and buzkashi; Ghazi Stadium and other sports grounds.
+81: Kandahar — Afghan film/documentary productions and television; cricket, football and traditional sports; local sports facilities.
+82: Herat — Afghan documentary/cultural productions and television; football and cricket; Herat sports facilities.
+83: Mazar-i-Sharif — Afghan documentary/cultural productions and television; football, cricket and buzkashi; Balkh sports facilities.
+84: Khost — Local/Afghan productions and television; cricket, football and traditional sports; Khost sports facilities.
+85: 13. Famous People
+86: Kabul — Ahmad Shah Massoud, Hamid Karzai, Amanullah Khan, Mahmud Tarzi, Khaled Hosseini.
+87: Kandahar — Ahmad Shah Durrani, Abdul Ghani Baradar, Mullah Mohammed Omar, Mirwais Hotak.
+88: Herat — Jami, Gawhar Shad, Kamaluddin Behzad, Khwaja Abdullah Ansari.
+89: Mazar-i-Sharif / Balkh — Rumi/Jalal al-Din Muhammad Balkhi, Rabia Balkhi.
+90: Khost — Najibullah Zadran and other regional figures; birthplace/association should be individually verified.
+91: 14. Fun &amp; Interesting Facts
+92: Kabul — High-elevation capital located in a mountain valley.
+93: Kandahar — Closely associated with Ahmad Shah Durrani and Pashtun history.
+94: Herat — Major historic cultural centre associated with Timurid art and Persian literature; historic city is on UNESCO's Tentative List.
+95: Mazar-i-Sharif — Famous for the Blue Mosque/Shrine of Hazrat Ali; major Nowruz centre; near ancient Balkh.
+96: Khost — Mountainous southeastern location with strong Pashtun cultural traditions and regional commercial importance.
+97: 15. City Statistics
+98: Kabul — Population 5,635,737 (2025 estimate); elevation ~1,800 m; AFT UTC+4:30; postal code varies by district.
+99: Kandahar — Population 799,015 (2025 estimate); elevation ~1,010 m; AFT UTC+4:30; postal code varies by district.
+100: Herat — Population 1,259,425 (2025 estimate); elevation ~920 m; AFT UTC+4:30; postal code varies by district.
+101: Mazar-i-Sharif — Population 651,287 (2025 estimate); elevation ~357 m; AFT UTC+4:30; postal code varies by district.
+102: Khost — Population 188,579 (2025 estimate); elevation ~1,150 m; AFT UTC+4:30; postal code varies by district.
+103: 16. City Events
+104: Kabul — Eid al-Fitr (19–21 Mar 2026, completed); Afghan Victory Day (28 Apr, completed); Eid al-Qurban (27–29 May, completed); Ashura (26 Jun, completed); Independence Day (19 Aug, upcoming); Martyrs &amp; Ahmad Shah Massoud Day (9 Sep, upcoming).
+105: Kandahar — Eid al-Fitr, Eid al-Qurban, Ashura, Independence Day and local religious/community events; local dates require organizer verification.
+106: Herat — Eid al-Fitr, Nowruz, Eid al-Qurban, Ashura and Independence Day; local dates require organizer verification.
+107: Mazar-i-Sharif — Nowruz, Eid al-Fitr, Eid al-Qurban, Ashura and Independence Day; local dates require organizer verification.
+108: Khost — Eid al-Fitr, Eid al-Qurban, Ashura, Independence Day and local community events; organizer verification required.
+109: Do not hard-code Total Number of Events; calculate it from verified event records.
+110: Fields: Event Name, Event Date, Event Date Range, Event Month/Period, Event Status, Event Location, Event Category, Event Description, Event Image.
+111: 17. Country / Regional Events
+112: 15 Feb — Liberation Day — Afghanistan — National — Completed.
+113: 18 Feb — Ramadan begins — Afghanistan — Religious — Completed.
+114: 19–21 Mar — Eid al-Fitr — Afghanistan — Religious — Completed.
+115: 21 Mar — Nowruz — Afghanistan — Cultural — Completed/observed.
+116: 28 Apr — Afghan Victory Day — Afghanistan — National — Completed.
+117: 1 May — Labour Day — Afghanistan — National — Completed.
+118: 26 May — Day of Arafat — Afghanistan — Religious — Completed.
+119: 27–29 May — Eid al-Qurban — Afghanistan — Religious — Completed.
+120: 26 Jun — Ashura — Afghanistan — Religious — Completed.
+121: 19 Aug — Independence Day — Afghanistan — National — Upcoming.
+122: 26 Aug (preliminary) — Prophet's Birthday — Afghanistan — Religious — Upcoming.
+123: 31 Aug — Anniversary of Withdrawal of Foreign Troops — Afghanistan — Commemorative — Upcoming.
+124: 9 Sep — Martyrs &amp; Ahmad Shah Massoud Day — Afghanistan — Commemorative — Upcoming.
+125: Retain Event Date, Historical Date, Document Date, Location, City/Region, Category, Type, Historical Significance, Description, Notes, Status and Image separately.
+126: 18. Event Details
+127: Event Title: Afghanistan Independence Day
+128: Document Date: 2026 calendar/current verification
+129: Historical Date: 19 August 1919
+130: Location: Afghanistan
+131: Country: Afghanistan
+132: City/Region: Nationwide; major observances may occur in Kabul and provincial centres
+133: Category: National / Historical
+134: Historical/Cultural Significance: Commemorates Afghanistan's independence associated with the 1919 Anglo-Afghan settlement.
+135: Event Overview: National day commemorating Afghan independence.
+136: Event Details: Public ceremonies, official messaging and national commemorations may occur.
+137: Notes: 19 August 2026 is listed as the national public holiday.
+138: Ceremonies: Official and local commemorative ceremonies.
+139: Exhibitions: Historical/cultural displays where organized.
+140: Educational Activities: Historical programmes and cultural presentations where organized.
+141: Event Status: Upcoming as of 8 August 2026.
+142: Event Image: Use an official event/government image after confirming image rights.
+143: Data Quality &amp; Verification Rules
+144: Current facts should use the latest reliable source available and retain the data year.
+145: Historical facts should retain their historical dates; old historical information is not obsolete merely because it is old.
+146: Recommended production metadata: Source Name, Source URL, Source Type, Published/Updated Date, Data Year, Last Verified Date, Verification Status and Confidence Level.
+147: Population figures are estimates where no current city census is available; do not label estimates as census counts.
+148: City area figures require a defined boundary type.
+149: Events and restaurant information are dynamic and should be re-verified frequently.
+150: Key Sources Used
+151: UN demographic statistics / World Population Prospects.
+152: World Bank — Afghanistan economic updates.
+153: UNESCO World Heritage Centre — Afghanistan information.
+154: Afghanistan Ministry of Foreign Affairs — Independence Day information.
+155: Timeanddate — Afghanistan 2026 holiday calendar and time-zone information.
+156: Worldometer — 2025 Afghanistan and city urban population estimates (secondary demographic source).

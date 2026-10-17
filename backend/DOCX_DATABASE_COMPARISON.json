@@ -1,0 +1,758 @@
+{
+  "Baku": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Ganja": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Lankaran": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Nakhchivan": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Gabala": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Lachin": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Fuzuli": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Zangilan": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  },
+  "Zaqatala": {
+    "fields": {
+      "overview": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "nickname": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "history": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "founded": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "historical_significance": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "area": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "elevation": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "rivers": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "climate": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "coordinates": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "unicode_sites": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "famous_landmarks": {
+        "docx": null,
+        "database": null,
+        "status": "✓ BOTH EMPTY (OK)"
+      },
+      "museums": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "traditional_food": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "time_zone": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      },
+      "postal_code": {
+        "docx": null,
+        "database": "(present)",
+        "status": "⚠️  DB HAS VALUE, DOCX EMPTY"
+      }
+    }
+  }
+}

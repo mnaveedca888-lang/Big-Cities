@@ -1,0 +1,323 @@
+{
+  "continent_label": "Oceania",
+  "countries": [
+    "Australia",
+    "Fiji",
+    "Kiribati",
+    "Marshall Islands",
+    "Federated States of Micronesia",
+    "Nauru",
+    "New Zealand",
+    "Palau",
+    "Samoa",
+    "Tonga",
+    "Tuvalu",
+    "Vanuatu",
+    "Solomon Islands",
+    "Papua New Guinea"
+  ],
+  "total_countries": 14,
+  "total_cities": 54,
+  "cities_by_country": {
+    "Australia": [
+      "Sydney",
+      "Melbourne",
+      "Brisbane",
+      "Perth",
+      "Adelaide",
+      "Gold Coast",
+      "Cairns",
+      "Darwin",
+      "Canberra",
+      "Hobart",
+      "Townsville",
+      "Newcastle",
+      "Broome",
+      "Port Hedland",
+      "Ayers Rock",
+      "Christmas Island",
+      "Cocos (Keeling) Islands"
+    ],
+    "Fiji": [
+      "Nadi",
+      "Suva"
+    ],
+    "Kiribati": [
+      "Tarawa",
+      "Kiritimati"
+    ],
+    "Marshall Islands": [
+      "Majuro",
+      "Kwajalein"
+    ],
+    "Federated States of Micronesia": [
+      "Palikir",
+      "Pohnpei",
+      "Weno",
+      "Yap",
+      "Kosrae"
+    ],
+    "Nauru": [
+      "Yaren"
+    ],
+    "New Zealand": [
+      "Auckland",
+      "Christchurch",
+      "Wellington",
+      "Queenstown",
+      "Dunedin",
+      "Hamilton",
+      "Rotorua",
+      "Palmerston North",
+      "Napier",
+      "New Plymouth",
+      "Nelson",
+      "Invercargill",
+      "Whangārei",
+      "Blenheim",
+      "Taupō",
+      "Gisborne",
+      "Kerikeri"
+    ],
+    "Palau": [
+      "Koror"
+    ],
+    "Samoa": [
+      "Apia"
+    ],
+    "Tonga": [
+      "Nuku'alofa"
+    ],
+    "Tuvalu": [
+      "Funafuti"
+    ],
+    "Vanuatu": [
+      "Port Vila",
+      "Luganville"
+    ],
+    "Solomon Islands": [
+      "Honiara"
+    ],
+    "Papua New Guinea": [
+      "Port Moresby"
+    ]
+  },
+  "city_list": [
+    {
+      "country": "Australia",
+      "city": "Sydney"
+    },
+    {
+      "country": "Australia",
+      "city": "Melbourne"
+    },
+    {
+      "country": "Australia",
+      "city": "Brisbane"
+    },
+    {
+      "country": "Australia",
+      "city": "Perth"
+    },
+    {
+      "country": "Australia",
+      "city": "Adelaide"
+    },
+    {
+      "country": "Australia",
+      "city": "Gold Coast"
+    },
+    {
+      "country": "Australia",
+      "city": "Cairns"
+    },
+    {
+      "country": "Australia",
+      "city": "Darwin"
+    },
+    {
+      "country": "Australia",
+      "city": "Canberra"
+    },
+    {
+      "country": "Australia",
+      "city": "Hobart"
+    },
+    {
+      "country": "Australia",
+      "city": "Townsville"
+    },
+    {
+      "country": "Australia",
+      "city": "Newcastle"
+    },
+    {
+      "country": "Australia",
+      "city": "Broome"
+    },
+    {
+      "country": "Australia",
+      "city": "Port Hedland"
+    },
+    {
+      "country": "Australia",
+      "city": "Ayers Rock"
+    },
+    {
+      "country": "Australia",
+      "city": "Christmas Island"
+    },
+    {
+      "country": "Australia",
+      "city": "Cocos (Keeling) Islands"
+    },
+    {
+      "country": "Fiji",
+      "city": "Nadi"
+    },
+    {
+      "country": "Fiji",
+      "city": "Suva"
+    },
+    {
+      "country": "Kiribati",
+      "city": "Tarawa"
+    },
+    {
+      "country": "Kiribati",
+      "city": "Kiritimati"
+    },
+    {
+      "country": "Marshall Islands",
+      "city": "Majuro"
+    },
+    {
+      "country": "Marshall Islands",
+      "city": "Kwajalein"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Palikir"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Pohnpei"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Weno"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Yap"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Kosrae"
+    },
+    {
+      "country": "Nauru",
+      "city": "Yaren"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Auckland"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Christchurch"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Wellington"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Queenstown"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Dunedin"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Hamilton"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Rotorua"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Palmerston North"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Napier"
+    },
+    {
+      "country": "New Zealand",
+      "city": "New Plymouth"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Nelson"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Invercargill"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Whangārei"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Blenheim"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Taupō"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Gisborne"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Kerikeri"
+    },
+    {
+      "country": "Palau",
+      "city": "Koror"
+    },
+    {
+      "country": "Samoa",
+      "city": "Apia"
+    },
+    {
+      "country": "Solomon Islands",
+      "city": "Honiara"
+    },
+    {
+      "country": "Tonga",
+      "city": "Nuku'alofa"
+    },
+    {
+      "country": "Tuvalu",
+      "city": "Funafuti"
+    },
+    {
+      "country": "Vanuatu",
+      "city": "Port Vila"
+    },
+    {
+      "country": "Vanuatu",
+      "city": "Luganville"
+    },
+    {
+      "country": "Papua New Guinea",
+      "city": "Port Moresby"
+    }
+  ]
+}

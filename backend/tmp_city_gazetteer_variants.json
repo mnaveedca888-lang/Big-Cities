@@ -1,0 +1,737 @@
+[
+  {
+    "country": "Bangladesh",
+    "countryCode": "BD",
+    "name": "Chattogram (Chittagong)",
+    "slug": "bd-chattogram-chittagong",
+    "profilePopulation": "~5.2 million (metro)",
+    "candidates": [
+      "chattogram chittagong",
+      "chattogram"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1205733",
+        "name": "Chattogram",
+        "asciiName": "Chattogram",
+        "featureCode": "PPLA",
+        "population": "3920222"
+      }
+    ]
+  },
+  {
+    "country": "Bahrain",
+    "countryCode": "BH",
+    "name": "Muharraq (serves Manama)",
+    "slug": "bh-muharraq-serves-manama",
+    "profilePopulation": "~176,000 (Muharraq city)",
+    "candidates": [
+      "muharraq serves manama",
+      "muharraq"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "290332",
+        "name": "Al Muharraq",
+        "asciiName": "Al Muharraq",
+        "featureCode": "PPL",
+        "population": "176583"
+      }
+    ]
+  },
+  {
+    "country": "China",
+    "countryCode": "CN",
+    "name": "Mangshi (Dehong)",
+    "slug": "cn-mangshi-dehong",
+    "profilePopulation": "~450,000",
+    "candidates": [
+      "mangshi dehong",
+      "mangshi"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1280623",
+        "name": "Mangshi",
+        "asciiName": "Mangshi",
+        "featureCode": "PPLA4",
+        "population": "46353"
+      }
+    ]
+  },
+  {
+    "country": "Spain",
+    "countryCode": "ES",
+    "name": "Ceuta Heliport",
+    "slug": "es-ceuta-heliport",
+    "profilePopulation": null,
+    "candidates": [
+      "ceuta heliport",
+      "ceuta"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "6362987",
+        "name": "Ceuta",
+        "asciiName": "Ceuta",
+        "featureCode": "PPLA",
+        "population": "83179"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Astypalaia Island",
+    "slug": "gr-astypalaia-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "astypalaia island",
+      "astypalaia"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "264408",
+        "name": "Astypálaia",
+        "asciiName": "Astypalaia",
+        "featureCode": "PPLA3",
+        "population": "1129"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Chios Island",
+    "slug": "gr-chios-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "chios island",
+      "chios"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "259973",
+        "name": "Chios",
+        "asciiName": "Chios",
+        "featureCode": "PPLA2",
+        "population": "23953"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Karpathos Island",
+    "slug": "gr-karpathos-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "karpathos island",
+      "karpathos"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "260895",
+        "name": "Karpathos",
+        "asciiName": "Karpathos",
+        "featureCode": "PPL",
+        "population": "7790"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Kithira Island",
+    "slug": "gr-kithira-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "kithira island",
+      "kithira"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "259710",
+        "name": "Kýthira",
+        "asciiName": "Kythira",
+        "featureCode": "PPLA3",
+        "population": "281"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Milos Island",
+    "slug": "gr-milos-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "milos island",
+      "milos"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "256952",
+        "name": "Mílos",
+        "asciiName": "Milos",
+        "featureCode": "PPLA3",
+        "population": "819"
+      },
+      {
+        "id": "265001",
+        "name": "Megalochóri",
+        "asciiName": "Megalochori",
+        "featureCode": "PPLA3",
+        "population": "566"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Naxos Island",
+    "slug": "gr-naxos-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "naxos island",
+      "naxos"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "256632",
+        "name": "Náxos",
+        "asciiName": "Naxos",
+        "featureCode": "PPLA3",
+        "population": "7070"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Skyros Island",
+    "slug": "gr-skyros-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "skyros island",
+      "skyros"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "253614",
+        "name": "Skýros",
+        "asciiName": "Skyros",
+        "featureCode": "PPLA3",
+        "population": "1732"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "countryCode": "GR",
+    "name": "Syros Island",
+    "slug": "gr-syros-island-national-airport",
+    "profilePopulation": null,
+    "candidates": [
+      "syros island",
+      "syros"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "264839",
+        "name": "Áno Sýros",
+        "asciiName": "Ano Syros",
+        "featureCode": "PPLA3",
+        "population": "1138"
+      }
+    ]
+  },
+  {
+    "country": "Indonesia",
+    "countryCode": "ID",
+    "name": "Surakarta (Solo)",
+    "slug": "id-surakarta-solo",
+    "profilePopulation": "~600,000 (metro)",
+    "candidates": [
+      "surakarta solo",
+      "surakarta"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1625812",
+        "name": "Surakarta",
+        "asciiName": "Surakarta",
+        "featureCode": "PPL",
+        "population": "526870"
+      }
+    ]
+  },
+  {
+    "country": "Indonesia",
+    "countryCode": "ID",
+    "name": "Tangerang (Jakarta)",
+    "slug": "id-tangerang-jakarta",
+    "profilePopulation": "~2.2 million (city)",
+    "candidates": [
+      "tangerang jakarta",
+      "tangerang"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1625084",
+        "name": "Tangerang",
+        "asciiName": "Tangerang",
+        "featureCode": "PPL",
+        "population": "1927815"
+      }
+    ]
+  },
+  {
+    "country": "Indonesia",
+    "countryCode": "ID",
+    "name": "Yogyakarta (limited international operations)",
+    "slug": "id-yogyakarta-limited-international-operations",
+    "profilePopulation": "See Yogyakarta city entry",
+    "candidates": [
+      "yogyakarta limited international operations",
+      "yogyakarta"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1621177",
+        "name": "Yogyakarta",
+        "asciiName": "Yogyakarta",
+        "featureCode": "PPLA",
+        "population": "375699"
+      }
+    ]
+  },
+  {
+    "country": "Iran",
+    "countryCode": "IR",
+    "name": "Kish Island",
+    "slug": "ir-kish-island",
+    "profilePopulation": "~50,000",
+    "candidates": [
+      "kish island",
+      "kish"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "126914",
+        "name": "Kīsh",
+        "asciiName": "Kish",
+        "featureCode": "PPL",
+        "population": "39853"
+      }
+    ]
+  },
+  {
+    "country": "Iran",
+    "countryCode": "IR",
+    "name": "Qeshm Island",
+    "slug": "ir-qeshm-island",
+    "profilePopulation": "~30,000 (main town)",
+    "candidates": [
+      "qeshm island",
+      "qeshm"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "119374",
+        "name": "Qeshm",
+        "asciiName": "Qeshm",
+        "featureCode": "PPLA2",
+        "population": "25000"
+      }
+    ]
+  },
+  {
+    "country": "Japan",
+    "countryCode": "JP",
+    "name": "Naha (Okinawa)",
+    "slug": "jp-naha-okinawa",
+    "profilePopulation": "~320,000",
+    "candidates": [
+      "naha okinawa",
+      "naha"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1856035",
+        "name": "Naha",
+        "asciiName": "Naha",
+        "featureCode": "PPLA",
+        "population": "317625"
+      }
+    ]
+  },
+  {
+    "country": "Japan",
+    "countryCode": "JP",
+    "name": "Narita (Tokyo)",
+    "slug": "jp-narita-tokyo",
+    "profilePopulation": "~130,000 (city)",
+    "candidates": [
+      "narita tokyo",
+      "narita"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "2111684",
+        "name": "Narita",
+        "asciiName": "Narita",
+        "featureCode": "PPLA2",
+        "population": "132906"
+      }
+    ]
+  },
+  {
+    "country": "Kazakhstan",
+    "countryCode": "KZ",
+    "name": "Oral (Uralsk)",
+    "slug": "kz-oral-uralsk",
+    "profilePopulation": null,
+    "candidates": [
+      "oral uralsk",
+      "oral"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "608668",
+        "name": "Oral",
+        "asciiName": "Oral",
+        "featureCode": "PPLA",
+        "population": "330000"
+      }
+    ]
+  },
+  {
+    "country": "Kazakhstan",
+    "countryCode": "KZ",
+    "name": "Oskemen (Ust-Kamenogorsk)",
+    "slug": "kz-oskemen-ust-kamenogorsk",
+    "profilePopulation": null,
+    "candidates": [
+      "oskemen ust kamenogorsk",
+      "oskemen"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1520316",
+        "name": "Ust-Kamenogorsk",
+        "asciiName": "Ust-Kamenogorsk",
+        "featureCode": "PPLA",
+        "population": "319067"
+      }
+    ]
+  },
+  {
+    "country": "Sri Lanka",
+    "countryCode": "LK",
+    "name": "Katunayake (Colombo)",
+    "slug": "lk-katunayake-colombo",
+    "profilePopulation": "~180,000",
+    "candidates": [
+      "katunayake colombo",
+      "katunayake"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1240935",
+        "name": "Katunayaka",
+        "asciiName": "Katunayaka",
+        "featureCode": "PPLA3",
+        "population": "84643"
+      }
+    ]
+  },
+  {
+    "country": "Myanmar",
+    "countryCode": "MM",
+    "name": "Thandwe (Ngapali)",
+    "slug": "mm-thandwe-ngapali",
+    "profilePopulation": "~70,000",
+    "candidates": [
+      "thandwe ngapali",
+      "thandwe"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1298073",
+        "name": "Thandwe",
+        "asciiName": "Thandwe",
+        "featureCode": "PPL",
+        "population": "133484"
+      }
+    ]
+  },
+  {
+    "country": "Mongolia",
+    "countryCode": "MN",
+    "name": "Ulaanbaatar (Sergelen, Töv Province)",
+    "slug": "mn-ulaanbaatar-sergelen-t-v-province",
+    "profilePopulation": "See Ulaanbaatar entry",
+    "candidates": [
+      "ulaanbaatar sergelen tov province",
+      "ulaanbaatar"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "2028462",
+        "name": "Ulan Bator",
+        "asciiName": "Ulan Bator",
+        "featureCode": "PPLC",
+        "population": "844818"
+      }
+    ]
+  },
+  {
+    "country": "Maldives",
+    "countryCode": "MV",
+    "name": "Malé (Hulhulé Island)",
+    "slug": "mv-mal-hulhul-island",
+    "profilePopulation": "~250,000",
+    "candidates": [
+      "male hulhule island",
+      "male"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1282027",
+        "name": "Male",
+        "asciiName": "Male",
+        "featureCode": "PPLC",
+        "population": "103693"
+      }
+    ]
+  },
+  {
+    "country": "Malaysia",
+    "countryCode": "MY",
+    "name": "Sepang (Kuala Lumpur)",
+    "slug": "my-sepang-kuala-lumpur",
+    "profilePopulation": "~200,000 (district)",
+    "candidates": [
+      "sepang kuala lumpur",
+      "sepang"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1734821",
+        "name": "Sepang",
+        "asciiName": "Sepang",
+        "featureCode": "PPL",
+        "population": "212050"
+      }
+    ]
+  },
+  {
+    "country": "Nepal",
+    "countryCode": "NP",
+    "name": "Bhairahawa (Siddharthanagar)",
+    "slug": "np-bhairahawa-siddharthanagar",
+    "profilePopulation": "~85,000",
+    "candidates": [
+      "bhairahawa siddharthanagar",
+      "bhairahawa"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1283621",
+        "name": "Siddharthanagar",
+        "asciiName": "Siddharthanagar",
+        "featureCode": "PPLA3",
+        "population": "63367"
+      }
+    ]
+  },
+  {
+    "country": "Philippines",
+    "countryCode": "PH",
+    "name": "Angeles (Clark, Pampanga)",
+    "slug": "ph-angeles-clark-pampanga",
+    "profilePopulation": "~460,000",
+    "candidates": [
+      "angeles clark pampanga",
+      "angeles"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1705545",
+        "name": "Los Angeles",
+        "asciiName": "Los Angeles",
+        "featureCode": "PPL",
+        "population": "4054"
+      },
+      {
+        "id": "1730737",
+        "name": "Angeles City",
+        "asciiName": "Angeles City",
+        "featureCode": "PPL",
+        "population": "483452"
+      }
+    ]
+  },
+  {
+    "country": "Philippines",
+    "countryCode": "PH",
+    "name": "Lapu-Lapu (Cebu)",
+    "slug": "ph-lapu-lapu-cebu",
+    "profilePopulation": "~410,000",
+    "candidates": [
+      "lapu lapu cebu",
+      "lapu lapu"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1707267",
+        "name": "Lapu-Lapu City",
+        "asciiName": "Lapu-Lapu City",
+        "featureCode": "PPLA3",
+        "population": "497813"
+      }
+    ]
+  },
+  {
+    "country": "Türkiye",
+    "countryCode": "TR",
+    "name": "Muğla (Bodrum)",
+    "slug": "tr-mu-la-bodrum",
+    "profilePopulation": "~185,000 (district)",
+    "candidates": [
+      "mugla bodrum",
+      "mugla"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "304184",
+        "name": "Muğla",
+        "asciiName": "Mugla",
+        "featureCode": "PPLA",
+        "population": "92328"
+      }
+    ]
+  },
+  {
+    "country": "Türkiye",
+    "countryCode": "TR",
+    "name": "Muğla (Dalaman)",
+    "slug": "tr-mu-la-dalaman",
+    "profilePopulation": "~15,000 (town)",
+    "candidates": [
+      "mugla dalaman",
+      "mugla"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "304184",
+        "name": "Muğla",
+        "asciiName": "Mugla",
+        "featureCode": "PPLA",
+        "population": "92328"
+      }
+    ]
+  },
+  {
+    "country": "Vietnam",
+    "countryCode": "VN",
+    "name": "Nha Trang (Khanh Hoa)",
+    "slug": "vn-nha-trang-khanh-hoa",
+    "profilePopulation": "~440,000",
+    "candidates": [
+      "nha trang khanh hoa",
+      "nha trang"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "1572151",
+        "name": "Nha Trang",
+        "asciiName": "Nha Trang",
+        "featureCode": "PPLA",
+        "population": "579000"
+      }
+    ]
+  },
+  {
+    "country": "Vietnam",
+    "countryCode": "VN",
+    "name": "Phu Quoc Island",
+    "slug": "vn-phu-quoc-island",
+    "profilePopulation": "~180,000",
+    "candidates": [
+      "phu quoc island",
+      "phu quoc"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "8531735",
+        "name": "Phu Quoc",
+        "asciiName": "Phu Quoc",
+        "featureCode": "PPL",
+        "population": "294419"
+      },
+      {
+        "id": "12253704",
+        "name": "Phú Quốc",
+        "asciiName": "Phu Quoc",
+        "featureCode": "PPLA2",
+        "population": "179480"
+      }
+    ]
+  },
+  {
+    "country": "Yemen",
+    "countryCode": "YE",
+    "name": "Al Ghaydah (Al Mahrah)",
+    "slug": "ye-al-ghaydah-al-mahrah",
+    "profilePopulation": "~25,000",
+    "candidates": [
+      "al ghaydah al mahrah",
+      "al ghaydah"
+    ],
+    "matchKind": "normalized-locality-variant",
+    "matches": [
+      {
+        "id": "79700",
+        "name": "Al Ghayz̧ah",
+        "asciiName": "Al Ghayzah",
+        "featureCode": "PPLA",
+        "population": "10948"
+      }
+    ]
+  }
+]

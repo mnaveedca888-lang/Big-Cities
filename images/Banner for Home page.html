@@ -1,0 +1,1236 @@
+<style>
+html,
+body{
+    margin:0;
+    padding:0;
+}
+
+/* =========================================================
+   BIG CITIES INFO — LIGHTWEIGHT DRONE HERO
+========================================================= */
+
+#bci-drone-hero{
+    position:relative;
+    width:100%;
+    height:460px;
+    min-height:0;
+    overflow:hidden;
+    background:#05070a;
+    font-family:Arial,Helvetica,sans-serif;
+    isolation:isolate;
+}
+
+/* ---------------------------------------------------------
+   VIDEO
+--------------------------------------------------------- */
+
+#bci-drone-video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+    object-position:center;
+
+    opacity:0;
+
+    transform:scale(1.025);
+
+    filter:
+        brightness(.68)
+        contrast(1.06)
+        saturate(1.05);
+
+    transition:
+        opacity 1.25s ease,
+        transform 7s cubic-bezier(.22,1,.36,1);
+
+    z-index:1;
+}
+
+#bci-drone-video.is-visible{
+    opacity:1;
+    transform:scale(1);
+}
+
+/* subtle cinematic movement */
+#bci-drone-video.is-moving{
+    transform:scale(1.045);
+}
+
+/* ---------------------------------------------------------
+   CINEMATIC OVERLAY
+--------------------------------------------------------- */
+
+.bci-drone-shade{
+    position:absolute;
+    inset:0;
+    z-index:3;
+    pointer-events:none;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.82) 0%,
+            rgba(0,0,0,.42) 34%,
+            rgba(0,0,0,.08) 72%,
+            rgba(0,0,0,.28) 100%
+        ),
+        linear-gradient(
+            0deg,
+            rgba(0,0,0,.58) 0%,
+            transparent 45%,
+            rgba(0,0,0,.18) 100%
+        );
+}
+
+/* ---------------------------------------------------------
+   CONTENT
+--------------------------------------------------------- */
+
+.bci-drone-content{
+    position:relative;
+    z-index:10;
+    box-sizing:border-box;
+
+    width:100%;
+    height:100%;
+
+    max-width:1280px;
+    margin:0 auto;
+
+    padding:0 55px;
+
+    display:flex;
+    align-items:center;
+
+    pointer-events:none;
+}
+
+.bci-drone-inner{
+    max-width:650px;
+}
+
+/* ---------------------------------------------------------
+   KICKER
+--------------------------------------------------------- */
+
+.bci-drone-kicker{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin-bottom:20px;
+
+    color:#fff;
+
+    font-size:12px;
+    font-weight:700;
+
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+}
+
+.bci-drone-kicker:before{
+    content:"";
+
+    width:34px;
+    height:2px;
+
+    background:#fff;
+}
+
+/* ---------------------------------------------------------
+   TITLE
+--------------------------------------------------------- */
+
+.bci-drone-title{
+    margin:0 0 20px;
+
+    color:#fff;
+
+    font-size:
+        clamp(44px,6vw,80px);
+
+    line-height:.97;
+
+    font-weight:800;
+
+    letter-spacing:-3px;
+
+    text-shadow:
+        0 5px 25px rgba(0,0,0,.35);
+}
+
+.bci-drone-title span{
+    display:block;
+}
+
+/* ---------------------------------------------------------
+   DESCRIPTION
+--------------------------------------------------------- */
+
+.bci-drone-description{
+    max-width:560px;
+
+    margin:0;
+
+    color:
+        rgba(255,255,255,.87);
+
+    font-size:17px;
+
+    line-height:1.7;
+}
+
+/* ---------------------------------------------------------
+   CITY INFORMATION
+--------------------------------------------------------- */
+
+.bci-drone-location{
+    position:absolute;
+
+    z-index:20;
+
+    top:35px;
+    right:40px;
+
+    min-width:225px;
+
+    padding:
+        16px 19px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.22);
+
+    border-radius:12px;
+
+    background:
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    color:#fff;
+
+    opacity:0;
+
+    transform:
+        translateY(-10px);
+
+    transition:
+        opacity .75s ease,
+        transform .75s cubic-bezier(.22,1,.36,1);
+
+    pointer-events:none;
+}
+
+.bci-drone-location.show{
+    opacity:1;
+
+    transform:
+        translateY(0);
+}
+
+.bci-location-small{
+    display:block;
+    min-height:10px;
+
+    margin-bottom:5px;
+
+    color:
+        rgba(255,255,255,.55);
+
+    font-size:9px;
+
+    font-weight:700;
+
+    letter-spacing:1.8px;
+
+    text-transform:uppercase;
+}
+
+.bci-location-city{
+    font-size:22px;
+
+    line-height:1.1;
+
+    font-weight:800;
+}
+
+.bci-location-country{
+    margin-top:4px;
+
+    color:
+        rgba(255,255,255,.72);
+
+    font-size:12px;
+}
+
+/* ---------------------------------------------------------
+   CENTER CITY NAME
+--------------------------------------------------------- */
+
+.bci-drone-center{
+    position:absolute;
+
+    z-index:15;
+
+    left:50%;
+    bottom:12%;
+
+    transform:
+        translate(-50%,18px);
+
+    text-align:center;
+
+    opacity:0;
+
+    transition:
+        opacity .9s ease,
+        transform .9s cubic-bezier(.22,1,.36,1);
+
+    pointer-events:none;
+}
+
+.bci-drone-center.show{
+    opacity:1;
+
+    transform:
+        translate(-50%,0);
+}
+
+.bci-drone-center-city{
+    color:#fff;
+
+    font-size:
+        clamp(30px,4vw,52px);
+
+    line-height:1;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+
+    text-shadow:
+        0 5px 28px rgba(0,0,0,.65);
+}
+
+.bci-drone-center-country{
+    margin-top:8px;
+
+    color:
+        rgba(255,255,255,.82);
+
+    font-size:11px;
+
+    font-weight:600;
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    text-shadow:
+        0 3px 18px rgba(0,0,0,.65);
+}
+
+/* ---------------------------------------------------------
+   STATUS
+--------------------------------------------------------- */
+
+.bci-drone-status{
+    position:absolute;
+
+    z-index:20;
+
+    left:45px;
+    bottom:31px;
+
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    color:
+        rgba(255,255,255,.78);
+
+    font-size:10px;
+
+    font-weight:600;
+
+    letter-spacing:1.6px;
+
+    text-transform:uppercase;
+}
+
+.bci-drone-dot{
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    box-shadow:
+        0 0 13px rgba(255,255,255,.95);
+
+    animation:
+        bciPulse 1.7s infinite ease-in-out;
+}
+
+@keyframes bciPulse{
+    0%{
+        opacity:1;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:.35;
+        transform:scale(.72);
+    }
+
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+/* ---------------------------------------------------------
+   PROGRESS
+--------------------------------------------------------- */
+
+.bci-drone-progress{
+    position:absolute;
+
+    left:0;
+    bottom:0;
+
+    z-index:25;
+
+    width:0;
+
+    height:3px;
+
+    background:#fff;
+
+    box-shadow:
+        0 0 14px rgba(255,255,255,.8);
+
+    transition:width .1s linear;
+}
+
+/* ---------------------------------------------------------
+   MOBILE
+--------------------------------------------------------- */
+
+@media(max-width:767px){
+
+    #bci-drone-hero{
+        height:420px;
+        min-height:0;
+    }
+
+    .bci-drone-content{
+        padding:
+            0 18px 105px;
+
+        align-items:flex-end;
+    }
+
+    .bci-drone-title{
+        font-size:36px;
+        letter-spacing:-1px;
+    }
+
+    .bci-drone-description{
+        font-size:12px;
+        line-height:1.35;
+    }
+
+    .bci-drone-location{
+        top:18px;
+        right:17px;
+
+        min-width:180px;
+
+        padding:
+            12px 14px;
+    }
+
+    .bci-location-city{
+        font-size:17px;
+    }
+
+    .bci-location-country{
+        font-size:11px;
+    }
+
+    .bci-drone-center{
+        bottom:12%;
+    }
+
+    .bci-drone-center-city{
+        font-size:30px;
+    }
+
+    .bci-drone-center-country{
+        font-size:9px;
+        letter-spacing:2px;
+    }
+
+    .bci-drone-status{
+        left:24px;
+        bottom:10px;
+    }
+}
+</style>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section id="bci-drone-hero">
+
+    <!--
+      ONE VIDEO ONLY.
+      This is the main performance improvement.
+    -->
+
+    <video
+        id="bci-drone-video"
+        muted
+        playsinline
+        autoplay
+        preload="metadata">
+    </video>
+
+
+    <div class="bci-drone-shade"></div>
+
+
+    <!-- HERO CONTENT -->
+
+    <div class="bci-drone-content">
+
+        <div class="bci-drone-inner">
+
+            <div class="bci-drone-kicker">
+                Explore The World
+            </div>
+
+            <h1 class="bci-drone-title">
+                Discover
+                <span>Big Cities.</span>
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOP LOCATION -->
+
+    <div
+        id="bci-drone-location"
+        class="bci-drone-location">
+
+        <span class="bci-location-small">
+        </span>
+
+        <div
+            id="bci-location-city"
+            class="bci-location-city">
+        </div>
+
+        <div
+            id="bci-location-country"
+            class="bci-location-country">
+        </div>
+
+    </div>
+
+
+    <!-- CENTER LOCATION -->
+
+    <div
+        id="bci-drone-center"
+        class="bci-drone-center">
+
+        <div
+            id="bci-center-city"
+            class="bci-drone-center-city">
+        </div>
+
+        <div
+            id="bci-center-country"
+            class="bci-drone-center-country">
+        </div>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="bci-drone-status">
+
+        <span class="bci-drone-dot"></span>
+
+        <span id="bci-drone-status-text">
+            Preparing Flight
+        </span>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div
+        id="bci-drone-progress"
+        class="bci-drone-progress">
+    </div>
+
+</section>
+
+
+<script>
+
+(function(){
+
+    "use strict";
+
+
+    function initBigCitiesDrone(){
+
+        const hero =
+            document.getElementById(
+                "bci-drone-hero"
+            );
+
+        if(!hero){
+            return;
+        }
+
+
+        if(
+            hero.dataset.initialized === "true"
+        ){
+            return;
+        }
+
+
+        hero.dataset.initialized =
+            "true";
+
+
+        /* =================================================
+           VIDEO
+        ================================================= */
+
+        const video =
+            document.getElementById(
+                "bci-drone-video"
+            );
+
+
+        /* =================================================
+           CITY SOURCES
+           
+           These are city-specific aerial/
+           drone clips selected from Pexels.
+           
+           Only ONE video is requested at a time.
+        ================================================= */
+
+        const cities = [
+
+            {
+                city:"Lahore",
+                country:"Pakistan",
+
+                /*
+                 * Lahore aerial / Badshahi Mosque
+                 */
+                video:
+                "https://videos.pexels.com/video-files/9004010/9004010-hd_1920_1080_25fps.mp4"
+            },
+
+            {
+                city:"Istanbul",
+                country:"Türkiye",
+
+                video:
+                "https://videos.pexels.com/video-files/12762156/12762156-uhd_3840_2160_25fps.mp4"
+            },
+
+            {
+                city:"Dubai",
+                country:"United Arab Emirates",
+
+                /*
+                 * Dubai clip from the previously
+                 * selected aerial source.
+                 */
+                video:
+                "https://videos.pexels.com/video-files/31942008/13606726_3840_2160_30fps.mp4"
+            },
+
+            {
+                city:"London",
+                country:"United Kingdom",
+
+                video:
+                "https://videos.pexels.com/video-files/5236101/5236101-uhd_3840_2160_30fps.mp4"
+            },
+
+            {
+                city:"New York",
+                country:"United States",
+
+                video:
+                "https://videos.pexels.com/video-files/5796436/5796436-uhd_3840_2160_30fps.mp4"
+            },
+
+            {
+                city:"Tokyo",
+                country:"Japan",
+
+                video:
+                "https://videos.pexels.com/video-files/4511374/4511374-uhd_2560_1440_30fps.mp4"
+            }
+
+        ];
+
+
+        /*
+         * I intentionally kept Sydney out of the first
+         * build so the initial hero stays lighter.
+         *
+         * Add it later after testing performance.
+         */
+
+
+        /* =================================================
+           UI
+        ================================================= */
+
+        const locationBox =
+            document.getElementById(
+                "bci-drone-location"
+            );
+
+        const locationCity =
+            document.getElementById(
+                "bci-location-city"
+            );
+
+        const locationCountry =
+            document.getElementById(
+                "bci-location-country"
+            );
+
+        const centerBox =
+            document.getElementById(
+                "bci-drone-center"
+            );
+
+        const centerCity =
+            document.getElementById(
+                "bci-center-city"
+            );
+
+        const centerCountry =
+            document.getElementById(
+                "bci-center-country"
+            );
+
+        const statusText =
+            document.getElementById(
+                "bci-drone-status-text"
+            );
+
+        const progressBar =
+            document.getElementById(
+                "bci-drone-progress"
+            );
+
+
+        /* =================================================
+           PERFORMANCE SETTINGS
+        ================================================= */
+
+        /*
+         * 7 seconds per destination.
+         * Shorter clips = lower network usage.
+         */
+
+        const CITY_TIME =
+            7000;
+
+
+        /*
+         * City name appears after
+         * the drone shot settles.
+         */
+
+        const LABEL_DELAY =
+            1300;
+
+
+        /*
+         * Only show first ~7 seconds
+         * of the external clip.
+         */
+
+        const MAX_PLAY_SECONDS =
+            7;
+
+
+        let index = 0;
+
+        let timer = null;
+
+        let progressTimer = null;
+
+        let labelTimer = null;
+
+
+        /* =================================================
+           HIDE LABELS
+        ================================================= */
+
+        function hideLocation(){
+
+            locationBox.classList.remove(
+                "show"
+            );
+
+            centerBox.classList.remove(
+                "show"
+            );
+        }
+
+
+        /* =================================================
+           SHOW LABELS
+        ================================================= */
+
+        function showLocation(place){
+
+            locationCity.textContent =
+                place.city;
+
+            locationCountry.textContent =
+                place.country;
+
+            centerCity.textContent =
+                place.city;
+
+            centerCountry.textContent =
+                place.country;
+
+
+            locationBox.classList.add(
+                "show"
+            );
+
+            centerBox.classList.add(
+                "show"
+            );
+        }
+
+
+        /* =================================================
+           PROGRESS
+        ================================================= */
+
+        function startProgress(){
+
+            clearInterval(
+                progressTimer
+            );
+
+            progressBar.style.width =
+                "0%";
+
+
+            const start =
+                Date.now();
+
+
+            progressTimer =
+                setInterval(
+                    function(){
+
+                        const elapsed =
+                            Date.now() - start;
+
+
+                        const percent =
+                            Math.min(
+                                (elapsed /
+                                CITY_TIME) *
+                                100,
+                                100
+                            );
+
+
+                        progressBar.style.width =
+                            percent + "%";
+
+
+                        if(
+                            percent >= 100
+                        ){
+
+                            clearInterval(
+                                progressTimer
+                            );
+
+                        }
+
+                    },
+                    40
+                );
+        }
+
+
+        /* =================================================
+           LOAD ONE VIDEO
+        ================================================= */
+
+        function loadCityVideo(place){
+
+            return new Promise(
+                function(resolve,reject){
+
+                    let settled =
+                        false;
+
+
+                    function success(){
+
+                        if(settled){
+                            return;
+                        }
+
+                        settled = true;
+
+                        cleanup();
+
+                        resolve();
+                    }
+
+
+                    function failure(){
+
+                        if(settled){
+                            return;
+                        }
+
+                        settled = true;
+
+                        cleanup();
+
+                        reject();
+                    }
+
+
+                    function cleanup(){
+
+                        video.removeEventListener(
+                            "loadeddata",
+                            success
+                        );
+
+                        video.removeEventListener(
+                            "error",
+                            failure
+                        );
+                    }
+
+
+                    video.pause();
+
+                    video.removeAttribute(
+                        "src"
+                    );
+
+                    video.load();
+
+
+                    video.addEventListener(
+                        "loadeddata",
+                        success,
+                        { once:true }
+                    );
+
+                    video.addEventListener(
+                        "error",
+                        failure,
+                        { once:true }
+                    );
+
+
+                    video.src =
+                        place.video;
+
+
+                    /*
+                     * IMPORTANT:
+                     *
+                     * metadata only.
+                     * We do NOT preload
+                     * the next city.
+                     */
+
+                    video.preload =
+                        "metadata";
+
+                    video.muted =
+                        true;
+
+                    video.playsInline =
+                        true;
+
+                    video.load();
+
+                }
+            );
+        }
+
+
+        /* =================================================
+           PLAY CURRENT CITY
+        ================================================= */
+
+        async function playCity(){
+
+            const place =
+                cities[index];
+
+
+            clearTimeout(
+                timer
+            );
+
+            clearTimeout(
+                labelTimer
+            );
+
+
+            hideLocation();
+
+
+            statusText.textContent = "";
+
+
+            try{
+
+                await loadCityVideo(
+                    place
+                );
+
+
+                /*
+                 * Start immediately.
+                 */
+
+                video.currentTime =
+                    0;
+
+
+                video.classList.remove(
+                    "is-visible"
+                );
+
+
+                video.classList.remove(
+                    "is-moving"
+                );
+
+
+                /*
+                 * Browser paints first,
+                 * then fade video in.
+                 */
+
+                requestAnimationFrame(
+                    function(){
+
+                        video.classList.add(
+                            "is-visible"
+                        );
+
+                        video.classList.add(
+                            "is-moving"
+                        );
+
+                    }
+                );
+
+
+                await video.play();
+
+
+                startProgress();
+
+
+                /*
+                 * Show city name
+                 * after arrival.
+                 */
+
+                labelTimer =
+                    setTimeout(
+                        function(){
+
+                            showLocation(
+                                place
+                            );
+
+                        },
+                        LABEL_DELAY
+                    );
+
+
+                /*
+                 * Force clip to remain
+                 * lightweight.
+                 */
+
+                video.ontimeupdate =
+                    function(){
+
+                        if(
+                            video.currentTime >=
+                            MAX_PLAY_SECONDS
+                        ){
+
+                            video.pause();
+
+                        }
+
+                    };
+
+
+                /*
+                 * Move to next city.
+                 */
+
+                timer =
+                    setTimeout(
+                        function(){
+
+                            video.classList.remove(
+                                "is-moving"
+                            );
+
+
+                            video.classList.remove(
+                                "is-visible"
+                            );
+
+
+                            setTimeout(
+                                function(){
+
+                                    index++;
+
+                                    if(
+                                        index >=
+                                        cities.length
+                                    ){
+
+                                        index = 0;
+
+                                    }
+
+
+                                    playCity();
+
+                                },
+                                900
+                            );
+
+                        },
+                        CITY_TIME
+                    );
+
+
+            }
+            catch(error){
+
+                console.warn(
+                    "BCI video unavailable:",
+                    place.city
+                );
+
+
+                /*
+                 * Skip failed city
+                 * instead of breaking
+                 * the whole hero.
+                 */
+
+                index++;
+
+                if(
+                    index >=
+                    cities.length
+                ){
+                    index = 0;
+                }
+
+
+                playCity();
+
+            }
+
+        }
+
+
+        /* =================================================
+           START
+        ================================================= */
+
+        setTimeout(
+            function(){
+
+                playCity();
+
+            },
+            500
+        );
+
+    }
+
+
+    /* =====================================================
+       DOM READY
+    ===================================================== */
+
+    if(
+        document.readyState ===
+        "loading"
+    ){
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initBigCitiesDrone
+        );
+
+    }
+    else{
+
+        initBigCitiesDrone();
+
+    }
+
+})();
+
+</script>

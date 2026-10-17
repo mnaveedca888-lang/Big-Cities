@@ -1,0 +1,4093 @@
+{
+  "imageDirectory": "backend/public/Images/Country images",
+  "publicPathPrefix": "/images/Country%20images/",
+  "licenseUrl": "https://www.pexels.com/license/",
+  "countries": [
+    {
+      "code": "AD",
+      "country": "Andorra",
+      "caption": "Old-town Andorra cityscape framed by the Pyrenees",
+      "sourceUrl": "https://images.pexels.com/photos/3722489/pexels-photo-3722489.jpeg?cs=srgb&dl=pexels-lucascraig-3722489.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/old-town-near-mountain-3722489/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ad-andorra.webp",
+      "localImagePath": "/images/Country%20images/ad-andorra.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1924713,
+      "sourceDimensions": {
+        "width": 2984,
+        "height": 3532
+      },
+      "webpBytes": 304826,
+      "outputDimensions": {
+        "width": 1014,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:42.353Z"
+    },
+    {
+      "code": "AG",
+      "country": "Antigua and Barbuda",
+      "caption": "Yacht moored in English Harbour, Antigua",
+      "sourceUrl": "https://images.pexels.com/photos/16893065/pexels-photo-16893065.jpeg?cs=srgb&dl=pexels-cvele-16893065.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/trees-and-moored-cruise-ship-behind-16893065/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ag-antigua-and-barbuda.webp",
+      "localImagePath": "/images/Country%20images/ag-antigua-and-barbuda.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2066260,
+      "sourceDimensions": {
+        "width": 2250,
+        "height": 3000
+      },
+      "webpBytes": 479890,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:43.003Z"
+    },
+    {
+      "code": "AL",
+      "country": "Albania",
+      "caption": "Historic clock tower in Gjirokaster, Albania",
+      "sourceUrl": "https://images.pexels.com/photos/33714304/pexels-photo-33714304.jpeg?cs=srgb&dl=pexels-salihzkr-33714304.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/historic-clock-tower-in-gjirokaster-albania-33714304/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "al-albania.webp",
+      "localImagePath": "/images/Country%20images/al-albania.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4305944,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 5000
+      },
+      "webpBytes": 323882,
+      "outputDimensions": {
+        "width": 960,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:44.260Z"
+    },
+    {
+      "code": "AO",
+      "country": "Angola",
+      "caption": "Luanda cityscape and waterfront, Angola",
+      "sourceUrl": "https://images.pexels.com/photos/37064582/pexels-photo-37064582.jpeg?cs=srgb&dl=pexels-francisc-frost-148037137-37064582.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/modern-urban-building-in-luanda-angola-37064582/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ao-angola.webp",
+      "localImagePath": "/images/Country%20images/ao-angola.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1907382,
+      "sourceDimensions": {
+        "width": 3024,
+        "height": 4032
+      },
+      "webpBytes": 261238,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:44.900Z"
+    },
+    {
+      "code": "AR",
+      "country": "Argentina",
+      "caption": "Buenos Aires Obelisk and surrounding city",
+      "sourceUrl": "https://images.pexels.com/photos/21702090/pexels-photo-21702090.jpeg?cs=srgb&dl=pexels-kevin-miller-1175055345-21702090.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/obelisk-in-buenos-aires-in-argentina-21702090/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ar-argentina.webp",
+      "localImagePath": "/images/Country%20images/ar-argentina.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1375342,
+      "sourceDimensions": {
+        "width": 5923,
+        "height": 3333
+      },
+      "webpBytes": 169396,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T06:47:45.476Z"
+    },
+    {
+      "code": "AT",
+      "country": "Austria",
+      "caption": "Hallstatt lakeside town and Alpine landscape",
+      "sourceUrl": "https://images.pexels.com/photos/25478521/pexels-photo-25478521.jpeg?cs=srgb&dl=pexels-selimdersiniz-25478521.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/hallstatt-lake-and-town-in-austria-25478521/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "at-austria.webp",
+      "localImagePath": "/images/Country%20images/at-austria.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1968796,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 6000
+      },
+      "webpBytes": 172136,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:46.155Z"
+    },
+    {
+      "code": "AU",
+      "country": "Australia",
+      "caption": "Sydney Opera House and Harbour Bridge",
+      "sourceUrl": "https://images.pexels.com/photos/4810613/pexels-photo-4810613.jpeg?cs=srgb&dl=pexels-maotuizhutuzi-4810613.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/sydney-opera-house-and-harbour-bridge-under-blue-and-cloudy-sky-4810613/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "au-australia.webp",
+      "localImagePath": "/images/Country%20images/au-australia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3467231,
+      "sourceDimensions": {
+        "width": 5616,
+        "height": 3744
+      },
+      "webpBytes": 261856,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:47:47.275Z"
+    },
+    {
+      "code": "BA",
+      "country": "Bosnia and Herzegovina",
+      "caption": "Historic stone bridge in Mostar over the Neretva",
+      "sourceUrl": "https://images.pexels.com/photos/39892918/pexels-photo-39892918.jpeg?cs=srgb&dl=pexels-abdullah-karatas-1573293-39892918.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/historic-stone-bridge-in-mostar-bosnia-herzegovina-39892918/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ba-bosnia-and-herzegovina.webp",
+      "localImagePath": "/images/Country%20images/ba-bosnia-and-herzegovina.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1444962,
+      "sourceDimensions": {
+        "width": 2730,
+        "height": 4096
+      },
+      "webpBytes": 228552,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:47.900Z"
+    },
+    {
+      "code": "BB",
+      "country": "Barbados",
+      "caption": "Bridgetown waterfront and historic buildings",
+      "sourceUrl": "https://images.pexels.com/photos/32115340/pexels-photo-32115340.jpeg?cs=srgb&dl=pexels-rashad-browne-157460722-32115340.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-view-of-bridgetown-with-historic-buildings-32115340/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bb-barbados.webp",
+      "localImagePath": "/images/Country%20images/bb-barbados.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1911249,
+      "sourceDimensions": {
+        "width": 4984,
+        "height": 3262
+      },
+      "webpBytes": 273174,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1047
+      },
+      "verifiedAt": "2026-10-05T06:47:48.862Z"
+    },
+    {
+      "code": "BE",
+      "country": "Belgium",
+      "caption": "Brussels Town Hall at the Grand Place",
+      "sourceUrl": "https://images.pexels.com/photos/16922922/pexels-photo-16922922.jpeg?cs=srgb&dl=pexels-diego-f-parra-33199-16922922.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/town-hall-and-tenements-in-brussels-16922922/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "be-belgium.webp",
+      "localImagePath": "/images/Country%20images/be-belgium.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 5568052,
+      "sourceDimensions": {
+        "width": 7360,
+        "height": 4912
+      },
+      "webpBytes": 258124,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1068
+      },
+      "verifiedAt": "2026-10-05T06:47:50.172Z"
+    },
+    {
+      "code": "BF",
+      "country": "Burkina Faso",
+      "caption": "Grand Mosque of Bobo-Dioulasso",
+      "sourceUrl": "https://images.pexels.com/photos/32981289/pexels-photo-32981289.jpeg?cs=srgb&dl=pexels-ousmane-guindo-243772336-32981289.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/grand-mosque-of-bobo-dioulasso-in-burkina-faso-32981289/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bf-burkina-faso.webp",
+      "localImagePath": "/images/Country%20images/bf-burkina-faso.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1964473,
+      "sourceDimensions": {
+        "width": 4288,
+        "height": 2848
+      },
+      "webpBytes": 337238,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1063
+      },
+      "verifiedAt": "2026-10-05T06:47:51.217Z"
+    },
+    {
+      "code": "BG",
+      "country": "Bulgaria",
+      "caption": "Saint Alexander Nevsky Cathedral in Sofia",
+      "sourceUrl": "https://images.pexels.com/photos/15074411/pexels-photo-15074411.jpeg?cs=srgb&dl=pexels-stijn-dijkstra-1306815-15074411.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/facade-of-saint-alexander-nevski-cathedral-15074411/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bg-bulgaria.webp",
+      "localImagePath": "/images/Country%20images/bg-bulgaria.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3747594,
+      "sourceDimensions": {
+        "width": 4672,
+        "height": 7008
+      },
+      "webpBytes": 106354,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:52.053Z"
+    },
+    {
+      "code": "BI",
+      "country": "Burundi",
+      "caption": "Bujumbura skyline with palm trees and local architecture",
+      "sourceUrl": "https://images.pexels.com/photos/30817101/pexels-photo-30817101.jpeg?cs=srgb&dl=pexels-edouard-mihigo-129683048-30817101.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/bujumbura-skyline-with-palm-trees-and-architecture-30817101/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bi-burundi.webp",
+      "localImagePath": "/images/Country%20images/bi-burundi.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1290233,
+      "sourceDimensions": {
+        "width": 4451,
+        "height": 6510
+      },
+      "webpBytes": 93908,
+      "outputDimensions": {
+        "width": 820,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:52.613Z"
+    },
+    {
+      "code": "BJ",
+      "country": "Benin",
+      "caption": "Monument Amazone in Cotonou",
+      "sourceUrl": "https://images.pexels.com/photos/27552677/pexels-photo-27552677.jpeg?cs=srgb&dl=pexels-chikamnenye-onubogu-1622391324-27552677.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/monument-amazone-27552677/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bj-benin.webp",
+      "localImagePath": "/images/Country%20images/bj-benin.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1108625,
+      "sourceDimensions": {
+        "width": 3024,
+        "height": 4032
+      },
+      "webpBytes": 124108,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:53.288Z"
+    },
+    {
+      "code": "BO",
+      "country": "Bolivia",
+      "caption": "Salar de Uyuni salt flats",
+      "sourceUrl": "https://images.pexels.com/photos/17269876/pexels-photo-17269876.jpeg?cs=srgb&dl=pexels-amorosaviajera-17269876.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/salar-de-uyuni-in-bolivia-17269876/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bo-bolivia.webp",
+      "localImagePath": "/images/Country%20images/bo-bolivia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4421070,
+      "sourceDimensions": {
+        "width": 6000,
+        "height": 4000
+      },
+      "webpBytes": 272788,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:47:54.599Z"
+    },
+    {
+      "code": "BR",
+      "country": "Brazil",
+      "caption": "Christ the Redeemer overlooking Rio de Janeiro",
+      "sourceUrl": "https://images.pexels.com/photos/23732393/pexels-photo-23732393.jpeg?cs=srgb&dl=pexels-kelly-23732393.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/christ-the-redeemer-in-rio-de-janeiro-23732393/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "br-brazil.webp",
+      "localImagePath": "/images/Country%20images/br-brazil.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 480010,
+      "sourceDimensions": {
+        "width": 4024,
+        "height": 2260
+      },
+      "webpBytes": 66996,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 899
+      },
+      "verifiedAt": "2026-10-05T06:47:55.135Z"
+    },
+    {
+      "code": "BS",
+      "country": "Bahamas",
+      "caption": "Atlantis resort on Paradise Island, Nassau",
+      "sourceUrl": "https://images.pexels.com/photos/28443535/pexels-photo-28443535.jpeg?cs=srgb&dl=pexels-ackats-films-1759538370-28443535.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/atlantis-nassau-28443535/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bs-bahamas.webp",
+      "localImagePath": "/images/Country%20images/bs-bahamas.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2065150,
+      "sourceDimensions": {
+        "width": 3910,
+        "height": 2932
+      },
+      "webpBytes": 520256,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:56.111Z"
+    },
+    {
+      "code": "BW",
+      "country": "Botswana",
+      "caption": "Monument to Botswana leaders in Gaborone",
+      "sourceUrl": "https://images.pexels.com/photos/30205448/pexels-photo-30205448.jpeg?cs=srgb&dl=pexels-brandon-lerothodi-1441974-30205448.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/monument-of-botswana-leaders-in-gaborone-30205448/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bw-botswana.webp",
+      "localImagePath": "/images/Country%20images/bw-botswana.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1089111,
+      "sourceDimensions": {
+        "width": 2717,
+        "height": 4080
+      },
+      "webpBytes": 127696,
+      "outputDimensions": {
+        "width": 799,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:47:56.628Z"
+    },
+    {
+      "code": "BY",
+      "country": "Belarus",
+      "caption": "Mir Castle, a UNESCO World Heritage site",
+      "sourceUrl": "https://images.pexels.com/photos/13087008/pexels-photo-13087008.jpeg?cs=srgb&dl=pexels-sarazhizmailov-13087008.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/the-mir-castle-complex-on-green-grass-field-13087008/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "by-belarus.webp",
+      "localImagePath": "/images/Country%20images/by-belarus.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3993151,
+      "sourceDimensions": {
+        "width": 5184,
+        "height": 3456
+      },
+      "webpBytes": 405844,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:47:57.727Z"
+    },
+    {
+      "code": "BZ",
+      "country": "Belize",
+      "caption": "Mayan ruins at Xunantunich",
+      "sourceUrl": "https://images.pexels.com/photos/15368568/pexels-photo-15368568.jpeg?cs=srgb&dl=pexels-ronald-plett-437547918-15368568.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/pyramid-in-xunantunich-15368568/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "bz-belize.webp",
+      "localImagePath": "/images/Country%20images/bz-belize.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 5501205,
+      "sourceDimensions": {
+        "width": 6955,
+        "height": 4786
+      },
+      "webpBytes": 513730,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1101
+      },
+      "verifiedAt": "2026-10-05T06:47:59.116Z"
+    },
+    {
+      "code": "CA",
+      "country": "Canada",
+      "caption": "Toronto skyline with the CN Tower",
+      "sourceUrl": "https://images.pexels.com/photos/32203131/pexels-photo-32203131.jpeg?cs=srgb&dl=pexels-alex-ohan-2150877096-32203131.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/toronto-skyline-featuring-the-iconic-cn-tower-32203131/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ca-canada.webp",
+      "localImagePath": "/images/Country%20images/ca-canada.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2088671,
+      "sourceDimensions": {
+        "width": 5184,
+        "height": 3456
+      },
+      "webpBytes": 286782,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:55:14.059Z"
+    },
+    {
+      "code": "CD",
+      "country": "Democratic Republic of the Congo",
+      "caption": "Bukavu cityscape across Lake Kivu in South Kivu, DRC",
+      "sourceUrl": "https://images.pexels.com/photos/30184936/pexels-photo-30184936.jpeg?cs=srgb&dl=pexels-edouard-mihigo-129683048-30184936.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-view-of-bukavu-cityscape-across-lake-kivu-30184936/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cd-democratic-republic-of-the-congo.webp",
+      "localImagePath": "/images/Country%20images/cd-democratic-republic-of-the-congo.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 5313000,
+      "sourceDimensions": {
+        "width": 5907,
+        "height": 3937
+      },
+      "webpBytes": 413328,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1066
+      },
+      "verifiedAt": "2026-10-05T06:55:15.783Z"
+    },
+    {
+      "code": "CF",
+      "country": "Central African Republic",
+      "caption": "Bangui City Centre, capital cityscape",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/58/Bangui_City_Centre.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=37229930",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Alllexxxis",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution": "Bangui City Centre by Alllexxxis, CC BY-SA 4.0",
+      "imageFilename": "cf-central-african-republic.webp",
+      "localImagePath": "/images/Country%20images/cf-central-african-republic.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1981288,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 2226
+      },
+      "webpBytes": 264892,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 890
+      },
+      "verifiedAt": "2026-10-05T06:55:17.370Z"
+    },
+    {
+      "code": "CG",
+      "country": "Republic of the Congo",
+      "caption": "Nabemba Tower in Brazzaville",
+      "sourceUrl": "https://images.pexels.com/photos/25852538/pexels-photo-25852538.jpeg?cs=srgb&dl=pexels-henry-acevedo-382866382-25852538.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/steel-tower-against-the-blue-sky-25852538/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cg-republic-of-the-congo.webp",
+      "localImagePath": "/images/Country%20images/cg-republic-of-the-congo.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3019879,
+      "sourceDimensions": {
+        "width": 4137,
+        "height": 6206
+      },
+      "webpBytes": 40708,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:18.158Z"
+    },
+    {
+      "code": "CH",
+      "country": "Switzerland",
+      "caption": "Chapel Bridge over the Reuss River in Lucerne",
+      "sourceUrl": "https://images.pexels.com/photos/27222023/pexels-photo-27222023.jpeg?cs=srgb&dl=pexels-nanda-gopal-lakshman-1548481679-27222023.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/kapelbrucke-27222023/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ch-switzerland.webp",
+      "localImagePath": "/images/Country%20images/ch-switzerland.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1317919,
+      "sourceDimensions": {
+        "width": 4536,
+        "height": 8064
+      },
+      "webpBytes": 65830,
+      "outputDimensions": {
+        "width": 675,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:18.948Z"
+    },
+    {
+      "code": "CI",
+      "country": "Côte d'Ivoire",
+      "caption": "Basilica of Our Lady of Peace in Yamoussoukro",
+      "sourceUrl": "https://images.pexels.com/photos/19891960/pexels-photo-19891960.jpeg?cs=srgb&dl=pexels-cedric-g-909632575-19891960.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/basilica-of-our-lady-of-peace-in-ivory-coast-19891960/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ci-cote-d-ivoire.webp",
+      "localImagePath": "/images/Country%20images/ci-cote-d-ivoire.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1370056,
+      "sourceDimensions": {
+        "width": 6000,
+        "height": 4000
+      },
+      "webpBytes": 105770,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:55:19.999Z"
+    },
+    {
+      "code": "CL",
+      "country": "Chile",
+      "caption": "Palacio de La Moneda in Santiago",
+      "sourceUrl": "https://live.staticflickr.com/5009/5303851015_c43a5044a8_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/54829270@N00/5303851015",
+      "sourceWebsite": "Flickr",
+      "creator": "Dave_B_",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Palacio de la moneda by Dave_B_, CC BY 2.0",
+      "imageFilename": "cl-chile.webp",
+      "localImagePath": "/images/Country%20images/cl-chile.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 164493,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 680
+      },
+      "webpBytes": 114024,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 680
+      },
+      "verifiedAt": "2026-10-05T07:12:42.469Z"
+    },
+    {
+      "code": "CM",
+      "country": "Cameroon",
+      "caption": "Reunification Monument in Yaoundé",
+      "sourceUrl": "https://images.pexels.com/photos/17290983/pexels-photo-17290983.jpeg?cs=srgb&dl=pexels-kelly-17290983.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/cameroon-reunification-monument-in-capital-city-of-cameroon-17290983/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cm-cameroon.webp",
+      "localImagePath": "/images/Country%20images/cm-cameroon.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 6789122,
+      "sourceDimensions": {
+        "width": 8064,
+        "height": 6048
+      },
+      "webpBytes": 505102,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:21.827Z"
+    },
+    {
+      "code": "CO",
+      "country": "Colombia",
+      "caption": "Monserrate mountain overlooking Bogota",
+      "sourceUrl": "https://live.staticflickr.com/8219/8339683196_76f3efcaa0_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/25897810@N00/8339683196",
+      "sourceWebsite": "Flickr",
+      "creator": "David Berkowitz",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Monserrate mountain - Bogota, Colombia by David Berkowitz, CC BY 2.0",
+      "imageFilename": "co-colombia.webp",
+      "localImagePath": "/images/Country%20images/co-colombia.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 250630,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 191890,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T07:12:42.473Z"
+    },
+    {
+      "code": "CR",
+      "country": "Costa Rica",
+      "caption": "Arenal Volcano and surrounding green landscape",
+      "sourceUrl": "https://images.pexels.com/photos/14510492/pexels-photo-14510492.jpeg?cs=srgb&dl=pexels-jean-paul-montanaro-49563862-14510492.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/landscape-with-a-volcano-14510492/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cr-costa-rica.webp",
+      "localImagePath": "/images/Country%20images/cr-costa-rica.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2595675,
+      "sourceDimensions": {
+        "width": 4910,
+        "height": 3682
+      },
+      "webpBytes": 318538,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:23.447Z"
+    },
+    {
+      "code": "CU",
+      "country": "Cuba",
+      "caption": "El Capitolio, Havana",
+      "sourceUrl": "https://images.pexels.com/photos/16010375/pexels-photo-16010375.jpeg?cs=srgb&dl=pexels-vika-glitter-392079-16010375.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/facade-of-the-national-capitol-building-in-havana-cuba-16010375/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cu-cuba.webp",
+      "localImagePath": "/images/Country%20images/cu-cuba.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2654765,
+      "sourceDimensions": {
+        "width": 6016,
+        "height": 4000
+      },
+      "webpBytes": 233190,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1064
+      },
+      "verifiedAt": "2026-10-05T06:55:26.248Z"
+    },
+    {
+      "code": "CV",
+      "country": "Cabo Verde",
+      "caption": "Mountain landscape on Sal Island, Cape Verde",
+      "sourceUrl": "https://images.pexels.com/photos/13521210/pexels-photo-13521210.jpeg?cs=srgb&dl=pexels-bibi-kiekens-310266663-13521210.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/brown-mountain-under-white-clouds-13521210/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cv-cabo-verde.webp",
+      "localImagePath": "/images/Country%20images/cv-cabo-verde.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1351814,
+      "sourceDimensions": {
+        "width": 3971,
+        "height": 2978
+      },
+      "webpBytes": 276444,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:27.679Z"
+    },
+    {
+      "code": "CZ",
+      "country": "Czech Republic (Czechia)",
+      "caption": "Prague Old Town and Vltava River",
+      "sourceUrl": "https://images.pexels.com/photos/35044597/pexels-photo-35044597.jpeg?cs=srgb&dl=pexels-airamdphoto-35044597.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-view-of-old-town-prague-with-vltava-river-35044597/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "cz-czech-republic-czechia.webp",
+      "localImagePath": "/images/Country%20images/cz-czech-republic-czechia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1836464,
+      "sourceDimensions": {
+        "width": 3000,
+        "height": 4500
+      },
+      "webpBytes": 185162,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:28.675Z"
+    },
+    {
+      "code": "DE",
+      "country": "Germany",
+      "caption": "Brandenburg Gate in Berlin",
+      "sourceUrl": "https://images.pexels.com/photos/19340933/pexels-photo-19340933.jpeg?cs=srgb&dl=pexels-c1superstar-19340933.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/berlin-brandenburg-gate-with-the-statues-of-horses-on-top-19340933/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "de-germany.webp",
+      "localImagePath": "/images/Country%20images/de-germany.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1560014,
+      "sourceDimensions": {
+        "width": 4928,
+        "height": 3264
+      },
+      "webpBytes": 194458,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1060
+      },
+      "verifiedAt": "2026-10-05T06:55:29.941Z"
+    },
+    {
+      "code": "DJ",
+      "country": "Djibouti",
+      "caption": "Djibouti city mosque",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Djibouti_mosque.JPG",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=4533903",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Tyke",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "attribution": "Djibouti mosque by Tyke, CC BY-SA 3.0",
+      "imageFilename": "dj-djibouti.webp",
+      "localImagePath": "/images/Country%20images/dj-djibouti.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 293270,
+      "sourceDimensions": {
+        "width": 1295,
+        "height": 1018
+      },
+      "webpBytes": 61104,
+      "outputDimensions": {
+        "width": 1295,
+        "height": 1018
+      },
+      "verifiedAt": "2026-10-05T06:55:31.068Z"
+    },
+    {
+      "code": "DK",
+      "country": "Denmark",
+      "caption": "Colorful historic Nyhavn harbor district in Copenhagen",
+      "sourceUrl": "https://images.pexels.com/photos/31707003/pexels-photo-31707003.jpeg?cs=srgb&dl=pexels-blazearth-31707003.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/colorful-architecture-in-nyhavn-copenhagen-31707003/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "dk-denmark.webp",
+      "localImagePath": "/images/Country%20images/dk-denmark.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1847152,
+      "sourceDimensions": {
+        "width": 3396,
+        "height": 5093
+      },
+      "webpBytes": 150808,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:32.796Z"
+    },
+    {
+      "code": "DM",
+      "country": "Dominica",
+      "caption": "Cabrits National Park coastline",
+      "sourceUrl": "https://images.pexels.com/photos/28055689/pexels-photo-28055689.jpeg?cs=srgb&dl=pexels-kendell-barrie-1722127728-28055689.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/cabrits-national-park-28055689/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "dm-dominica.webp",
+      "localImagePath": "/images/Country%20images/dm-dominica.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3317916,
+      "sourceDimensions": {
+        "width": 4826,
+        "height": 2634
+      },
+      "webpBytes": 434512,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 873
+      },
+      "verifiedAt": "2026-10-05T06:55:34.213Z"
+    },
+    {
+      "code": "DO",
+      "country": "Dominican Republic",
+      "caption": "Fortaleza Ozama in Santo Domingo",
+      "sourceUrl": "https://images.pexels.com/photos/31749062/pexels-photo-31749062.png?cs=srgb&dl=pexels-masterchaku-31749062.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/historic-fortaleza-ozama-in-santo-domingo-31749062/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "do-dominican-republic.webp",
+      "localImagePath": "/images/Country%20images/do-dominican-republic.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4105590,
+      "sourceDimensions": {
+        "width": 6000,
+        "height": 4000
+      },
+      "webpBytes": 269944,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:55:36.299Z"
+    },
+    {
+      "code": "DZ",
+      "country": "Algeria",
+      "caption": "Martyrs' Memorial in Algiers",
+      "sourceUrl": "https://images.pexels.com/photos/8826278/pexels-photo-8826278.jpeg?cs=srgb&dl=pexels-abdelhaksami-8826278.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/martyrs-memorial-in-algeria-8826278/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "dz-algeria.webp",
+      "localImagePath": "/images/Country%20images/dz-algeria.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1336376,
+      "sourceDimensions": {
+        "width": 5212,
+        "height": 2931
+      },
+      "webpBytes": 149320,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 899
+      },
+      "verifiedAt": "2026-10-05T06:55:37.253Z"
+    },
+    {
+      "code": "EC",
+      "country": "Ecuador",
+      "caption": "Quito historic cityscape",
+      "sourceUrl": "https://live.staticflickr.com/5258/5504211551_971404e627_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/72378228@N00/5504211551",
+      "sourceWebsite": "Flickr",
+      "creator": "queulat00",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "quito_2819 by queulat00, CC BY 2.0",
+      "imageFilename": "ec-ecuador.webp",
+      "localImagePath": "/images/Country%20images/ec-ecuador.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 78641,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 37144,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:12:42.486Z"
+    },
+    {
+      "code": "EE",
+      "country": "Estonia",
+      "caption": "Historic medieval tower in Tallinn",
+      "sourceUrl": "https://images.pexels.com/photos/36768900/pexels-photo-36768900.jpeg?cs=srgb&dl=pexels-sergei-36768900.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/historic-medieval-tower-in-tallinn-estonia-36768900/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ee-estonia.webp",
+      "localImagePath": "/images/Country%20images/ee-estonia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1729781,
+      "sourceDimensions": {
+        "width": 3024,
+        "height": 3780
+      },
+      "webpBytes": 290030,
+      "outputDimensions": {
+        "width": 960,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T06:55:38.375Z"
+    },
+    {
+      "code": "EG",
+      "country": "Egypt",
+      "caption": "Giza Pyramids near Cairo",
+      "sourceUrl": "https://images.pexels.com/photos/31133003/pexels-photo-31133003.jpeg?cs=srgb&dl=pexels-michelle-chadwick-2149425616-31133003.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/iconic-view-of-the-giza-pyramids-in-egypt-31133003/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "eg-egypt.webp",
+      "localImagePath": "/images/Country%20images/eg-egypt.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2410254,
+      "sourceDimensions": {
+        "width": 5839,
+        "height": 3893
+      },
+      "webpBytes": 147796,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T06:55:39.790Z"
+    },
+    {
+      "code": "ER",
+      "country": "Eritrea",
+      "caption": "Fiat Tagliero building, Asmara",
+      "sourceUrl": "https://live.staticflickr.com/8225/8352534406_b9fc358528_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/79721788@N00/8352534406",
+      "sourceWebsite": "Flickr",
+      "creator": "D-Stanley",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Fiat Tagliero Building by D-Stanley, CC BY 2.0",
+      "imageFilename": "er-eritrea.webp",
+      "localImagePath": "/images/Country%20images/er-eritrea.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 96129,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 56606,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T06:55:40.669Z"
+    },
+    {
+      "code": "ES",
+      "country": "Spain",
+      "caption": "La Sagrada Familia in Barcelona",
+      "sourceUrl": "https://images.pexels.com/photos/13677543/pexels-photo-13677543.jpeg?cs=srgb&dl=pexels-tkirkgoz-13677543.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/low-angle-shot-of-la-sagrada-familia-13677543/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "es-spain.webp",
+      "localImagePath": "/images/Country%20images/es-spain.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2049164,
+      "sourceDimensions": {
+        "width": 4285,
+        "height": 3214
+      },
+      "webpBytes": 325254,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:03:52.721Z"
+    },
+    {
+      "code": "ET",
+      "country": "Ethiopia",
+      "caption": "Rock-hewn church of Saint George in Lalibela",
+      "sourceUrl": "https://images.pexels.com/photos/12344991/pexels-photo-12344991.jpeg?cs=srgb&dl=pexels-ludo-van-den-nouweland-214324419-12344991.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/the-underground-church-of-saint-george-lalibela-12344991/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "et-ethiopia.webp",
+      "localImagePath": "/images/Country%20images/et-ethiopia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1260263,
+      "sourceDimensions": {
+        "width": 3456,
+        "height": 2304
+      },
+      "webpBytes": 380570,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T07:03:53.743Z"
+    },
+    {
+      "code": "FI",
+      "country": "Finland",
+      "caption": "Helsinki Cathedral",
+      "sourceUrl": "https://images.pexels.com/photos/12697068/pexels-photo-12697068.jpeg?cs=srgb&dl=pexels-aleksei-pribolovski-258450633-12697068.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/dome-of-helsinki-cathedral-12697068/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "fi-finland.webp",
+      "localImagePath": "/images/Country%20images/fi-finland.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 793024,
+      "sourceDimensions": {
+        "width": 5184,
+        "height": 3456
+      },
+      "webpBytes": 131832,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T07:03:54.962Z"
+    },
+    {
+      "code": "FJ",
+      "country": "Fiji",
+      "caption": "Yasawa Islands beach and coastline at sunset",
+      "sourceUrl": "https://images.pexels.com/photos/33732082/pexels-photo-33732082.jpeg?cs=srgb&dl=pexels-mark-direen-622749-33732082.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-yasawa-islands-beach-at-sunset-33732082/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "fj-fiji.webp",
+      "localImagePath": "/images/Country%20images/fj-fiji.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3582914,
+      "sourceDimensions": {
+        "width": 5966,
+        "height": 3949
+      },
+      "webpBytes": 368454,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1059
+      },
+      "verifiedAt": "2026-10-05T07:03:56.099Z"
+    },
+    {
+      "code": "FM",
+      "country": "Federated States of Micronesia",
+      "caption": "Nan Madol megalithic site on Pohnpei",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/be/Nan_Madol_megalithic_site%2C_Pohnpei_%28Federated_States_of_Micronesia%29_5.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=89610031",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Patrick Nunn",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution": "Nan Madol megalithic site, Pohnpei (Federated States of Micronesia) by Patrick Nunn, CC BY-SA 4.0",
+      "imageFilename": "fm-federated-states-of-micronesia.webp",
+      "localImagePath": "/images/Country%20images/fm-federated-states-of-micronesia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3300780,
+      "sourceDimensions": {
+        "width": 4288,
+        "height": 3216
+      },
+      "webpBytes": 572072,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:03:58.248Z"
+    },
+    {
+      "code": "FR",
+      "country": "France",
+      "caption": "Eiffel Tower in Paris",
+      "sourceUrl": "https://images.pexels.com/photos/12350741/pexels-photo-12350741.jpeg?cs=srgb&dl=pexels-geekymegt-12350741.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/eiffel-tower-in-paris-12350741/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "fr-france.webp",
+      "localImagePath": "/images/Country%20images/fr-france.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1030293,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 2661
+      },
+      "webpBytes": 204730,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1064
+      },
+      "verifiedAt": "2026-10-05T07:03:59.434Z"
+    },
+    {
+      "code": "GA",
+      "country": "Gabon",
+      "caption": "Saint-Pierre Cathedral in Libreville",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Cath%C3%A9drale_Saint-Pierre_de_Libreville%2C_Gabon_-_2023_%28cropped%29.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=148550239",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Daniel Beloumou / European Union, 2023 / EC - Audiovisual Service",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Cathédrale Saint-Pierre de Libreville, Gabon by Daniel Beloumou / European Union, 2023 / EC - Audiovisual Service, CC BY 4.0",
+      "imageFilename": "ga-gabon.webp",
+      "localImagePath": "/images/Country%20images/ga-gabon.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2264314,
+      "sourceDimensions": {
+        "width": 2645,
+        "height": 1610
+      },
+      "webpBytes": 127972,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 974
+      },
+      "verifiedAt": "2026-10-05T07:04:03.145Z"
+    },
+    {
+      "code": "GB",
+      "country": "United Kingdom",
+      "caption": "Big Ben and the Palace of Westminster in London",
+      "sourceUrl": "https://images.pexels.com/photos/19396516/pexels-photo-19396516.jpeg?cs=srgb&dl=pexels-athul-shigo-774998744-19396516.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/big-ben-clock-tower-in-london-england-19396516/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gb-united-kingdom.webp",
+      "localImagePath": "/images/Country%20images/gb-united-kingdom.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3798339,
+      "sourceDimensions": {
+        "width": 3862,
+        "height": 6866
+      },
+      "webpBytes": 115456,
+      "outputDimensions": {
+        "width": 675,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:05.028Z"
+    },
+    {
+      "code": "GD",
+      "country": "Grenada",
+      "caption": "Harbor and colorful buildings in St. George's",
+      "sourceUrl": "https://images.pexels.com/photos/11892773/pexels-photo-11892773.jpeg?cs=srgb&dl=pexels-g-isle-px-210751289-11892773.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/drone-photography-of-buildings-on-seaside-11892773/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gd-grenada.webp",
+      "localImagePath": "/images/Country%20images/gd-grenada.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2524320,
+      "sourceDimensions": {
+        "width": 3456,
+        "height": 5184
+      },
+      "webpBytes": 190792,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:06.416Z"
+    },
+    {
+      "code": "GH",
+      "country": "Ghana",
+      "caption": "Kwame Nkrumah Memorial Park in Accra",
+      "sourceUrl": "https://images.pexels.com/photos/36505989/pexels-photo-36505989.jpeg?cs=srgb&dl=pexels-wyteshot-36505989.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/kwame-nkrumah-memorial-park-statue-in-accra-36505989/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gh-ghana.webp",
+      "localImagePath": "/images/Country%20images/gh-ghana.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1901005,
+      "sourceDimensions": {
+        "width": 3648,
+        "height": 5472
+      },
+      "webpBytes": 86588,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:07.703Z"
+    },
+    {
+      "code": "GM",
+      "country": "The Gambia",
+      "caption": "Arch 22 monument in Banjul",
+      "sourceUrl": "https://images.pexels.com/photos/32839809/pexels-photo-32839809.jpeg?cs=srgb&dl=pexels-the-gambia-2153662480-32839809.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/beautiful-aerial-view-of-arch-22-in-banjul-the-gambia-32839809/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gm-the-gambia.webp",
+      "localImagePath": "/images/Country%20images/gm-the-gambia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1406751,
+      "sourceDimensions": {
+        "width": 3992,
+        "height": 2242
+      },
+      "webpBytes": 377854,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 899
+      },
+      "verifiedAt": "2026-10-05T07:04:09.190Z"
+    },
+    {
+      "code": "GN",
+      "country": "Guinea",
+      "caption": "Historic colonial-era architecture in Conakry",
+      "sourceUrl": "https://live.staticflickr.com/8286/7861490626_3075c2f74c_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/72105154@N00/7861490626",
+      "sourceWebsite": "Flickr",
+      "creator": "gbaku",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "attribution": "French colonial architecture, Conakry, Guinea (West Africa), c. 1905 by gbaku, CC BY-SA 2.0",
+      "imageFilename": "gn-guinea.webp",
+      "localImagePath": "/images/Country%20images/gn-guinea.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 252103,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 560
+      },
+      "webpBytes": 220432,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 560
+      },
+      "verifiedAt": "2026-10-05T07:04:10.127Z"
+    },
+    {
+      "code": "GQ",
+      "country": "Equatorial Guinea",
+      "caption": "Palm-lined pathway in Malabo",
+      "sourceUrl": "https://images.pexels.com/photos/36705138/pexels-photo-36705138.jpeg?cs=srgb&dl=pexels-medialensking-36705138.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-palm-lined-pathway-in-malabo-park-36705138/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gq-equatorial-guinea.webp",
+      "localImagePath": "/images/Country%20images/gq-equatorial-guinea.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3843387,
+      "sourceDimensions": {
+        "width": 5679,
+        "height": 3786
+      },
+      "webpBytes": 491896,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T07:04:12.158Z"
+    },
+    {
+      "code": "GR",
+      "country": "Greece",
+      "caption": "Parthenon on the Acropolis in Athens",
+      "sourceUrl": "https://images.pexels.com/photos/14446397/pexels-photo-14446397.jpeg?cs=srgb&dl=pexels-cvele-14446397.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/low-angle-shot-of-the-parthenon-14446397/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gr-greece.webp",
+      "localImagePath": "/images/Country%20images/gr-greece.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1607221,
+      "sourceDimensions": {
+        "width": 3024,
+        "height": 4032
+      },
+      "webpBytes": 163740,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:13.805Z"
+    },
+    {
+      "code": "GT",
+      "country": "Guatemala",
+      "caption": "Santa Catalina Arch in Antigua Guatemala",
+      "sourceUrl": "https://images.pexels.com/photos/36028365/pexels-photo-36028365.jpeg?cs=srgb&dl=pexels-alex-aparicio-557022046-36028365.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-view-of-santa-catalina-arch-in-antigua-guatemala-36028365/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "gt-guatemala.webp",
+      "localImagePath": "/images/Country%20images/gt-guatemala.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 799883,
+      "sourceDimensions": {
+        "width": 2138,
+        "height": 3800
+      },
+      "webpBytes": 106286,
+      "outputDimensions": {
+        "width": 675,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:14.683Z"
+    },
+    {
+      "code": "GW",
+      "country": "Guinea-Bissau",
+      "caption": "Bissau city centre streetscape",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/94/Bissau_city_center.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=11497563",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Nammarci",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "attribution": "Bissau city center by Nammarci, CC BY-SA 3.0",
+      "imageFilename": "gw-guinea-bissau.webp",
+      "localImagePath": "/images/Country%20images/gw-guinea-bissau.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2432491,
+      "sourceDimensions": {
+        "width": 2592,
+        "height": 1944
+      },
+      "webpBytes": 299160,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:18.654Z"
+    },
+    {
+      "code": "GY",
+      "country": "Guyana",
+      "caption": "Stabroek Market in Georgetown",
+      "sourceUrl": "https://live.staticflickr.com/7229/13552500193_c4c3d75a5e_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/79721788@N00/13552500193",
+      "sourceWebsite": "Flickr",
+      "creator": "D-Stanley",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Stabroek Market by D-Stanley, CC BY 2.0",
+      "imageFilename": "gy-guyana.webp",
+      "localImagePath": "/images/Country%20images/gy-guyana.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 151001,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 113808,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T07:12:42.496Z"
+    },
+    {
+      "code": "HN",
+      "country": "Honduras",
+      "caption": "Tegucigalpa cathedral and surrounding mountains",
+      "sourceUrl": "https://images.pexels.com/photos/13863671/pexels-photo-13863671.jpeg?cs=srgb&dl=pexels-jochua-rodas-329897098-13863671.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/church-building-in-a-city-and-mountains-covered-by-fog-in-the-distance-13863671/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "hn-honduras.webp",
+      "localImagePath": "/images/Country%20images/hn-honduras.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1714540,
+      "sourceDimensions": {
+        "width": 3427,
+        "height": 5140
+      },
+      "webpBytes": 83274,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:20.641Z"
+    },
+    {
+      "code": "HR",
+      "country": "Croatia",
+      "caption": "Roman amphitheatre in Pula",
+      "sourceUrl": "https://images.pexels.com/photos/29690520/pexels-photo-29690520.jpeg?cs=srgb&dl=pexels-eugenia-sol-1769194548-29690520.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/ancient-roman-amphitheater-in-pula-croatia-29690520/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "hr-croatia.webp",
+      "localImagePath": "/images/Country%20images/hr-croatia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1977681,
+      "sourceDimensions": {
+        "width": 3648,
+        "height": 5472
+      },
+      "webpBytes": 175906,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:22.136Z"
+    },
+    {
+      "code": "HT",
+      "country": "Haiti",
+      "caption": "Citadelle Laferrière historic mountaintop fortress",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ec/The_Citadelle_Laferri%C3%A8re%2C_Haiti_%287761638618%29.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=25648653",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Alex Proimos from Sydney, Australia",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "The Citadelle Laferrière, Haiti (7761638618) by Alex Proimos, CC BY 2.0",
+      "imageFilename": "ht-haiti.webp",
+      "localImagePath": "/images/Country%20images/ht-haiti.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3168975,
+      "sourceDimensions": {
+        "width": 4185,
+        "height": 2354
+      },
+      "webpBytes": 275518,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:04:25.456Z"
+    },
+    {
+      "code": "HU",
+      "country": "Hungary",
+      "caption": "Hungarian Parliament Building on the Danube in Budapest",
+      "sourceUrl": "https://images.pexels.com/photos/18613695/pexels-photo-18613695.jpeg?cs=srgb&dl=pexels-masoodaslami-18613695.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/building-of-hungarian-parliament-in-budapest-18613695/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "hu-hungary.webp",
+      "localImagePath": "/images/Country%20images/hu-hungary.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 861002,
+      "sourceDimensions": {
+        "width": 1999,
+        "height": 2499
+      },
+      "webpBytes": 243034,
+      "outputDimensions": {
+        "width": 960,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:04:26.616Z"
+    },
+    {
+      "code": "IE",
+      "country": "Ireland",
+      "caption": "Grand Canal at sunset in Dublin",
+      "sourceUrl": "https://live.staticflickr.com/7504/29636117984_ef0485fcb8_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/87690240@N03/29636117984",
+      "sourceWebsite": "Flickr",
+      "creator": "Giuseppe Milo (www.pixael.com)",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Sunset in Grand Canal - Dublin, Ireland by Giuseppe Milo, CC BY 2.0",
+      "imageFilename": "ie-ireland.webp",
+      "localImagePath": "/images/Country%20images/ie-ireland.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 105526,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 576
+      },
+      "webpBytes": 53078,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 576
+      },
+      "verifiedAt": "2026-10-05T07:12:42.514Z"
+    },
+    {
+      "code": "IS",
+      "country": "Iceland",
+      "caption": "Hallgrimskirkja in Reykjavik",
+      "sourceUrl": "https://live.staticflickr.com/2678/4229517552_060a55fd7a_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/45713725@N00/4229517552",
+      "sourceWebsite": "Flickr",
+      "creator": "o palsson",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Hallgrímskirkja - an architectural landmark in Reykjavik, Iceland by o palsson, CC BY 2.0",
+      "imageFilename": "is-iceland.webp",
+      "localImagePath": "/images/Country%20images/is-iceland.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 152733,
+      "sourceDimensions": {
+        "width": 1023,
+        "height": 749
+      },
+      "webpBytes": 94798,
+      "outputDimensions": {
+        "width": 1023,
+        "height": 749
+      },
+      "verifiedAt": "2026-10-05T07:12:42.527Z"
+    },
+    {
+      "code": "IT",
+      "country": "Italy",
+      "caption": "Colosseum in Rome",
+      "sourceUrl": "https://live.staticflickr.com/65535/51608480742_1bb08b02c1_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/137294100@N08/51608480742",
+      "sourceWebsite": "Flickr",
+      "creator": "radkuch.13",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Early morning Colosseo by radkuch.13, CC BY 2.0",
+      "imageFilename": "it-italy.webp",
+      "localImagePath": "/images/Country%20images/it-italy.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 221254,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 134638,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:12:42.541Z"
+    },
+    {
+      "code": "JM",
+      "country": "Jamaica",
+      "caption": "Coastal road and lush greenery in Buff Bay",
+      "sourceUrl": "https://images.pexels.com/photos/14788935/pexels-photo-14788935.jpeg?cs=srgb&dl=pexels-aviz-14788935.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/aerial-photography-of-the-sea-14788935/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "jm-jamaica.webp",
+      "localImagePath": "/images/Country%20images/jm-jamaica.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3036159,
+      "sourceDimensions": {
+        "width": 4676,
+        "height": 3115
+      },
+      "webpBytes": 505080,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1066
+      },
+      "verifiedAt": "2026-10-05T07:12:42.545Z"
+    },
+    {
+      "code": "KE",
+      "country": "Kenya",
+      "caption": "Freedom Heroes monument on Kenyatta Avenue in Nairobi",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/01/Freedom_Heroes_Kenyatta_Avenue_03.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=162804324",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Francis Akuka for the Wikimedia Foundation",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en/",
+      "attribution": "Freedom Heroes Kenyatta Avenue 03 by Francis Akuka for the Wikimedia Foundation, CC0 1.0",
+      "imageFilename": "ke-kenya.webp",
+      "localImagePath": "/images/Country%20images/ke-kenya.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 10759815,
+      "sourceDimensions": {
+        "width": 6000,
+        "height": 4000
+      },
+      "webpBytes": 413862,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T07:12:42.562Z"
+    },
+    {
+      "code": "KI",
+      "country": "Kiribati",
+      "caption": "Tarawa atoll in Kiribati",
+      "sourceUrl": "https://live.staticflickr.com/65535/50381716376_d3576de056_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/37472264@N04/50381716376",
+      "sourceWebsite": "Flickr",
+      "creator": "europeanspaceagency",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "attribution": "Tarawa, Kiribati by europeanspaceagency, CC BY-SA 2.0",
+      "imageFilename": "ki-kiribati.webp",
+      "localImagePath": "/images/Country%20images/ki-kiribati.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 182342,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "webpBytes": 77142,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "verifiedAt": "2026-10-05T07:12:42.573Z"
+    },
+    {
+      "code": "KM",
+      "country": "Comoros",
+      "caption": "Salmata Hamissi Mosque in Moroni",
+      "sourceUrl": "https://live.staticflickr.com/2836/10893772245_df9a581ce5_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/79721788@N00/10893772245",
+      "sourceWebsite": "Flickr",
+      "creator": "D-Stanley",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Salmata Hamissi Mosque by D-Stanley, CC BY 2.0",
+      "imageFilename": "km-comoros.webp",
+      "localImagePath": "/images/Country%20images/km-comoros.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 126770,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 93720,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T07:12:43.376Z"
+    },
+    {
+      "code": "KN",
+      "country": "Saint Kitts and Nevis",
+      "caption": "Government building in Saint Kitts and Nevis",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/00/Saint_Kitts_and_Nevis_Government_building_2.JPG",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=36401825",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Gertjan R.",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution": "Saint Kitts and Nevis Government building 2 by Gertjan R., CC BY-SA 4.0",
+      "imageFilename": "kn-saint-kitts-and-nevis.webp",
+      "localImagePath": "/images/Country%20images/kn-saint-kitts-and-nevis.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3045963,
+      "sourceDimensions": {
+        "width": 4320,
+        "height": 3240
+      },
+      "webpBytes": 176034,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:12:43.381Z"
+    },
+    {
+      "code": "LC",
+      "country": "Saint Lucia",
+      "caption": "The gathering storm over Castries, Saint Lucia",
+      "sourceUrl": "https://live.staticflickr.com/65535/52474881464_7e58b46e98_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/146295563@N08/52474881464",
+      "sourceWebsite": "Flickr",
+      "creator": "rickmassey1",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "The Gathering Storm ~ Castries, St Lucia by rickmassey1, CC BY 2.0",
+      "imageFilename": "lc-saint-lucia.webp",
+      "localImagePath": "/images/Country%20images/lc-saint-lucia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 163716,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 576
+      },
+      "webpBytes": 100984,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 576
+      },
+      "verifiedAt": "2026-10-05T07:12:44.018Z"
+    },
+    {
+      "code": "LI",
+      "country": "Liechtenstein",
+      "caption": "Vaduz Castle in Liechtenstein",
+      "sourceUrl": "https://live.staticflickr.com/2834/9808488063_4d1d11178a_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/101561334@N08/9808488063",
+      "sourceWebsite": "Flickr",
+      "creator": "Gary Lee Todd, Ph.D.",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Vaduz Castle, Liechtenstein by Gary Lee Todd, Ph.D., CC0 1.0",
+      "imageFilename": "li-liechtenstein.webp",
+      "localImagePath": "/images/Country%20images/li-liechtenstein.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 159634,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 102600,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:12:44.609Z"
+    },
+    {
+      "code": "LR",
+      "country": "Liberia",
+      "caption": "Ducor Pool at the Ducor Hotel in Monrovia",
+      "sourceUrl": "https://live.staticflickr.com/65535/15303715899_16458c378f_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/80854685@N08/15303715899",
+      "sourceWebsite": "Flickr",
+      "creator": "Mark Fischer",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "attribution": "Ducor Pool by Mark Fischer, CC BY-SA 2.0",
+      "imageFilename": "lr-liberia.webp",
+      "localImagePath": "/images/Country%20images/lr-liberia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 312596,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 680
+      },
+      "webpBytes": 203252,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 680
+      },
+      "verifiedAt": "2026-10-05T07:12:45.264Z"
+    },
+    {
+      "code": "LS",
+      "country": "Lesotho",
+      "caption": "Maseru from Parliament Hill",
+      "sourceUrl": "https://live.staticflickr.com/8394/8700566641_d10a22e008_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/47660417@N03/8700566641",
+      "sourceWebsite": "Flickr",
+      "creator": "OER Africa",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Maseru from Parliament Hill by OER Africa, CC BY 2.0",
+      "imageFilename": "ls-lesotho.webp",
+      "localImagePath": "/images/Country%20images/ls-lesotho.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 292625,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 198906,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:12:45.270Z"
+    },
+    {
+      "code": "LT",
+      "country": "Lithuania",
+      "caption": "Vilnius Old Town",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Vilnius_Old_Town%2C_Lithuania%2C_14_Sept._2008.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=7013099",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Phillip Capper",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Vilnius Old Town, Lithuania, 14 Sept. 2008 by Phillip Capper, CC BY 2.0",
+      "imageFilename": "lt-lithuania.webp",
+      "localImagePath": "/images/Country%20images/lt-lithuania.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 5642750,
+      "sourceDimensions": {
+        "width": 3872,
+        "height": 2592
+      },
+      "webpBytes": 236020,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1071
+      },
+      "verifiedAt": "2026-10-05T07:12:45.284Z"
+    },
+    {
+      "code": "LU",
+      "country": "Luxembourg",
+      "caption": "Luxembourg City skyline",
+      "sourceUrl": "https://live.staticflickr.com/3435/3391511823_ed29ab9a94_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/11742539@N03/3391511823",
+      "sourceWebsite": "Flickr",
+      "creator": "Eoghan OLionnain",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "attribution": "Luxembourg Skyline by Eoghan OLionnain, CC BY-SA 2.0",
+      "imageFilename": "lu-luxembourg.webp",
+      "localImagePath": "/images/Country%20images/lu-luxembourg.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 94175,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 42370,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T07:12:45.302Z"
+    },
+    {
+      "code": "LV",
+      "country": "Latvia",
+      "caption": "Riga Dome Cathedral",
+      "sourceUrl": "https://live.staticflickr.com/4056/4288806440_c114678e8c_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/25554263@N04/4288806440",
+      "sourceWebsite": "Flickr",
+      "creator": "Peer.Gynt",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "attribution": "Riga Dome Cathedral by Peer.Gynt, CC BY-SA 2.0",
+      "imageFilename": "lv-latvia.webp",
+      "localImagePath": "/images/Country%20images/lv-latvia.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 331250,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 760
+      },
+      "webpBytes": 230140,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 760
+      },
+      "verifiedAt": "2026-10-05T07:12:45.320Z"
+    },
+    {
+      "code": "LY",
+      "country": "Libya",
+      "caption": "Clock tower in Tripoli, Libya",
+      "sourceUrl": "https://live.staticflickr.com/65535/49669778307_dc8d93e5ec_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/162485676@N06/49669778307",
+      "sourceWebsite": "Flickr",
+      "creator": "Ziad FMA",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Clock tower Tripoli Libya by Ziad FMA, CC BY 2.0",
+      "imageFilename": "ly-libya.webp",
+      "localImagePath": "/images/Country%20images/ly-libya.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 119501,
+      "sourceDimensions": {
+        "width": 683,
+        "height": 1024
+      },
+      "webpBytes": 71440,
+      "outputDimensions": {
+        "width": 683,
+        "height": 1024
+      },
+      "verifiedAt": "2026-10-05T07:12:45.921Z"
+    },
+    {
+      "code": "MA",
+      "country": "Morocco",
+      "caption": "Kasbah of the Udayas overlooking the Atlantic in Rabat",
+      "sourceUrl": "https://images.pexels.com/photos/30563472/pexels-photo-30563472.jpeg?cs=srgb&dl=pexels-mag-photography-1501456-30563472.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/historic-kasbah-of-the-udayas-in-rabat-morocco-30563472/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ma-morocco.webp",
+      "localImagePath": "/images/Country%20images/ma-morocco.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4090045,
+      "sourceDimensions": {
+        "width": 5792,
+        "height": 3861
+      },
+      "webpBytes": 389110,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1066
+      },
+      "verifiedAt": "2026-10-05T07:18:38.670Z"
+    },
+    {
+      "code": "MC",
+      "country": "Monaco",
+      "caption": "Monaco harbor",
+      "sourceUrl": "https://live.staticflickr.com/91/237773334_19ebe5d56f_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/17878642@N00/237773334",
+      "sourceWebsite": "Flickr",
+      "creator": "Salvatore.Freni",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Monaco Port by Salvatore.Freni, CC BY 2.0",
+      "imageFilename": "mc-monaco.webp",
+      "localImagePath": "/images/Country%20images/mc-monaco.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 253011,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 198860,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T07:18:38.677Z"
+    },
+    {
+      "code": "MD",
+      "country": "Moldova",
+      "caption": "Triumphal Arch in Chisinau",
+      "sourceUrl": "https://images.pexels.com/photos/16628938/pexels-photo-16628938.jpeg?cs=srgb&dl=pexels-igor-meghega-315695093-16628938.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/ark-from-the-center-of-chisinau-republic-of-moldova-16628938/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "md-moldova.webp",
+      "localImagePath": "/images/Country%20images/md-moldova.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2667250,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 6000
+      },
+      "webpBytes": 144946,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:38.695Z"
+    },
+    {
+      "code": "ME",
+      "country": "Montenegro",
+      "caption": "Aerial view of Kotor Bay and coastal towns",
+      "sourceUrl": "https://images.pexels.com/photos/18924404/pexels-photo-18924404.jpeg?cs=srgb&dl=pexels-julien-goettelmann-44396125-18924404.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-a-town-in-the-bay-in-montenegro-18924404/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "me-montenegro.webp",
+      "localImagePath": "/images/Country%20images/me-montenegro.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1221373,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 2250
+      },
+      "webpBytes": 164152,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:18:38.712Z"
+    },
+    {
+      "code": "MG",
+      "country": "Madagascar",
+      "caption": "Antananarivo City Hall on Avenue de l'Independance",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Antananarivo_City_Hall_on_Avenue_de_l%27Ind%C3%A9pendance_street.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=153525283",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Rudolphfurtado",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Antananarivo City Hall on Avenue de l'Independance street by Rudolphfurtado, CC BY 4.0",
+      "imageFilename": "mg-madagascar.webp",
+      "localImagePath": "/images/Country%20images/mg-madagascar.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4874498,
+      "sourceDimensions": {
+        "width": 3056,
+        "height": 3056
+      },
+      "webpBytes": 190366,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:38.731Z"
+    },
+    {
+      "code": "MH",
+      "country": "Marshall Islands",
+      "caption": "Building in Majuro, Marshall Islands",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Building_in_Majuro%2C_Marshall_Islands.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=4400571",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "mrlins",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Building in Majuro, Marshall Islands by mrlins, CC BY 2.0",
+      "imageFilename": "mh-marshall-islands.webp",
+      "localImagePath": "/images/Country%20images/mh-marshall-islands.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3327467,
+      "sourceDimensions": {
+        "width": 4338,
+        "height": 2862
+      },
+      "webpBytes": 266202,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1056
+      },
+      "verifiedAt": "2026-10-05T07:18:38.743Z"
+    },
+    {
+      "code": "MK",
+      "country": "North Macedonia",
+      "caption": "Stone Bridge and historic monuments in Skopje",
+      "sourceUrl": "https://images.pexels.com/photos/39483740/pexels-photo-39483740.jpeg?cs=srgb&dl=pexels-daciana-cristina-visan-2149801141-39483740.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/archaeological-museum-in-skopje-macedonia-39483740/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "mk-north-macedonia.webp",
+      "localImagePath": "/images/Country%20images/mk-north-macedonia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1767478,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 2252
+      },
+      "webpBytes": 356222,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 901
+      },
+      "verifiedAt": "2026-10-05T07:18:40.680Z"
+    },
+    {
+      "code": "ML",
+      "country": "Mali",
+      "caption": "Wooden boats on the Niger River in Bamako",
+      "sourceUrl": "https://images.pexels.com/photos/17676147/pexels-photo-17676147.jpeg?cs=srgb&dl=pexels-fatih-turan-63325184-17676147.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/view-of-a-riverbank-17676147/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ml-mali.webp",
+      "localImagePath": "/images/Country%20images/ml-mali.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2040672,
+      "sourceDimensions": {
+        "width": 4032,
+        "height": 3024
+      },
+      "webpBytes": 383730,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:40.684Z"
+    },
+    {
+      "code": "MR",
+      "country": "Mauritania",
+      "caption": "Aerial view of Nouakchott cityscape at sunset",
+      "sourceUrl": "https://images.pexels.com/photos/33952951/pexels-photo-33952951.jpeg?cs=srgb&dl=pexels-laye-photographe-1913410511-33952951.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-nouakchott-cityscape-at-sunset-33952951/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "mr-mauritania.webp",
+      "localImagePath": "/images/Country%20images/mr-mauritania.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4644819,
+      "sourceDimensions": {
+        "width": 8064,
+        "height": 4536
+      },
+      "webpBytes": 316382,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:18:40.698Z"
+    },
+    {
+      "code": "MT",
+      "country": "Malta",
+      "caption": "Grand Harbour entrance in Valletta",
+      "sourceUrl": "https://live.staticflickr.com/3093/3174500776_1c9faccba9_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/43145783@N00/3174500776",
+      "sourceWebsite": "Flickr",
+      "creator": "foxypar4",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Entering the Grand Harbour; Valletta, Malta by foxypar4, CC BY 2.0",
+      "imageFilename": "mt-malta.webp",
+      "localImagePath": "/images/Country%20images/mt-malta.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 154501,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 108212,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:18:40.710Z"
+    },
+    {
+      "code": "MU",
+      "country": "Mauritius",
+      "caption": "Mauritius mountains and lagoon",
+      "sourceUrl": "https://images.pexels.com/photos/36731927/pexels-photo-36731927.jpeg?cs=srgb&dl=pexels-zakh-36731927.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/scenic-view-of-mauritius-mountains-and-lagoon-36731927/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "mu-mauritius.webp",
+      "localImagePath": "/images/Country%20images/mu-mauritius.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1256981,
+      "sourceDimensions": {
+        "width": 4000,
+        "height": 3000
+      },
+      "webpBytes": 226702,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:40.722Z"
+    },
+    {
+      "code": "MW",
+      "country": "Malawi",
+      "caption": "Farmlands near Lilongwe, Malawi",
+      "sourceUrl": "https://images.pexels.com/photos/33516339/pexels-photo-33516339.jpeg?cs=srgb&dl=pexels-sinalmultimedia-33516339.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-farmlands-near-lilongwe-malawi-33516339/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "mw-malawi.webp",
+      "localImagePath": "/images/Country%20images/mw-malawi.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2815822,
+      "sourceDimensions": {
+        "width": 4032,
+        "height": 3024
+      },
+      "webpBytes": 658800,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:40.742Z"
+    },
+    {
+      "code": "MX",
+      "country": "Mexico",
+      "caption": "Palacio de Bellas Artes in Mexico City",
+      "sourceUrl": "https://live.staticflickr.com/180/404023488_4617cd5df7_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/66208256@N00/404023488",
+      "sourceWebsite": "Flickr",
+      "creator": "Esparta",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Palacio de Bellas Artes by Esparta, CC BY 2.0",
+      "imageFilename": "mx-mexico.webp",
+      "localImagePath": "/images/Country%20images/mx-mexico.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 183944,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 123624,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:18:40.755Z"
+    },
+    {
+      "code": "MZ",
+      "country": "Mozambique",
+      "caption": "Aerial view of Maputo city skyline",
+      "sourceUrl": "https://images.pexels.com/photos/30188142/pexels-photo-30188142.jpeg?cs=srgb&dl=pexels-sinalmultimedia-30188142.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-maputo-city-skyline-30188142/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "mz-mozambique.webp",
+      "localImagePath": "/images/Country%20images/mz-mozambique.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 2108877,
+      "sourceDimensions": {
+        "width": 4032,
+        "height": 3024
+      },
+      "webpBytes": 472622,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:40.767Z"
+    },
+    {
+      "code": "NA",
+      "country": "Namibia",
+      "caption": "Christuskirche landmark church in Windhoek",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/79/Christuskirche_-_Landmark_church_in_Windhoek%2C_Namibia.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=101208094",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "JalenPhotos",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution": "Christuskirche - Landmark church in Windhoek, Namibia by JalenPhotos, CC BY-SA 4.0",
+      "imageFilename": "na-namibia.webp",
+      "localImagePath": "/images/Country%20images/na-namibia.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 3650182,
+      "sourceDimensions": {
+        "width": 4032,
+        "height": 3024
+      },
+      "webpBytes": 428432,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:40.781Z"
+    },
+    {
+      "code": "NE",
+      "country": "Niger",
+      "caption": "Aerial view of the Niger River and landscape near Niamey",
+      "sourceUrl": "https://images.pexels.com/photos/8236090/pexels-photo-8236090.jpeg?cs=srgb&dl=pexels-andre-24301262-8236090.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/view-of-an-airplane-wing-8236090/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ne-niger.webp",
+      "localImagePath": "/images/Country%20images/ne-niger.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 1303583,
+      "sourceDimensions": {
+        "width": 3024,
+        "height": 4032
+      },
+      "webpBytes": 143626,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:18:40.792Z"
+    },
+    {
+      "code": "NG",
+      "country": "Nigeria",
+      "caption": "Ojota neighborhood street in Lagos",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Ojota%2C_Lagos_Nigeria_08.jpg",
+      "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=80337280",
+      "sourceWebsite": "Wikimedia Commons",
+      "creator": "Johnbrainyvisuals (ogedengbe Tobi John)",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution": "Ojota, Lagos Nigeria 08 by Johnbrainyvisuals, CC BY-SA 4.0",
+      "imageFilename": "ng-nigeria.webp",
+      "localImagePath": "/images/Country%20images/ng-nigeria.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 438895,
+      "sourceDimensions": {
+        "width": 6000,
+        "height": 4000
+      },
+      "webpBytes": 130706,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1067
+      },
+      "verifiedAt": "2026-10-05T07:18:40.805Z"
+    },
+    {
+      "code": "NI",
+      "country": "Nicaragua",
+      "caption": "Old Cathedral of Managua",
+      "sourceUrl": "https://images.pexels.com/photos/5274756/pexels-photo-5274756.jpeg?cs=srgb&dl=pexels-errezuniga-5274756.jpg&fm=jpg",
+      "sourcePage": "https://www.pexels.com/photo/traditional-cathedral-in-managua-5274756/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ni-nicaragua.webp",
+      "localImagePath": "/images/Country%20images/ni-nicaragua.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 4713004,
+      "sourceDimensions": {
+        "width": 4631,
+        "height": 3459
+      },
+      "webpBytes": 603740,
+      "outputDimensions": {
+        "width": 1600,
+        "height": 1195
+      },
+      "verifiedAt": "2026-10-05T07:18:40.818Z"
+    },
+    {
+      "code": "NL",
+      "country": "Netherlands",
+      "caption": "Leidsegracht canal in Amsterdam",
+      "sourceUrl": "https://live.staticflickr.com/3063/2549181418_de61a39650_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/12836528@N00/2549181418",
+      "sourceWebsite": "Flickr",
+      "creator": "kevin dooley",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Leidsegracht by kevin dooley, CC BY 2.0",
+      "imageFilename": "nl-netherlands.webp",
+      "localImagePath": "/images/Country%20images/nl-netherlands.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 264675,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "webpBytes": 121618,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "verifiedAt": "2026-10-05T07:18:40.829Z"
+    },
+    {
+      "code": "NO",
+      "country": "Norway",
+      "caption": "Oslo City Hall",
+      "sourceUrl": "https://live.staticflickr.com/2402/2289994863_5bbfea6da7_b.jpg",
+      "sourcePage": "https://www.flickr.com/photos/67975030@N00/2289994863",
+      "sourceWebsite": "Flickr",
+      "creator": "Bernt Rostad",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "attribution": "Oslo Rådhus by Bernt Rostad, CC BY 2.0",
+      "imageFilename": "no-norway.webp",
+      "localImagePath": "/images/Country%20images/no-norway.webp",
+      "downloadStatus": "retained-existing-local-file",
+      "webpConversionStatus": "already-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 176994,
+      "sourceDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "webpBytes": 126722,
+      "outputDimensions": {
+        "width": 1024,
+        "height": 683
+      },
+      "verifiedAt": "2026-10-05T07:18:40.846Z"
+    },
+    {
+      "code": "NR",
+      "country": "Nauru",
+      "caption": "Aerial island view in Nauru",
+      "sourceUrl": "https://images.pexels.com/photos/13868397/pexels-photo-13868397.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-an-island-13868397/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "nr-nauru.webp",
+      "localImagePath": "/images/Country%20images/nr-nauru.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 166323,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 799
+      },
+      "webpBytes": 163968,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 799
+      },
+      "verifiedAt": "2026-10-05T07:32:30.528Z"
+    },
+    {
+      "code": "NZ",
+      "country": "New Zealand",
+      "caption": "Te Kouma Harbour in New Zealand",
+      "sourceUrl": "https://images.pexels.com/photos/25772429/pexels-photo-25772429/free-photo-of-te-kouma-harbour-waikato-new-zealand.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/te-kouma-harbour-waikato-new-zealand-25772429/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "nz-new-zealand.webp",
+      "localImagePath": "/images/Country%20images/nz-new-zealand.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 112898,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 98570,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:31.339Z"
+    },
+    {
+      "code": "PA",
+      "country": "Panama",
+      "caption": "Panama City skyline by the shore",
+      "sourceUrl": "https://images.pexels.com/photos/20323097/pexels-photo-20323097/free-photo-of-view-of-the-skyscrapers-on-the-shore-in-panama-city-panama.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/view-of-the-skyscrapers-on-the-shore-in-panama-city-panama-20323097/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "pa-panama.webp",
+      "localImagePath": "/images/Country%20images/pa-panama.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 326622,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1600
+      },
+      "webpBytes": 197058,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:32.044Z"
+    },
+    {
+      "code": "PE",
+      "country": "Peru",
+      "caption": "Historic rooftops in Peru",
+      "sourceUrl": "https://images.pexels.com/photos/19820477/pexels-photo-19820477/free-photo-of-rooftops-in-sunlight.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/rooftops-in-sunlight-19820477/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "pe-peru.webp",
+      "localImagePath": "/images/Country%20images/pe-peru.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 548144,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 290098,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:33.293Z"
+    },
+    {
+      "code": "PG",
+      "country": "Papua New Guinea",
+      "caption": "Ceremonial tribal attire in Papua New Guinea",
+      "sourceUrl": "https://images.pexels.com/photos/24345891/pexels-photo-24345891/free-photo-of-man-in-ceremonial-tribal-attire.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/man-in-ceremonial-tribal-attire-24345891/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "pg-papua-new-guinea.webp",
+      "localImagePath": "/images/Country%20images/pg-papua-new-guinea.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 352880,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 179460,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:34.282Z"
+    },
+    {
+      "code": "PL",
+      "country": "Poland",
+      "caption": "Military parade in Poland",
+      "sourceUrl": "https://images.pexels.com/photos/34693641/pexels-photo-34693641/free-photo-of-military-parade-with-soldiers-and-flag.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/military-parade-with-soldiers-and-flag-34693641/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "pl-poland.webp",
+      "localImagePath": "/images/Country%20images/pl-poland.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 198416,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "webpBytes": 174174,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:32:35.138Z"
+    },
+    {
+      "code": "PT",
+      "country": "Portugal",
+      "caption": "Train station at sunset in Portugal",
+      "sourceUrl": "https://images.pexels.com/photos/39475211/pexels-photo-39475211/free-photo-of-beautiful-train-station-at-sunset-in-portugal.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/beautiful-train-station-at-sunset-in-portugal-39475211/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "pt-portugal.webp",
+      "localImagePath": "/images/Country%20images/pt-portugal.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 303794,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 2133
+      },
+      "webpBytes": 97046,
+      "outputDimensions": {
+        "width": 675,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:36.001Z"
+    },
+    {
+      "code": "PW",
+      "country": "Palau",
+      "caption": "Tropical archipelago in Palau",
+      "sourceUrl": "https://images.pexels.com/photos/26926255/pexels-photo-26926255/free-photo-of-tropical-archipelago-on-sea.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/tropical-archipelago-on-sea-26926255/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "pw-palau.webp",
+      "localImagePath": "/images/Country%20images/pw-palau.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 187163,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1437
+      },
+      "webpBytes": 116300,
+      "outputDimensions": {
+        "width": 1002,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:36.806Z"
+    },
+    {
+      "code": "PY",
+      "country": "Paraguay",
+      "caption": "Panoramic skyline in Paraguay",
+      "sourceUrl": "https://images.pexels.com/photos/34298766/pexels-photo-34298766/free-photo-of-panoramic-view-of-skyline-with-lush-greenery.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/panoramic-view-of-skyline-with-lush-greenery-34298766/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "py-paraguay.webp",
+      "localImagePath": "/images/Country%20images/py-paraguay.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 210239,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "webpBytes": 210556,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:32:37.380Z"
+    },
+    {
+      "code": "RO",
+      "country": "Romania",
+      "caption": "Romanian architecture in forest hills",
+      "sourceUrl": "https://images.pexels.com/photos/31067775/pexels-photo-31067775/free-photo-of-scenic-romanian-architecture-in-forest-hills.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/scenic-romanian-architecture-in-forest-hills-31067775/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ro-romania.webp",
+      "localImagePath": "/images/Country%20images/ro-romania.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 210154,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 798
+      },
+      "webpBytes": 216656,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 798
+      },
+      "verifiedAt": "2026-10-05T07:32:38.153Z"
+    },
+    {
+      "code": "RS",
+      "country": "Serbia",
+      "caption": "Serbian flags near the river in Serbia",
+      "sourceUrl": "https://images.pexels.com/photos/17288412/pexels-photo-17288412/free-photo-of-serbian-flags-near-ship-on-river.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/serbian-flags-near-ship-on-river-17288412/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "rs-serbia.webp",
+      "localImagePath": "/images/Country%20images/rs-serbia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 251661,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 108864,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:39.218Z"
+    },
+    {
+      "code": "RW",
+      "country": "Rwanda",
+      "caption": "Modern Kigali skyline in Rwanda",
+      "sourceUrl": "https://images.pexels.com/photos/31466702/pexels-photo-31466702/free-photo-of-aerial-view-of-kigali-s-modern-skyline.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-kigali-s-modern-skyline-31466702/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "rw-rwanda.webp",
+      "localImagePath": "/images/Country%20images/rw-rwanda.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 435481,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1671
+      },
+      "webpBytes": 259112,
+      "outputDimensions": {
+        "width": 862,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:39.862Z"
+    },
+    {
+      "code": "SB",
+      "country": "Solomon Islands",
+      "caption": "Sunlit shore in the Solomon Islands",
+      "sourceUrl": "https://images.pexels.com/photos/17396353/pexels-photo-17396353/free-photo-of-sunlit-trees-on-sea-shore.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/sunlit-trees-on-sea-shore-17396353/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sb-solomon-islands.webp",
+      "localImagePath": "/images/Country%20images/sb-solomon-islands.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 367006,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1825
+      },
+      "webpBytes": 174218,
+      "outputDimensions": {
+        "width": 789,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:40.770Z"
+    },
+    {
+      "code": "SC",
+      "country": "Seychelles",
+      "caption": "Pristine beach in Seychelles",
+      "sourceUrl": "https://images.pexels.com/photos/30358266/pexels-photo-30358266/free-photo-of-pristine-beach-view-in-seychelles-paradise.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/pristine-beach-view-in-seychelles-paradise-30358266/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sc-seychelles.webp",
+      "localImagePath": "/images/Country%20images/sc-seychelles.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 609104,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 2132
+      },
+      "webpBytes": 238344,
+      "outputDimensions": {
+        "width": 675,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:41.424Z"
+    },
+    {
+      "code": "SD",
+      "country": "Sudan",
+      "caption": "People walking toward the pyramids in Sudan",
+      "sourceUrl": "https://images.pexels.com/photos/10970368/pexels-photo-10970368.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/people-walking-on-sand-toward-the-pyramids-10970368/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sd-sudan.webp",
+      "localImagePath": "/images/Country%20images/sd-sudan.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 170439,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "webpBytes": 167662,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:32:42.317Z"
+    },
+    {
+      "code": "SE",
+      "country": "Sweden",
+      "caption": "River in a Swedish city at dusk",
+      "sourceUrl": "https://images.pexels.com/photos/10445142/pexels-photo-10445142.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/a-river-in-a-city-at-dusk-10445142/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "se-sweden.webp",
+      "localImagePath": "/images/Country%20images/se-sweden.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 89536,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 71478,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:43.349Z"
+    },
+    {
+      "code": "SI",
+      "country": "Slovenia",
+      "caption": "Scenic lake in Slovenia",
+      "sourceUrl": "https://images.pexels.com/photos/258136/pexels-photo-258136.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/scenic-view-of-lake-against-sky-during-sunset-258136/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "si-slovenia.webp",
+      "localImagePath": "/images/Country%20images/si-slovenia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 95364,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 676
+      },
+      "webpBytes": 83358,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 676
+      },
+      "verifiedAt": "2026-10-05T07:32:43.914Z"
+    },
+    {
+      "code": "SK",
+      "country": "Slovakia",
+      "caption": "Slovak flag on a mountain peak",
+      "sourceUrl": "https://images.pexels.com/photos/31348072/pexels-photo-31348072/free-photo-of-slovak-flag-on-snowy-mountain-peak.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/slovak-flag-on-snowy-mountain-peak-31348072/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sk-slovakia.webp",
+      "localImagePath": "/images/Country%20images/sk-slovakia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 145238,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 130942,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:45.137Z"
+    },
+    {
+      "code": "SL",
+      "country": "Sierra Leone",
+      "caption": "Flag in Sierra Leone greenery",
+      "sourceUrl": "https://images.pexels.com/photos/39606825/pexels-photo-39606825/free-photo-of-sierra-leone-flag-waving-amidst-lush-greenery.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/sierra-leone-flag-waving-amidst-lush-greenery-39606825/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sl-sierra-leone.webp",
+      "localImagePath": "/images/Country%20images/sl-sierra-leone.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 284307,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 133512,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:45.955Z"
+    },
+    {
+      "code": "SM",
+      "country": "San Marino",
+      "caption": "Historic fortress in San Marino",
+      "sourceUrl": "https://images.pexels.com/photos/36930262/pexels-photo-36930262/free-photo-of-dramatic-view-of-san-marino-s-historic-fortress.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/dramatic-view-of-san-marino-s-historic-fortress-36930262/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sm-san-marino.webp",
+      "localImagePath": "/images/Country%20images/sm-san-marino.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 149945,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 140378,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:47.135Z"
+    },
+    {
+      "code": "SN",
+      "country": "Senegal",
+      "caption": "Flag aboard a boat in Senegal",
+      "sourceUrl": "https://images.pexels.com/photos/14434228/pexels-photo-14434228.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/flag-on-a-boat-deck-14434228/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sn-senegal.webp",
+      "localImagePath": "/images/Country%20images/sn-senegal.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 130897,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 114282,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:51.316Z"
+    },
+    {
+      "code": "SO",
+      "country": "Somalia",
+      "caption": "Somalia national flag celebration at night",
+      "sourceUrl": "https://images.pexels.com/photos/32906728/pexels-photo-32906728/free-photo-of-celebration-with-somalia-national-flag-at-night.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/celebration-with-somalia-national-flag-at-night-32906728/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "so-somalia.webp",
+      "localImagePath": "/images/Country%20images/so-somalia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 74236,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 50836,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:52.246Z"
+    },
+    {
+      "code": "SR",
+      "country": "Suriname",
+      "caption": "Map and location detail in Suriname",
+      "sourceUrl": "https://images.pexels.com/photos/15031991/pexels-photo-15031991/free-photo-of-person-pointing-at-brazilian-state-of-roraima-on-a-map.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/person-pointing-at-brazilian-state-of-roraima-on-a-map-15031991/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sr-suriname.webp",
+      "localImagePath": "/images/Country%20images/sr-suriname.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 114329,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 91854,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:53.068Z"
+    },
+    {
+      "code": "SS",
+      "country": "South Sudan",
+      "caption": "Rural landscape in South Sudan",
+      "sourceUrl": "https://images.pexels.com/photos/33749782/pexels-photo-33749782/free-photo-of-man-carrying-sack-in-rural-landscape-africa.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/man-carrying-sack-in-rural-landscape-africa-33749782/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ss-south-sudan.webp",
+      "localImagePath": "/images/Country%20images/ss-south-sudan.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 184290,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 178526,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:32:54.147Z"
+    },
+    {
+      "code": "ST",
+      "country": "São Tomé and Príncipe",
+      "caption": "Scenic pier in São Tomé and Príncipe",
+      "sourceUrl": "https://images.pexels.com/photos/38890216/pexels-photo-38890216/free-photo-of-scenic-pier-overlooking-tranquil-lake.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/scenic-pier-overlooking-tranquil-lake-38890216/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "st-sao-tome-and-principe.webp",
+      "localImagePath": "/images/Country%20images/st-sao-tome-and-principe.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 146142,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 675
+      },
+      "webpBytes": 137616,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 675
+      },
+      "verifiedAt": "2026-10-05T07:32:55.012Z"
+    },
+    {
+      "code": "SV",
+      "country": "El Salvador",
+      "caption": "Metropolitan cathedral in San Salvador",
+      "sourceUrl": "https://images.pexels.com/photos/38023550/pexels-photo-38023550/free-photo-of-aerial-view-of-metropolitan-cathedral-in-san-salvador.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/aerial-view-of-metropolitan-cathedral-in-san-salvador-38023550/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sv-el-salvador.webp",
+      "localImagePath": "/images/Country%20images/sv-el-salvador.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 256286,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 799
+      },
+      "webpBytes": 262490,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 799
+      },
+      "verifiedAt": "2026-10-05T07:32:56.223Z"
+    },
+    {
+      "code": "SZ",
+      "country": "Eswatini",
+      "caption": "Cascades in Eswatini",
+      "sourceUrl": "https://images.pexels.com/photos/6491895/pexels-photo-6491895.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/cascades-on-wild-river-6491895/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "sz-eswatini.webp",
+      "localImagePath": "/images/Country%20images/sz-eswatini.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 173255,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 756
+      },
+      "webpBytes": 169344,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 756
+      },
+      "verifiedAt": "2026-10-05T07:32:57.984Z"
+    },
+    {
+      "code": "TD",
+      "country": "Chad",
+      "caption": "Rural portrait in Chad",
+      "sourceUrl": "https://images.pexels.com/photos/7624246/pexels-photo-7624246.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/shirtless-man-wearing-black-beanie-hat-7624246/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "td-chad.webp",
+      "localImagePath": "/images/Country%20images/td-chad.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 169938,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 64358,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:32:59.141Z"
+    },
+    {
+      "code": "TG",
+      "country": "Togo",
+      "caption": "Street vendor in Lomé, Togo",
+      "sourceUrl": "https://images.pexels.com/photos/37904067/pexels-photo-37904067/free-photo-of-street-vendor-in-lome-pushing-cart.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/street-vendor-in-lome-pushing-cart-37904067/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "tg-togo.webp",
+      "localImagePath": "/images/Country%20images/tg-togo.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 167358,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 150614,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:33:00.013Z"
+    },
+    {
+      "code": "TN",
+      "country": "Tunisia",
+      "caption": "Market scene in Tunisia",
+      "sourceUrl": "https://images.pexels.com/photos/27685454/pexels-photo-27685454/free-photo-of-old-man-in-tunisia-s-souk-eating-bread.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/old-man-in-tunisia-s-souk-eating-bread-27685454/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "tn-tunisia.webp",
+      "localImagePath": "/images/Country%20images/tn-tunisia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 387731,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 184904,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:01.214Z"
+    },
+    {
+      "code": "TO",
+      "country": "Tonga",
+      "caption": "Beachside deck in Tonga",
+      "sourceUrl": "https://images.pexels.com/photos/36331323/pexels-photo-36331323/free-photo-of-relaxing-beachside-deck-with-tropical-view.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/relaxing-beachside-deck-with-tropical-view-36331323/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "to-tonga.webp",
+      "localImagePath": "/images/Country%20images/to-tonga.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 237172,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 237194,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:33:02.434Z"
+    },
+    {
+      "code": "TT",
+      "country": "Trinidad and Tobago",
+      "caption": "Rainbow over a Trinidad and Tobago beach",
+      "sourceUrl": "https://images.pexels.com/photos/31703687/pexels-photo-31703687/free-photo-of-colorful-rainbow-over-trinidad-and-tobago-beach.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/colorful-rainbow-over-trinidad-and-tobago-beach-31703687/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "tt-trinidad-and-tobago.webp",
+      "localImagePath": "/images/Country%20images/tt-trinidad-and-tobago.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 145152,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 801
+      },
+      "webpBytes": 132540,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 801
+      },
+      "verifiedAt": "2026-10-05T07:33:03.435Z"
+    },
+    {
+      "code": "TV",
+      "country": "Tuvalu",
+      "caption": "Coastal city in Tuvalu",
+      "sourceUrl": "https://images.pexels.com/photos/10878084/pexels-photo-10878084.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/aerial-shot-of-a-coastal-city-10878084/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "tv-tuvalu.webp",
+      "localImagePath": "/images/Country%20images/tv-tuvalu.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 143503,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 675
+      },
+      "webpBytes": 133768,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 675
+      },
+      "verifiedAt": "2026-10-05T07:33:04.365Z"
+    },
+    {
+      "code": "TZ",
+      "country": "Tanzania",
+      "caption": "Wildlife in Tanzania",
+      "sourceUrl": "https://images.pexels.com/photos/9185413/pexels-photo-9185413.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/brown-animal-with-horns-on-brown-grass-field-9185413/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "tz-tanzania.webp",
+      "localImagePath": "/images/Country%20images/tz-tanzania.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 116918,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 98184,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:33:05.448Z"
+    },
+    {
+      "code": "UA",
+      "country": "Ukraine",
+      "caption": "Ukraine rally in Germany",
+      "sourceUrl": "https://images.pexels.com/photos/11394226/pexels-photo-11394226.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/people-gathered-at-pro-ukraine-rally-in-germany-11394226/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ua-ukraine.webp",
+      "localImagePath": "/images/Country%20images/ua-ukraine.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 337950,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1795
+      },
+      "webpBytes": 159220,
+      "outputDimensions": {
+        "width": 802,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:06.322Z"
+    },
+    {
+      "code": "UG",
+      "country": "Uganda",
+      "caption": "Motorcyclist on a rustic road in Uganda",
+      "sourceUrl": "https://images.pexels.com/photos/35811586/pexels-photo-35811586/free-photo-of-motorcyclist-riding-with-umbrella-on-rustic-road.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/motorcyclist-riding-with-umbrella-on-rustic-road-35811586/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ug-uganda.webp",
+      "localImagePath": "/images/Country%20images/ug-uganda.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 308505,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1500
+      },
+      "webpBytes": 191502,
+      "outputDimensions": {
+        "width": 960,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:07.743Z"
+    },
+    {
+      "code": "US",
+      "country": "United States of America",
+      "caption": "Flag map pin for the United States",
+      "sourceUrl": "https://images.pexels.com/photos/19963874/pexels-photo-19963874/free-photo-of-pin-on-usa-on-map.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/pin-on-usa-on-map-19963874/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "us-united-states-of-america.webp",
+      "localImagePath": "/images/Country%20images/us-united-states-of-america.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 166040,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "webpBytes": 146618,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:33:08.741Z"
+    },
+    {
+      "code": "UY",
+      "country": "Uruguay",
+      "caption": "Montevideo waterfront in Uruguay",
+      "sourceUrl": "https://images.pexels.com/photos/33631939/pexels-photo-33631939/free-photo-of-montevideo-skyline-by-the-waterfront-in-uruguay.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/montevideo-skyline-by-the-waterfront-in-uruguay-33631939/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "uy-uruguay.webp",
+      "localImagePath": "/images/Country%20images/uy-uruguay.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 162554,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "webpBytes": 155540,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:33:09.684Z"
+    },
+    {
+      "code": "VA",
+      "country": "Vatican City",
+      "caption": "St. Peter’s Basilica in Vatican City",
+      "sourceUrl": "https://images.pexels.com/photos/7229228/pexels-photo-7229228.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/statue-in-front-of-st-peters-basilica-7229228/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "va-vatican-city.webp",
+      "localImagePath": "/images/Country%20images/va-vatican-city.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 155409,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "webpBytes": 132924,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 800
+      },
+      "verifiedAt": "2026-10-05T07:33:10.335Z"
+    },
+    {
+      "code": "VC",
+      "country": "Saint Vincent and the Grenadines",
+      "caption": "Island shore in Saint Vincent and the Grenadines",
+      "sourceUrl": "https://images.pexels.com/photos/14074713/pexels-photo-14074713.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/islands-on-sea-shore-14074713/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "vc-saint-vincent-and-the-grenadines.webp",
+      "localImagePath": "/images/Country%20images/vc-saint-vincent-and-the-grenadines.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 436600,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 2133
+      },
+      "webpBytes": 159384,
+      "outputDimensions": {
+        "width": 675,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:11.347Z"
+    },
+    {
+      "code": "VE",
+      "country": "Venezuela",
+      "caption": "Venezuelan flag in Buenos Aires",
+      "sourceUrl": "https://images.pexels.com/photos/35555620/pexels-photo-35555620/free-photo-of-venezuelan-flag-waving-in-buenos-aires-street.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/venezuelan-flag-waving-in-buenos-aires-street-35555620/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ve-venezuela.webp",
+      "localImagePath": "/images/Country%20images/ve-venezuela.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 244964,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1798
+      },
+      "webpBytes": 108554,
+      "outputDimensions": {
+        "width": 801,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:15.874Z"
+    },
+    {
+      "code": "VU",
+      "country": "Vanuatu",
+      "caption": "Forest on the shore in Vanuatu",
+      "sourceUrl": "https://images.pexels.com/photos/4719669/pexels-photo-4719669.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/forest-on-sea-shore-4719669/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "vu-vanuatu.webp",
+      "localImagePath": "/images/Country%20images/vu-vanuatu.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 538947,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1800
+      },
+      "webpBytes": 301928,
+      "outputDimensions": {
+        "width": 800,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:16.761Z"
+    },
+    {
+      "code": "WS",
+      "country": "Samoa",
+      "caption": "Gray islet in Samoa",
+      "sourceUrl": "https://images.pexels.com/photos/3423152/pexels-photo-3423152.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/gray-islet-3423152/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "ws-samoa.webp",
+      "localImagePath": "/images/Country%20images/ws-samoa.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 175053,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 799
+      },
+      "webpBytes": 171594,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 799
+      },
+      "verifiedAt": "2026-10-05T07:33:17.774Z"
+    },
+    {
+      "code": "ZA",
+      "country": "South Africa",
+      "caption": "Road and landscape in South Africa",
+      "sourceUrl": "https://images.pexels.com/photos/8060106/pexels-photo-8060106.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/wet-asphalt-road-with-red-lines-8060106/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "za-south-africa.webp",
+      "localImagePath": "/images/Country%20images/za-south-africa.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 324451,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 841
+      },
+      "webpBytes": 356044,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 841
+      },
+      "verifiedAt": "2026-10-05T07:33:18.932Z"
+    },
+    {
+      "code": "ZM",
+      "country": "Zambia",
+      "caption": "African elephants in Zambia",
+      "sourceUrl": "https://images.pexels.com/photos/33643712/pexels-photo-33643712/free-photo-of-african-elephants-in-the-wild-zambia.png?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/african-elephants-in-the-wild-zambia-33643712/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "zm-zambia.webp",
+      "localImagePath": "/images/Country%20images/zm-zambia.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-png-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/png",
+      "sourceBytes": 2483815,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 1600
+      },
+      "webpBytes": 135998,
+      "outputDimensions": {
+        "width": 900,
+        "height": 1200
+      },
+      "verifiedAt": "2026-10-05T07:33:20.418Z"
+    },
+    {
+      "code": "ZW",
+      "country": "Zimbabwe",
+      "caption": "Map pin for Zimbabwe",
+      "sourceUrl": "https://images.pexels.com/photos/19963962/pexels-photo-19963962/free-photo-of-pin-on-map.jpeg?cs=tinysrgb&dpr=1&w=1200",
+      "sourcePage": "https://www.pexels.com/photo/pin-on-map-19963962/",
+      "sourceWebsite": "Pexels",
+      "imageFilename": "zw-zimbabwe.webp",
+      "localImagePath": "/images/Country%20images/zw-zimbabwe.webp",
+      "downloadStatus": "downloaded",
+      "webpConversionStatus": "converted-jpeg-to-webp",
+      "databaseUpdateStatus": "updated-or-already-current",
+      "verificationStatus": "source-caption, image-decode, WebP-format, and-dimensions-passed",
+      "error": null,
+      "sourceContentType": "image/jpeg",
+      "sourceBytes": 99373,
+      "sourceDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "webpBytes": 78008,
+      "outputDimensions": {
+        "width": 1200,
+        "height": 900
+      },
+      "verifiedAt": "2026-10-05T07:33:21.259Z"
+    }
+  ]
+}

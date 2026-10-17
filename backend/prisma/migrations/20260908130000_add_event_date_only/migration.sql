@@ -1,0 +1,2 @@
+ALTER TABLE "Event"
+  ADD COLUMN "dateOnly" BOOLEAN NOT NULL DEFAULT false;

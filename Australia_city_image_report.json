@@ -1,0 +1,591 @@
+{
+  "continent_label": "Oceania",
+  "countries_inspected": 14,
+  "cities_identified": 54,
+  "images_successfully_downloaded_and_verified": 50,
+  "cities_missing_images": [
+    {
+      "country": "Australia",
+      "city": "Canberra",
+      "reason": "Saving failed for Canberra Australia via Canberra: Image too small for Canberra Australia: (330, 146)"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Invercargill",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "Samoa",
+      "city": "Apia",
+      "reason": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "country": "Tuvalu",
+      "city": "Funafuti",
+      "reason": "HTTP Error 429: Too Many Requests"
+    }
+  ],
+  "image_directory": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images",
+  "download_results": [
+    {
+      "country": "Australia",
+      "city": "Sydney",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-sydney.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-sydney.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Melbourne",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-melbourne.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-melbourne.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Brisbane",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-brisbane.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-brisbane.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Perth",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-perth.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-perth.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Adelaide",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-adelaide.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-adelaide.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Gold Coast",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-gold-coast.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-gold-coast.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Cairns",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-cairns.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-cairns.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Darwin",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-darwin.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-darwin.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Hobart",
+      "code": "au",
+      "result": {
+        "status": "downloaded",
+        "file": "au-hobart.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-hobart.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Franklin_Wharf_2015_b_%28cropped%29.jpg/330px-Franklin_Wharf_2015_b_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Hobart"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Townsville",
+      "code": "au",
+      "result": {
+        "status": "downloaded",
+        "file": "au-townsville.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-townsville.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Ross_River_flowing_through_Townsville_CBD.jpg/330px-Ross_River_flowing_through_Townsville_CBD.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Townsville"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Newcastle",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-newcastle.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-newcastle.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Broome",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-broome.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-broome.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Port Hedland",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-port-hedland.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-port-hedland.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Ayers Rock",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-ayers-rock.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-ayers-rock.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Christmas Island",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-christmas-island.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-christmas-island.webp"
+      }
+    },
+    {
+      "country": "Australia",
+      "city": "Cocos (Keeling) Islands",
+      "code": "au",
+      "result": {
+        "status": "existing",
+        "file": "au-cocos-keeling-islands.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\au-cocos-keeling-islands.webp"
+      }
+    },
+    {
+      "country": "Fiji",
+      "city": "Nadi",
+      "code": "fj",
+      "result": {
+        "status": "downloaded",
+        "file": "fj-nadi.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fj-nadi.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Nadi_Airport_-_International_Departures_2.jpg/330px-Nadi_Airport_-_International_Departures_2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Nadi International Airport"
+      }
+    },
+    {
+      "country": "Fiji",
+      "city": "Suva",
+      "code": "fj",
+      "result": {
+        "status": "downloaded",
+        "file": "fj-suva.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fj-suva.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Suva%2C_Fiji_77.jpg/330px-Suva%2C_Fiji_77.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Suva"
+      }
+    },
+    {
+      "country": "Kiribati",
+      "city": "Tarawa",
+      "code": "ki",
+      "result": {
+        "status": "downloaded",
+        "file": "ki-tarawa.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\ki-tarawa.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/South_Tarawa_%28north_and_south_labeled%29.svg/330px-South_Tarawa_%28north_and_south_labeled%29.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Tarawa"
+      }
+    },
+    {
+      "country": "Kiribati",
+      "city": "Kiritimati",
+      "code": "ki",
+      "result": {
+        "status": "downloaded",
+        "file": "ki-kiritimati.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\ki-kiritimati.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Kiritimati-EO.jpg/330px-Kiritimati-EO.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Kiritimati"
+      }
+    },
+    {
+      "country": "Marshall Islands",
+      "city": "Majuro",
+      "code": "mh",
+      "result": {
+        "status": "downloaded",
+        "file": "mh-majuro.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\mh-majuro.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Eneko_Islet_02.JPG/330px-Eneko_Islet_02.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Majuro"
+      }
+    },
+    {
+      "country": "Marshall Islands",
+      "city": "Kwajalein",
+      "code": "mh",
+      "result": {
+        "status": "downloaded",
+        "file": "mh-kwajalein.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\mh-kwajalein.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Kwajalein_Atoll_2003-02-07_-_Landsat_7_-_30m.png/330px-Kwajalein_Atoll_2003-02-07_-_Landsat_7_-_30m.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Kwajalein Atoll"
+      }
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Palikir",
+      "code": "fm",
+      "result": {
+        "status": "downloaded",
+        "file": "fm-palikir.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fm-palikir.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Palikir_2025-Presidential2.jpg/330px-Palikir_2025-Presidential2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Palikir"
+      }
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Pohnpei",
+      "code": "fm",
+      "result": {
+        "status": "downloaded",
+        "file": "fm-pohnpei.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fm-pohnpei.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Pohnpei.png/330px-Pohnpei.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Pohnpei State"
+      }
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Weno",
+      "code": "fm",
+      "result": {
+        "status": "downloaded",
+        "file": "fm-weno.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fm-weno.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Weno_island_2.jpg/330px-Weno_island_2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Weno"
+      }
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Yap",
+      "code": "fm",
+      "result": {
+        "status": "downloaded",
+        "file": "fm-yap.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fm-yap.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/Yap_in_Federated_States_of_Micronesia.svg/330px-Yap_in_Federated_States_of_Micronesia.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Yap State"
+      }
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Kosrae",
+      "code": "fm",
+      "result": {
+        "status": "existing",
+        "file": "fm-kosrae.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\fm-kosrae.webp"
+      }
+    },
+    {
+      "country": "Nauru",
+      "city": "Yaren",
+      "code": "nr",
+      "result": {
+        "status": "existing",
+        "file": "nr-yaren.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nr-yaren.webp"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Auckland",
+      "code": "nz",
+      "result": {
+        "status": "existing",
+        "file": "nz-auckland.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-auckland.webp"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Christchurch",
+      "code": "nz",
+      "result": {
+        "status": "existing",
+        "file": "nz-christchurch.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-christchurch.webp"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Wellington",
+      "code": "nz",
+      "result": {
+        "status": "existing",
+        "file": "nz-wellington.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-wellington.webp"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Queenstown",
+      "code": "nz",
+      "result": {
+        "status": "existing",
+        "file": "nz-queenstown.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-queenstown.webp"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Dunedin",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-dunedin.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-dunedin.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Dunedin-Nueva_Zelanda01.JPG/330px-Dunedin-Nueva_Zelanda01.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Dunedin"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Hamilton",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-hamilton.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-hamilton.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Hamilton_montage.jpg/330px-Hamilton_montage.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Hamilton, New Zealand"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Rotorua",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-rotorua.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-rotorua.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Government_Gardens_in_Rotorua_01.jpg/330px-Government_Gardens_in_Rotorua_01.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Rotorua"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Palmerston North",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-palmerston-north.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-palmerston-north.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Palmerston_North_Collage_2015.jpg/330px-Palmerston_North_Collage_2015.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Palmerston North"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Napier",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-napier.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-napier.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/T_%26_G_building_and_Masonic_Hotel%2C_Napier%2C_September_2026.jpg/330px-T_%26_G_building_and_Masonic_Hotel%2C_Napier%2C_September_2026.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Napier, New Zealand"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "New Plymouth",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-new-plymouth.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-new-plymouth.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/New-plymouth-city-skyline-npdc.jpg/330px-New-plymouth-city-skyline-npdc.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "New Plymouth"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Nelson",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-nelson.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-nelson.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/The_Suter_Art_Gallery%2C_Nelson.jpg/330px-The_Suter_Art_Gallery%2C_Nelson.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Nelson, New Zealand"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Whangārei",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-whang-rei.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-whang-rei.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Parihaka_te_Maunga.jpg/330px-Parihaka_te_Maunga.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Whangārei"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Blenheim",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-blenheim.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-blenheim.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/ISS_Blenheim%2C_New_Zealand.jpg/330px-ISS_Blenheim%2C_New_Zealand.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Blenheim, New Zealand"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Taupō",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-taup.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-taup.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Lake_Taupo_and_Waikato_River_aerial_view.jpg/330px-Lake_Taupo_and_Waikato_River_aerial_view.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Taupō"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Gisborne",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-gisborne.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-gisborne.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/View_over_Gisborne.jpg/330px-View_over_Gisborne.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Gisborne District"
+      }
+    },
+    {
+      "country": "New Zealand",
+      "city": "Kerikeri",
+      "code": "nz",
+      "result": {
+        "status": "downloaded",
+        "file": "nz-kerikeri.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\nz-kerikeri.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Stone_Store_and_Kemp_House.jpg/330px-Stone_Store_and_Kemp_House.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Kerikeri"
+      }
+    },
+    {
+      "country": "Palau",
+      "city": "Koror",
+      "code": "pw",
+      "result": {
+        "status": "downloaded",
+        "file": "pw-koror.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\pw-koror.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Koror_State_Government_Building.JPG/330px-Koror_State_Government_Building.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Koror (city)"
+      }
+    },
+    {
+      "country": "Solomon Islands",
+      "city": "Honiara",
+      "code": "sb",
+      "result": {
+        "status": "downloaded",
+        "file": "sb-honiara.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\sb-honiara.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Honiara_View.jpg/330px-Honiara_View.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Honiara"
+      }
+    },
+    {
+      "country": "Tonga",
+      "city": "Nuku'alofa",
+      "code": "to",
+      "result": {
+        "status": "downloaded",
+        "file": "to-nukualofa.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\to-nukualofa.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Royal_Palace%2C_Nuku%27alofa%2C_Nov_18.jpg/330px-Royal_Palace%2C_Nuku%27alofa%2C_Nov_18.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Nukuʻalofa"
+      }
+    },
+    {
+      "country": "Vanuatu",
+      "city": "Port Vila",
+      "code": "vu",
+      "result": {
+        "status": "downloaded",
+        "file": "vu-port-vila.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\vu-port-vila.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Port_Vila_aerial.jpg/330px-Port_Vila_aerial.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Port Vila"
+      }
+    },
+    {
+      "country": "Vanuatu",
+      "city": "Luganville",
+      "code": "vu",
+      "result": {
+        "status": "downloaded",
+        "file": "vu-luganville.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\vu-luganville.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Main_Street_Luganville_%2828661070193%29.jpg/330px-Main_Street_Luganville_%2828661070193%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Luganville"
+      }
+    },
+    {
+      "country": "Papua New Guinea",
+      "city": "Port Moresby",
+      "code": "pg",
+      "result": {
+        "status": "downloaded",
+        "file": "pg-port-moresby.webp",
+        "path": "C:\\Users\\LBG\\Desktop\\New folder\\React router\\backend\\public\\Images\\Australia cities images\\pg-port-moresby.webp",
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Port_Moresby_Town2_Mschlauch.jpg/330px-Port_Moresby_Town2_Mschlauch.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "title": "Port Moresby"
+      }
+    }
+  ]
+}

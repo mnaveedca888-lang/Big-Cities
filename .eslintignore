@@ -1,0 +1,5 @@
+backend/dist
+backend/scripts
+node_modules
+.vite
+dist

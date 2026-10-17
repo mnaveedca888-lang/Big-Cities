@@ -1,0 +1,9 @@
+Kabul: Eid al-Fitr (19—21 Mar 2026, completed); Afghan Victory Day (28 Apr, completed); Eid al-Qurban (27—29 May, completed); Ashura (26 Jun, completed); Independence Day (19 Aug, upcoming); Martyrs & Ahmad Shah Massoud Day (9 Sep, upcoming).
+
+Kandahar: Eid al-Fitr, Eid al-Qurban, Ashura, Independence Day and local religious/community events; local dates require organizer verification.
+
+Herat: Eid al-Fitr, Nowruz, Eid al-Qurban, Ashura and Independence Day; local dates require organizer verification.
+
+Mazar-i-Sharif: Nowruz, Eid al-Fitr, Eid al-Qurban, Ashura and Independence Day; local dates require organizer verification.
+
+Khost: Eid al-Fitr, Eid al-Qurban, Ashura, Independence Day and local community events; organizer verification required.Do not hard-code Total Number of Events; calculate it from verified event records.Fields: Event Name, Event Date, Event Date Range, Event Month/Period, Event Status, Event Location, Event Category, Event Description, Event Image.

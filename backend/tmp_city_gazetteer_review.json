@@ -1,0 +1,2404 @@
+{
+  "source": "GeoNames cities500 (populated places, country ISO code match)",
+  "totalCities": 1230,
+  "gazetteerRows": 236014,
+  "counts": {
+    "exact-name": 763,
+    "not-in-cities500": 433,
+    "normalized-locality-variant": 34
+  },
+  "airportSlugCount": 751,
+  "profilePopulationCount": 751,
+  "unmatchedCount": 433,
+  "unmatchedByCountry": {
+    "Antigua and Barbuda": [
+      {
+        "name": "V.C. Bird",
+        "slug": "ag-v-c-bird-international-airport",
+        "population": null
+      }
+    ],
+    "Albania": [
+      {
+        "name": "Tirana Nënë Tereza",
+        "slug": "al-tirana-international-airport-n-n-tereza",
+        "population": null
+      }
+    ],
+    "Austria": [
+      {
+        "name": "Salzburg W. A. Mozart",
+        "slug": "at-salzburg-airport-w-a-mozart",
+        "population": null
+      }
+    ],
+    "Australia": [
+      {
+        "name": "Ayers Rock",
+        "slug": "au-ayers-rock-airport",
+        "population": "1000"
+      },
+      {
+        "name": "Christmas Island",
+        "slug": "au-christmas-island-airport",
+        "population": "1800"
+      },
+      {
+        "name": "Cocos Islands",
+        "slug": "au-cocos-keeling-islands-airport",
+        "population": null
+      },
+      {
+        "name": "Sydney Kingsford Smith",
+        "slug": "au-sydney-kingsford-smith-airport",
+        "population": null
+      }
+    ],
+    "Barbados": [
+      {
+        "name": "Grantley Adams",
+        "slug": "bb-grantley-adams-international-airport",
+        "population": null
+      }
+    ],
+    "Belgium": [
+      {
+        "name": "Brussels South Charleroi",
+        "slug": "be-brussels-south-charleroi-airport",
+        "population": null
+      },
+      {
+        "name": "Ostend–Bruges",
+        "slug": "be-ostend-bruges-international-airport",
+        "population": null
+      }
+    ],
+    "Burundi": [
+      {
+        "name": "Burundi",
+        "slug": "bi-burundi",
+        "population": null
+      },
+      {
+        "name": "Melchior Ndadaye",
+        "slug": "bi-melchior-ndadaye-international-airport-tourisme-gov-bi",
+        "population": null
+      }
+    ],
+    "Bahamas": [
+      {
+        "name": "Chub Cay",
+        "slug": "bs-chub-cay-international-airport",
+        "population": "~50,000 (2026 working estimate; not an official 2026 census count)"
+      },
+      {
+        "name": "Exuma",
+        "slug": "bs-exuma-international-airport",
+        "population": null
+      },
+      {
+        "name": "Grand Bahama",
+        "slug": "bs-grand-bahama-international-airport",
+        "population": null
+      },
+      {
+        "name": "Great Harbour Cay",
+        "slug": "bs-great-harbour-cay-airport",
+        "population": "~50,000 (2026 working estimate; not an official 2026 census count)"
+      },
+      {
+        "name": "Leonard M. Thompson",
+        "slug": "bs-leonard-m-thompson-international-airport",
+        "population": null
+      },
+      {
+        "name": "Lynden Pindling",
+        "slug": "bs-lynden-pindling-international-airport",
+        "population": null
+      },
+      {
+        "name": "New Bight",
+        "slug": "bs-new-bight-airport",
+        "population": "~50,000 (2026 working estimate; not an official 2026 census count)"
+      },
+      {
+        "name": "North Eleuthera",
+        "slug": "bs-north-eleuthera-airport",
+        "population": "~50,000 (2026 working estimate; not an official 2026 census count)"
+      },
+      {
+        "name": "Rock Sound",
+        "slug": "bs-rock-sound-international-airport",
+        "population": "~50,000 (2026 working estimate; not an official 2026 census count)"
+      },
+      {
+        "name": "South Bimini",
+        "slug": "bs-south-bimini-airport",
+        "population": null
+      },
+      {
+        "name": "Staniel Cay",
+        "slug": "bs-staniel-cay-airport",
+        "population": "~50,000 (2026 working estimate; not an official 2026 census count)"
+      }
+    ],
+    "Belize": [
+      {
+        "name": "Philip S. W. Goldson",
+        "slug": "bz-philip-s-w-goldson-international-airport",
+        "population": null
+      }
+    ],
+    "Canada": [
+      {
+        "name": "Halifax Stanfield",
+        "slug": "ca-halifax-stanfield-international-airport-catsa",
+        "population": null
+      },
+      {
+        "name": "John C. Munro Hamilton",
+        "slug": "ca-john-c-munro-hamilton-international-airport-catsa",
+        "population": null
+      },
+      {
+        "name": "Montréal-Trudeau",
+        "slug": "ca-montr-al-trudeau-international-airport-catsa",
+        "population": null
+      },
+      {
+        "name": "Québec City Jean Lesage",
+        "slug": "ca-qu-bec-city-jean-lesage-international-airport-catsa",
+        "population": null
+      },
+      {
+        "name": "Saskatoon John G. Diefenbaker",
+        "slug": "ca-saskatoon-john-g-diefenbaker-international-airport-catsa",
+        "population": null
+      },
+      {
+        "name": "Toronto Pearson",
+        "slug": "ca-toronto-pearson-international-airport-catsa",
+        "population": null
+      },
+      {
+        "name": "Winnipeg James Armstrong Richardson",
+        "slug": "ca-winnipeg-james-armstrong-richardson-international-airport-catsa",
+        "population": null
+      }
+    ],
+    "Democratic Republic of the Congo": [
+      {
+        "name": "Bangoka",
+        "slug": "cd-bangoka-international-airport",
+        "population": null
+      },
+      {
+        "name": "N'djili",
+        "slug": "cd-n-djili-international-airport",
+        "population": null
+      }
+    ],
+    "Central African Republic": [
+      {
+        "name": "Bangui M'Poko",
+        "slug": "cf-bangui-m-poko-international-airport",
+        "population": null
+      }
+    ],
+    "Republic of the Congo": [
+      {
+        "name": "Agostinho-Neto",
+        "slug": "cg-agostinho-neto-international-airport",
+        "population": null
+      }
+    ],
+    "Côte d'Ivoire": [
+      {
+        "name": "Félix-Houphouët-Boigny",
+        "slug": "ci-f-lix-houphou-t-boigny-international-airport",
+        "population": null
+      }
+    ],
+    "Cameroon": [
+      {
+        "name": "Maroua Salak",
+        "slug": "cm-maroua-salak-international-airport",
+        "population": null
+      },
+      {
+        "name": "Yaoundé Nsimalen",
+        "slug": "cm-yaound-nsimalen-international-airport",
+        "population": null
+      }
+    ],
+    "Costa Rica": [
+      {
+        "name": "Guanacaste",
+        "slug": "cr-guanacaste-airport-daniel-oduber-quir-s-international-airport",
+        "population": null
+      },
+      {
+        "name": "Juan Santamaría",
+        "slug": "cr-juan-santamar-a-international-airport",
+        "population": null
+      }
+    ],
+    "Cuba": [
+      {
+        "name": "Abel Santamaría",
+        "slug": "cu-abel-santamar-a-international-airport",
+        "population": null
+      },
+      {
+        "name": "Antonio Maceo",
+        "slug": "cu-antonio-maceo-international-airport",
+        "population": null
+      },
+      {
+        "name": "Ignacio Agramonte",
+        "slug": "cu-ignacio-agramonte-international-airport",
+        "population": null
+      },
+      {
+        "name": "Jardines del Rey",
+        "slug": "cu-jardines-del-rey-airport",
+        "population": null
+      },
+      {
+        "name": "José Martí",
+        "slug": "cu-jos-mart-international-airport",
+        "population": null
+      },
+      {
+        "name": "Juan Gualberto Gómez",
+        "slug": "cu-juan-gualberto-g-mez-international-airport",
+        "population": null
+      },
+      {
+        "name": "Vilo Acuña",
+        "slug": "cu-vilo-acu-a-airport",
+        "population": null
+      }
+    ],
+    "Cabo Verde": [
+      {
+        "name": "Amílcar Cabral",
+        "slug": "cv-am-lcar-cabral-international-airport",
+        "population": null
+      },
+      {
+        "name": "Aristides Pereira",
+        "slug": "cv-aristides-pereira-international-airport",
+        "population": null
+      },
+      {
+        "name": "Cesária Évora",
+        "slug": "cv-ces-ria-vora-airport",
+        "population": null
+      },
+      {
+        "name": "Nelson Mandela",
+        "slug": "cv-nelson-mandela-international-airport",
+        "population": null
+      }
+    ],
+    "Cyprus": [
+      {
+        "name": "Northern Nicosia",
+        "slug": "cy-northern-nicosia",
+        "population": "~90,000 (Northern Nicosia)"
+      }
+    ],
+    "Czechia": [
+      {
+        "name": "Leoš Janáček Ostrava",
+        "slug": "cz-leo-jan-ek-airport-ostrava",
+        "population": null
+      },
+      {
+        "name": "Václav Havel Prague",
+        "slug": "cz-v-clav-havel-airport-prague",
+        "population": null
+      }
+    ],
+    "Germany": [
+      {
+        "name": "Berlin Brandenburg",
+        "slug": "de-berlin-brandenburg-airport",
+        "population": null
+      },
+      {
+        "name": "Cologne Bonn",
+        "slug": "de-cologne-bonn-airport",
+        "population": null
+      },
+      {
+        "name": "Erfurt–Weimar",
+        "slug": "de-erfurt-weimar-airport",
+        "population": null
+      },
+      {
+        "name": "Karlsruhe/Baden-Baden",
+        "slug": "de-karlsruhe-baden-baden-airport",
+        "population": null
+      },
+      {
+        "name": "Leipzig/Halle",
+        "slug": "de-leipzig-halle-airport",
+        "population": null
+      },
+      {
+        "name": "Münster Osnabrück",
+        "slug": "de-m-nster-osnabr-ck-international-airport",
+        "population": null
+      },
+      {
+        "name": "Paderborn Lippstadt",
+        "slug": "de-paderborn-lippstadt-airport",
+        "population": null
+      },
+      {
+        "name": "Rostock–Laage",
+        "slug": "de-rostock-laage-airport",
+        "population": null
+      }
+    ],
+    "Djibouti": [
+      {
+        "name": "Djibouti–Ambouli",
+        "slug": "dj-djibouti-ambouli-international-airport",
+        "population": null
+      }
+    ],
+    "Dominica": [
+      {
+        "name": "Douglas–Charles",
+        "slug": "dm-douglas-charles-airport",
+        "population": null
+      }
+    ],
+    "Dominican Republic": [
+      {
+        "name": "Cibao",
+        "slug": "do-cibao-international-airport",
+        "population": null
+      },
+      {
+        "name": "Gregorio Luperón",
+        "slug": "do-gregorio-luper-n-international-airport",
+        "population": null
+      },
+      {
+        "name": "Las Américas",
+        "slug": "do-las-am-ricas-international-airport",
+        "population": null
+      },
+      {
+        "name": "Samaná El Catey",
+        "slug": "do-saman-el-catey-international-airport",
+        "population": null
+      }
+    ],
+    "Estonia": [
+      {
+        "name": "Lennart Meri Tallinn",
+        "slug": "ee-lennart-meri-tallinn-airport",
+        "population": null
+      }
+    ],
+    "Egypt": [
+      {
+        "name": "Sphinx",
+        "slug": "eg-sphinx-international-airport",
+        "population": null
+      }
+    ],
+    "Spain": [
+      {
+        "name": "Adolfo Suárez Madrid–Barajas",
+        "slug": "es-adolfo-su-rez-madrid-barajas-airport",
+        "population": null
+      },
+      {
+        "name": "Alicante–Elche Miguel Hernández",
+        "slug": "es-alicante-elche-miguel-hern-ndez-airport",
+        "population": null
+      },
+      {
+        "name": "Asturias",
+        "slug": "es-asturias-airport",
+        "population": "1,000,000"
+      },
+      {
+        "name": "Castellón–Costa Azahar",
+        "slug": "es-castell-n-costa-azahar-airport",
+        "population": null
+      },
+      {
+        "name": "César Manrique–Lanzarote",
+        "slug": "es-c-sar-manrique-lanzarote-airport",
+        "population": null
+      },
+      {
+        "name": "El Hierro",
+        "slug": "es-el-hierro-airport",
+        "population": "11,000"
+      },
+      {
+        "name": "Federico García Lorca Granada–Jaén",
+        "slug": "es-federico-garc-a-lorca-granada-ja-n-airport",
+        "population": null
+      },
+      {
+        "name": "Fuerteventura",
+        "slug": "es-fuerteventura-airport",
+        "population": "126,000"
+      },
+      {
+        "name": "Girona-Costa Brava",
+        "slug": "es-girona-costa-brava-airport",
+        "population": null
+      },
+      {
+        "name": "Gran Canaria",
+        "slug": "es-gran-canaria-airport",
+        "population": "861,000"
+      },
+      {
+        "name": "Josep Tarradellas Barcelona–El Prat",
+        "slug": "es-josep-tarradellas-barcelona-el-prat-airport",
+        "population": null
+      },
+      {
+        "name": "La Gomera",
+        "slug": "es-la-gomera-airport",
+        "population": "22,000"
+      },
+      {
+        "name": "Málaga-Costa del Sol",
+        "slug": "es-m-laga-costa-del-sol-airport",
+        "population": null
+      },
+      {
+        "name": "Menorca",
+        "slug": "es-menorca-airport",
+        "population": "99,000"
+      },
+      {
+        "name": "Región de Murcia",
+        "slug": "es-regi-n-de-murcia-international-airport",
+        "population": null
+      },
+      {
+        "name": "Santiago–Rosalía de Castro",
+        "slug": "es-santiago-rosal-a-de-castro-airport",
+        "population": null
+      },
+      {
+        "name": "Seve Ballesteros–Santander",
+        "slug": "es-seve-ballesteros-santander-airport",
+        "population": null
+      },
+      {
+        "name": "Tenerife North–Ciudad de La Laguna",
+        "slug": "es-tenerife-north-ciudad-de-la-laguna-airport",
+        "population": null
+      },
+      {
+        "name": "Tenerife South",
+        "slug": "es-tenerife-south-airport",
+        "population": null
+      }
+    ],
+    "Ethiopia": [
+      {
+        "name": "Aba Tenna Dejazmach Yilma",
+        "slug": "et-aba-tenna-dejazmach-yilma-international-airport",
+        "population": null
+      },
+      {
+        "name": "Addis Ababa Bole",
+        "slug": "et-addis-ababa-bole-international-airport",
+        "population": null
+      }
+    ],
+    "Finland": [
+      {
+        "name": "Helsinki-Vantaa",
+        "slug": "fi-helsinki-vantaa-airport",
+        "population": null
+      },
+      {
+        "name": "Mariehamn",
+        "slug": "fi-mariehamn-airport",
+        "population": "11,800"
+      },
+      {
+        "name": "Tampere-Pirkkala",
+        "slug": "fi-tampere-pirkkala-airport",
+        "population": null
+      }
+    ],
+    "Fiji": [
+      {
+        "name": "Nausori",
+        "slug": "fj-nausori-international-airport",
+        "population": null
+      }
+    ],
+    "Federated States of Micronesia": [
+      {
+        "name": "Chuuk",
+        "slug": "fm-chuuk-international-airport",
+        "population": null
+      },
+      {
+        "name": "Kosrae",
+        "slug": "fm-kosrae-international-airport",
+        "population": "7000"
+      },
+      {
+        "name": "None.",
+        "slug": "fm-none",
+        "population": null
+      },
+      {
+        "name": "Pohnpei",
+        "slug": "fm-pohnpei-international-airport",
+        "population": "34000"
+      },
+      {
+        "name": "Yap",
+        "slug": "fm-yap-international-airport",
+        "population": "7000"
+      }
+    ],
+    "France": [
+      {
+        "name": "Ajaccio Napoleon Bonaparte",
+        "slug": "fr-ajaccio-napoleon-bonaparte-airport",
+        "population": null
+      },
+      {
+        "name": "Bastia–Poretta",
+        "slug": "fr-bastia-poretta-airport",
+        "population": null
+      },
+      {
+        "name": "Beauvais–Tillé",
+        "slug": "fr-beauvais-till-airport",
+        "population": null
+      },
+      {
+        "name": "Bergerac Dordogne Périgord",
+        "slug": "fr-bergerac-dordogne-p-rigord-airport",
+        "population": null
+      },
+      {
+        "name": "Biarritz Pays Basque",
+        "slug": "fr-biarritz-pays-basque-airport",
+        "population": null
+      },
+      {
+        "name": "Bordeaux–Mérignac",
+        "slug": "fr-bordeaux-m-rignac-airport",
+        "population": null
+      },
+      {
+        "name": "Brest Bretagne",
+        "slug": "fr-brest-bretagne-airport",
+        "population": null
+      },
+      {
+        "name": "Caen–Carpiquet",
+        "slug": "fr-caen-carpiquet-airport",
+        "population": null
+      },
+      {
+        "name": "Calvi–Sainte-Catherine",
+        "slug": "fr-calvi-sainte-catherine-airport",
+        "population": null
+      },
+      {
+        "name": "Clermont-Ferrand Auvergne",
+        "slug": "fr-clermont-ferrand-auvergne-airport",
+        "population": null
+      },
+      {
+        "name": "Deauville–Normandie",
+        "slug": "fr-deauville-normandie-airport",
+        "population": null
+      },
+      {
+        "name": "Dinard–Pleurtuit–Saint-Malo",
+        "slug": "fr-dinard-pleurtuit-saint-malo-airport",
+        "population": null
+      },
+      {
+        "name": "Figari–Sud Corse",
+        "slug": "fr-figari-sud-corse-airport",
+        "population": null
+      },
+      {
+        "name": "Freiburg",
+        "slug": "fr-euroairport-basel-mulhouse-freiburg",
+        "population": null
+      },
+      {
+        "name": "Grenoble–Alpes–Isère",
+        "slug": "fr-grenoble-alpes-is-re-airport",
+        "population": null
+      },
+      {
+        "name": "La Rochelle–Île de Ré",
+        "slug": "fr-la-rochelle-le-de-r-airport",
+        "population": null
+      },
+      {
+        "name": "Limoges–Bellegarde",
+        "slug": "fr-limoges-bellegarde-airport",
+        "population": null
+      },
+      {
+        "name": "Lyon–Saint-Exupéry",
+        "slug": "fr-lyon-saint-exup-ry-airport",
+        "population": null
+      },
+      {
+        "name": "Marseille Provence",
+        "slug": "fr-marseille-provence-airport",
+        "population": null
+      },
+      {
+        "name": "Metz–Nancy–Lorraine",
+        "slug": "fr-metz-nancy-lorraine-airport",
+        "population": null
+      },
+      {
+        "name": "Montpellier–Méditerranée",
+        "slug": "fr-montpellier-m-diterran-e-airport",
+        "population": null
+      },
+      {
+        "name": "Nantes Atlantique",
+        "slug": "fr-nantes-atlantique-airport",
+        "population": null
+      },
+      {
+        "name": "Nice Côte d’Azur",
+        "slug": "fr-nice-c-te-d-azur-airport",
+        "population": null
+      },
+      {
+        "name": "Nîmes–Alès–Camargue–Cévennes",
+        "slug": "fr-n-mes-al-s-camargue-c-vennes-airport",
+        "population": null
+      },
+      {
+        "name": "Paris Charles de Gaulle",
+        "slug": "fr-paris-charles-de-gaulle-airport",
+        "population": null
+      },
+      {
+        "name": "Paris Orly",
+        "slug": "fr-paris-orly-airport",
+        "population": null
+      },
+      {
+        "name": "Pau Pyrénées",
+        "slug": "fr-pau-pyr-n-es-airport",
+        "population": null
+      },
+      {
+        "name": "Perpignan–Rivesaltes",
+        "slug": "fr-perpignan-rivesaltes-airport",
+        "population": null
+      },
+      {
+        "name": "Poitiers–Biard",
+        "slug": "fr-poitiers-biard-airport",
+        "population": null
+      },
+      {
+        "name": "Rennes–Saint-Jacques",
+        "slug": "fr-rennes-saint-jacques-airport",
+        "population": null
+      },
+      {
+        "name": "Tarbes–Lourdes–Pyrénées",
+        "slug": "fr-tarbes-lourdes-pyr-n-es-airport",
+        "population": null
+      },
+      {
+        "name": "Toulouse–Blagnac",
+        "slug": "fr-toulouse-blagnac-airport",
+        "population": null
+      },
+      {
+        "name": "Tours Val de Loire",
+        "slug": "fr-tours-val-de-loire-airport",
+        "population": null
+      }
+    ],
+    "Gabon": [
+      {
+        "name": "Léon-Mba",
+        "slug": "ga-l-on-mba-international-airport",
+        "population": null
+      },
+      {
+        "name": "M'Vengue El Hadj Omar Bongo Ondimba",
+        "slug": "ga-m-vengue-el-hadj-omar-bongo-ondimba-international-airport",
+        "population": null
+      }
+    ],
+    "United Kingdom": [
+      {
+        "name": "City of Derry",
+        "slug": "gb-city-of-derry-airport",
+        "population": null
+      },
+      {
+        "name": "Cornwall Newquay",
+        "slug": "gb-cornwall-airport-newquay",
+        "population": null
+      },
+      {
+        "name": "Doncaster Sheffield",
+        "slug": "gb-doncaster-sheffield-airport",
+        "population": null
+      },
+      {
+        "name": "East Midlands",
+        "slug": "gb-east-midlands-airport",
+        "population": "2,000"
+      },
+      {
+        "name": "George Best Belfast City",
+        "slug": "gb-george-best-belfast-city-airport",
+        "population": null
+      },
+      {
+        "name": "Glasgow Prestwick",
+        "slug": "gb-glasgow-prestwick-airport",
+        "population": null
+      },
+      {
+        "name": "Guernsey",
+        "slug": "gb-guernsey-airport",
+        "population": "64,000"
+      },
+      {
+        "name": "Isle of Man",
+        "slug": "gb-isle-of-man-airport",
+        "population": "84,000"
+      },
+      {
+        "name": "Jersey",
+        "slug": "gb-jersey-airport",
+        "population": "104,000"
+      },
+      {
+        "name": "Leeds Bradford",
+        "slug": "gb-leeds-bradford-airport",
+        "population": null
+      },
+      {
+        "name": "Liverpool John Lennon",
+        "slug": "gb-liverpool-john-lennon-airport",
+        "population": null
+      },
+      {
+        "name": "London Gatwick",
+        "slug": "gb-london-gatwick-airport",
+        "population": null
+      },
+      {
+        "name": "London Heathrow",
+        "slug": "gb-london-heathrow-airport",
+        "population": null
+      },
+      {
+        "name": "London Luton",
+        "slug": "gb-london-luton-airport",
+        "population": null
+      },
+      {
+        "name": "London Stansted",
+        "slug": "gb-london-stansted-airport",
+        "population": null
+      },
+      {
+        "name": "Teesside",
+        "slug": "gb-teesside-international-airport",
+        "population": "2,000"
+      }
+    ],
+    "Grenada": [
+      {
+        "name": "Maurice Bishop",
+        "slug": "gd-maurice-bishop-international-airport",
+        "population": null
+      }
+    ],
+    "Ghana": [
+      {
+        "name": "Kotoka",
+        "slug": "gh-kotoka-international-airport",
+        "population": null
+      }
+    ],
+    "Guinea": [
+      {
+        "name": "Ahmed Sékou Touré",
+        "slug": "gn-ahmed-s-kou-tour-international-airport",
+        "population": null
+      }
+    ],
+    "Greece": [
+      {
+        "name": "Aktion",
+        "slug": "gr-aktion-national-airport",
+        "population": null
+      },
+      {
+        "name": "Chania “Ioannis Daskalogiannis”",
+        "slug": "gr-chania-international-airport-ioannis-daskalogiannis",
+        "population": null
+      },
+      {
+        "name": "Corfu “Ioannis Kapodistrias”",
+        "slug": "gr-corfu-international-airport-ioannis-kapodistrias",
+        "population": null
+      },
+      {
+        "name": "Heraklion “Nikos Kazantzakis”",
+        "slug": "gr-heraklion-international-airport-nikos-kazantzakis",
+        "population": null
+      },
+      {
+        "name": "Ikaria Island",
+        "slug": "gr-ikaria-island-national-airport",
+        "population": null
+      },
+      {
+        "name": "Kalamata “Captain Vassilis Constantakopoulos”",
+        "slug": "gr-kalamata-international-airport-captain-vassilis-constantakopoulos",
+        "population": null
+      },
+      {
+        "name": "Kavala “Alexander the Great”",
+        "slug": "gr-kavala-international-airport-alexander-the-great",
+        "population": null
+      },
+      {
+        "name": "Kefalonia “Anna Pollatou”",
+        "slug": "gr-kefalonia-international-airport-anna-pollatou",
+        "population": null
+      },
+      {
+        "name": "Kos “Hippocrates”",
+        "slug": "gr-kos-international-airport-hippocrates",
+        "population": null
+      },
+      {
+        "name": "Lemnos",
+        "slug": "gr-lemnos-international-airport",
+        "population": null
+      },
+      {
+        "name": "Mytilene “Odysseas Elytis”",
+        "slug": "gr-mytilene-international-airport-odysseas-elytis",
+        "population": null
+      },
+      {
+        "name": "Rhodes “Diagoras”",
+        "slug": "gr-rhodes-international-airport-diagoras",
+        "population": null
+      },
+      {
+        "name": "Samos “Aristarchos of Samos”",
+        "slug": "gr-samos-international-airport-aristarchos-of-samos",
+        "population": null
+      },
+      {
+        "name": "Santorini",
+        "slug": "gr-santorini-airport",
+        "population": "15,000"
+      },
+      {
+        "name": "Skiathos “Alexandros Papadiamantis”",
+        "slug": "gr-skiathos-international-airport-alexandros-papadiamantis",
+        "population": null
+      },
+      {
+        "name": "Thessaloniki “Makedonia”",
+        "slug": "gr-thessaloniki-airport-makedonia",
+        "population": null
+      },
+      {
+        "name": "Zakynthos “Dionysios Solomos”",
+        "slug": "gr-zakynthos-international-airport-dionysios-solomos",
+        "population": null
+      }
+    ],
+    "Guatemala": [
+      {
+        "name": "La Aurora",
+        "slug": "gt-la-aurora-international-airport",
+        "population": null
+      }
+    ],
+    "Guinea-Bissau": [
+      {
+        "name": "Osvaldo Vieira",
+        "slug": "gw-osvaldo-vieira-international-airport",
+        "population": null
+      }
+    ],
+    "Honduras": [
+      {
+        "name": "Golosón",
+        "slug": "hn-golos-n-international-airport",
+        "population": null
+      },
+      {
+        "name": "Juan Manuel Gálvez",
+        "slug": "hn-juan-manuel-g-lvez-international-airport",
+        "population": null
+      },
+      {
+        "name": "Palmerola",
+        "slug": "hn-palmerola-international-airport",
+        "population": null
+      },
+      {
+        "name": "Ramón Villeda Morales",
+        "slug": "hn-ram-n-villeda-morales-international-airport",
+        "population": null
+      },
+      {
+        "name": "Toncontín",
+        "slug": "hn-toncont-n-international-airport",
+        "population": null
+      }
+    ],
+    "Croatia": [
+      {
+        "name": "Brač",
+        "slug": "hr-bra-airport",
+        "population": "13,000"
+      },
+      {
+        "name": "Franjo Tuđman",
+        "slug": "hr-franjo-tu-man-airport",
+        "population": null
+      }
+    ],
+    "Haiti": [
+      {
+        "name": "Toussaint Louverture",
+        "slug": "ht-toussaint-louverture-international-airport",
+        "population": null
+      }
+    ],
+    "Hungary": [
+      {
+        "name": "Budapest Ferenc Liszt",
+        "slug": "hu-budapest-ferenc-liszt-international-airport",
+        "population": null
+      },
+      {
+        "name": "Hévíz–Balaton",
+        "slug": "hu-h-v-z-balaton-airport",
+        "population": null
+      }
+    ],
+    "Indonesia": [
+      {
+        "name": "Lombok (Praya)",
+        "slug": "id-lombok-praya",
+        "population": "~120,000 (Praya)"
+      }
+    ],
+    "Ireland": [
+      {
+        "name": "Ireland West Knock",
+        "slug": "ie-ireland-west-airport-knock",
+        "population": null
+      }
+    ],
+    "India": [
+      {
+        "name": "district kutch",
+        "slug": "in-district-kutch",
+        "population": null
+      },
+      {
+        "name": "shantiniketan",
+        "slug": "in-shantiniketan",
+        "population": null
+      }
+    ],
+    "Italy": [
+      {
+        "name": "Abruzzo",
+        "slug": "it-abruzzo-airport",
+        "population": null
+      },
+      {
+        "name": "Alghero–Fertilia",
+        "slug": "it-alghero-fertilia-airport",
+        "population": null
+      },
+      {
+        "name": "Bari Karol Wojtyła",
+        "slug": "it-bari-karol-wojty-a-airport",
+        "population": null
+      },
+      {
+        "name": "Bologna Guglielmo Marconi",
+        "slug": "it-bologna-guglielmo-marconi-airport",
+        "population": null
+      },
+      {
+        "name": "Cagliari Elmas",
+        "slug": "it-cagliari-elmas-airport",
+        "population": null
+      },
+      {
+        "name": "Catania–Fontanarossa",
+        "slug": "it-catania-fontanarossa-airport",
+        "population": null
+      },
+      {
+        "name": "Falcone Borsellino",
+        "slug": "it-falcone-borsellino-airport",
+        "population": null
+      },
+      {
+        "name": "Federico Fellini",
+        "slug": "it-federico-fellini-international-airport",
+        "population": null
+      },
+      {
+        "name": "Florence , Peretola",
+        "slug": "it-florence-airport-peretola",
+        "population": null
+      },
+      {
+        "name": "Leonardo da Vinci–Fiumicino",
+        "slug": "it-leonardo-da-vinci-fiumicino-airport",
+        "population": null
+      },
+      {
+        "name": "Marche",
+        "slug": "it-marche-airport",
+        "population": null
+      },
+      {
+        "name": "Milan Bergamo",
+        "slug": "it-milan-bergamo-airport",
+        "population": null
+      },
+      {
+        "name": "Milan Linate",
+        "slug": "it-milan-linate-airport",
+        "population": null
+      },
+      {
+        "name": "Milan Malpensa",
+        "slug": "it-milan-malpensa-airport",
+        "population": null
+      },
+      {
+        "name": "Olbia Costa Smeralda",
+        "slug": "it-olbia-costa-smeralda-airport",
+        "population": null
+      },
+      {
+        "name": "Perugia San Francesco d'Assisi–Umbria",
+        "slug": "it-perugia-san-francesco-d-assisi-umbria-international-airport",
+        "population": null
+      },
+      {
+        "name": "Trapani–Birgi",
+        "slug": "it-trapani-birgi-airport",
+        "population": null
+      },
+      {
+        "name": "Venice Marco Polo",
+        "slug": "it-venice-marco-polo-airport",
+        "population": null
+      },
+      {
+        "name": "Verona Villafranca",
+        "slug": "it-verona-villafranca-airport",
+        "population": null
+      }
+    ],
+    "Jamaica": [
+      {
+        "name": "Ian Fleming",
+        "slug": "jm-ian-fleming-international-airport",
+        "population": null
+      },
+      {
+        "name": "Norman Manley",
+        "slug": "jm-norman-manley-international-airport",
+        "population": null
+      },
+      {
+        "name": "Sangster",
+        "slug": "jm-sangster-international-airport",
+        "population": null
+      }
+    ],
+    "Kenya": [
+      {
+        "name": "Jomo Kenyatta",
+        "slug": "ke-jomo-kenyatta-international-airport",
+        "population": null
+      },
+      {
+        "name": "Moi",
+        "slug": "ke-moi-international-airport",
+        "population": null
+      }
+    ],
+    "Kyrgyzstan": [
+      {
+        "name": "Tamchy (Issyk-Kul Region)",
+        "slug": "kg-tamchy-issyk-kul-region",
+        "population": "~2,000 (village)"
+      }
+    ],
+    "Kiribati": [
+      {
+        "name": "Bonriki",
+        "slug": "ki-bonriki-international-airport",
+        "population": null
+      },
+      {
+        "name": "Cassidy",
+        "slug": "ki-cassidy-international-airport",
+        "population": null
+      }
+    ],
+    "Comoros": [
+      {
+        "name": "Prince Said Ibrahim",
+        "slug": "km-prince-said-ibrahim-international-airport",
+        "population": null
+      }
+    ],
+    "Saint Kitts and Nevis": [
+      {
+        "name": "Robert L. Bradshaw",
+        "slug": "kn-robert-l-bradshaw-international-airport",
+        "population": null
+      },
+      {
+        "name": "Vance W. Amory",
+        "slug": "kn-vance-w-amory-international-airport",
+        "population": null
+      }
+    ],
+    "South Korea": [
+      {
+        "name": "Yangyang",
+        "slug": "kr-yangyang",
+        "population": "~27,000"
+      }
+    ],
+    "Saint Lucia": [
+      {
+        "name": "George F. L. Charles",
+        "slug": "lc-george-f-l-charles-airport",
+        "population": null
+      },
+      {
+        "name": "Hewanorra",
+        "slug": "lc-hewanorra-international-airport",
+        "population": null
+      }
+    ],
+    "Liberia": [
+      {
+        "name": "Roberts",
+        "slug": "lr-roberts-international-airport",
+        "population": null
+      }
+    ],
+    "Lesotho": [
+      {
+        "name": "Moshoeshoe I",
+        "slug": "ls-moshoeshoe-i-international-airport",
+        "population": null
+      }
+    ],
+    "Libya": [
+      {
+        "name": "Benina",
+        "slug": "ly-benina-international-airport",
+        "population": null
+      },
+      {
+        "name": "Mitiga",
+        "slug": "ly-mitiga-international-airport",
+        "population": null
+      }
+    ],
+    "Morocco": [
+      {
+        "name": "Agadir–Al Massira",
+        "slug": "ma-agadir-al-massira-airport",
+        "population": null
+      },
+      {
+        "name": "Fès–Saïs",
+        "slug": "ma-f-s-sa-s-airport",
+        "population": null
+      },
+      {
+        "name": "Hassan I",
+        "slug": "ma-hassan-i-airport",
+        "population": null
+      },
+      {
+        "name": "Marrakesh Menara",
+        "slug": "ma-marrakesh-menara-airport",
+        "population": null
+      },
+      {
+        "name": "Mohammed V",
+        "slug": "ma-mohammed-v-international-airport",
+        "population": null
+      },
+      {
+        "name": "Nador Al Aaroui",
+        "slug": "ma-nador-al-aaroui-international-airport",
+        "population": null
+      },
+      {
+        "name": "Oujda Angads",
+        "slug": "ma-oujda-angads-airport",
+        "population": null
+      },
+      {
+        "name": "Rabat–Salé",
+        "slug": "ma-rabat-sal-airport",
+        "population": null
+      },
+      {
+        "name": "Tangier Ibn Battouta",
+        "slug": "ma-tangier-ibn-battouta-airport",
+        "population": null
+      }
+    ],
+    "Madagascar": [
+      {
+        "name": "Amborovy",
+        "slug": "mg-amborovy-airport",
+        "population": null
+      },
+      {
+        "name": "Arrachart",
+        "slug": "mg-arrachart-airport",
+        "population": null
+      },
+      {
+        "name": "Fascene",
+        "slug": "mg-fascene-airport",
+        "population": null
+      },
+      {
+        "name": "Marillac",
+        "slug": "mg-marillac-airport",
+        "population": null
+      },
+      {
+        "name": "Toamasina Ambalamanasy",
+        "slug": "mg-toamasina-ambalamanasy-airport",
+        "population": null
+      }
+    ],
+    "Marshall Islands": [
+      {
+        "name": "Bucholz Army Airfield",
+        "slug": "mh-bucholz-army-airfield",
+        "population": null
+      },
+      {
+        "name": "Marshall Islands",
+        "slug": "mh-marshall-islands-international-airport",
+        "population": null
+      }
+    ],
+    "North Macedonia": [
+      {
+        "name": "Ohrid St. Paul the Apostle",
+        "slug": "mk-ohrid-st-paul-the-apostle-airport",
+        "population": null
+      }
+    ],
+    "Mali": [
+      {
+        "name": "Modibo Keita",
+        "slug": "ml-modibo-keita-international-airport",
+        "population": null
+      },
+      {
+        "name": "Mopti Ambodedjo",
+        "slug": "ml-mopti-ambodedjo-airport",
+        "population": null
+      }
+    ],
+    "Myanmar": [
+      {
+        "name": "Bagan (Nyaung U)",
+        "slug": "mm-bagan-nyaung-u",
+        "population": "~200,000 (region)"
+      }
+    ],
+    "Mauritania": [
+      {
+        "name": "Nouakchott–Oumtounsy",
+        "slug": "mr-nouakchott-oumtounsy-international-airport",
+        "population": null
+      }
+    ],
+    "Malta": [
+      {
+        "name": "Malta",
+        "slug": "mt-malta-international-airport",
+        "population": null
+      }
+    ],
+    "Mauritius": [
+      {
+        "name": "Sir Seewoosagur Ramgoolam",
+        "slug": "mu-sir-seewoosagur-ramgoolam-international-airport",
+        "population": null
+      }
+    ],
+    "Maldives": [
+      {
+        "name": "Gan (Addu City)",
+        "slug": "mv-gan-addu-city",
+        "population": "~20,000"
+      },
+      {
+        "name": "Hanimaadhoo",
+        "slug": "mv-hanimaadhoo",
+        "population": "~2,000"
+      },
+      {
+        "name": "Maamigili",
+        "slug": "mv-maamigili",
+        "population": "~2,500"
+      }
+    ],
+    "Malawi": [
+      {
+        "name": "Chileka",
+        "slug": "mw-chileka-international-airport",
+        "population": null
+      },
+      {
+        "name": "Kamuzu",
+        "slug": "mw-kamuzu-international-airport",
+        "population": null
+      }
+    ],
+    "Mexico": [
+      {
+        "name": "Carlos Rovirosa Pérez",
+        "slug": "mx-carlos-rovirosa-p-rez-international-airport",
+        "population": null
+      },
+      {
+        "name": "Don Miguel Hidalgo y Costilla",
+        "slug": "mx-don-miguel-hidalgo-y-costilla-international-airport",
+        "population": null
+      },
+      {
+        "name": "Federal de Bachigualato",
+        "slug": "mx-federal-de-bachigualato-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Abelardo L. Rodríguez",
+        "slug": "mx-general-abelardo-l-rodr-guez-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Francisco Javier Mina",
+        "slug": "mx-general-francisco-javier-mina-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Heriberto Jara",
+        "slug": "mx-general-heriberto-jara-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Ignacio Pesqueira García",
+        "slug": "mx-general-ignacio-pesqueira-garc-a-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Juan N. Álvarez",
+        "slug": "mx-general-juan-n-lvarez-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Leobardo C. Ruiz",
+        "slug": "mx-general-leobardo-c-ruiz-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Mariano Escobedo",
+        "slug": "mx-general-mariano-escobedo-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Rafael Buelna",
+        "slug": "mx-general-rafael-buelna-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Roberto Fierro Villalobos",
+        "slug": "mx-general-roberto-fierro-villalobos-international-airport",
+        "population": null
+      },
+      {
+        "name": "General Rodolfo Sánchez Taboada",
+        "slug": "mx-general-rodolfo-s-nchez-taboada-international-airport",
+        "population": null
+      },
+      {
+        "name": "Hermanos Serdán",
+        "slug": "mx-hermanos-serd-n-international-airport",
+        "population": null
+      },
+      {
+        "name": "Lic. Adolfo López Mateos",
+        "slug": "mx-lic-adolfo-l-pez-mateos-international-airport",
+        "population": null
+      },
+      {
+        "name": "Lic. Gustavo Díaz Ordaz",
+        "slug": "mx-lic-gustavo-d-az-ordaz-international-airport",
+        "population": null
+      },
+      {
+        "name": "Lic. Jesús Terán Peredo",
+        "slug": "mx-lic-jes-s-ter-n-peredo-international-airport",
+        "population": null
+      },
+      {
+        "name": "Los Cabos",
+        "slug": "mx-los-cabos-international-airport",
+        "population": null
+      },
+      {
+        "name": "Manuel Crescencio Rejón",
+        "slug": "mx-manuel-crescencio-rej-n-international-airport",
+        "population": null
+      },
+      {
+        "name": "Manuel Márquez de León",
+        "slug": "mx-manuel-m-rquez-de-le-n-international-airport",
+        "population": null
+      },
+      {
+        "name": "Playa de Oro",
+        "slug": "mx-playa-de-oro-international-airport",
+        "population": null
+      },
+      {
+        "name": "Querétaro Intercontinental",
+        "slug": "mx-quer-taro-intercontinental-airport",
+        "population": null
+      }
+    ],
+    "Namibia": [
+      {
+        "name": "Hosea Kutako",
+        "slug": "na-hosea-kutako-international-airport",
+        "population": null
+      }
+    ],
+    "Niger": [
+      {
+        "name": "Diori Hamani",
+        "slug": "ne-diori-hamani-international-airport",
+        "population": null
+      }
+    ],
+    "Nigeria": [
+      {
+        "name": "Akanu Ibiam",
+        "slug": "ng-akanu-ibiam-international-airport",
+        "population": null
+      },
+      {
+        "name": "Mallam Aminu Kano",
+        "slug": "ng-mallam-aminu-kano-international-airport",
+        "population": null
+      },
+      {
+        "name": "Murtala Muhammed",
+        "slug": "ng-murtala-muhammed-international-airport",
+        "population": null
+      },
+      {
+        "name": "Nnamdi Azikiwe",
+        "slug": "ng-nnamdi-azikiwe-international-airport",
+        "population": null
+      },
+      {
+        "name": "Sam Mbakwe Cargo",
+        "slug": "ng-sam-mbakwe-international-cargo-airport",
+        "population": null
+      },
+      {
+        "name": "Umaru Musa Yar'Adua",
+        "slug": "ng-umaru-musa-yar-adua-international-airport",
+        "population": null
+      }
+    ],
+    "Nicaragua": [
+      {
+        "name": "Augusto C. Sandino",
+        "slug": "ni-augusto-c-sandino-international-airport",
+        "population": null
+      }
+    ],
+    "Netherlands": [
+      {
+        "name": "Amsterdam Schiphol",
+        "slug": "nl-amsterdam-airport-schiphol",
+        "population": null
+      },
+      {
+        "name": "Groningen Eelde",
+        "slug": "nl-groningen-airport-eelde",
+        "population": null
+      },
+      {
+        "name": "Maastricht Aachen",
+        "slug": "nl-maastricht-aachen-airport",
+        "population": null
+      },
+      {
+        "name": "Rotterdam The Hague",
+        "slug": "nl-rotterdam-the-hague-airport",
+        "population": null
+      }
+    ],
+    "Norway": [
+      {
+        "name": "Ålesund , Vigra",
+        "slug": "no-lesund-airport-vigra",
+        "population": null
+      },
+      {
+        "name": "Bergen , Flesland",
+        "slug": "no-bergen-airport-flesland",
+        "population": null
+      },
+      {
+        "name": "Brønnøysund , Brønnøy",
+        "slug": "no-br-nn-ysund-airport-br-nn-y",
+        "population": null
+      },
+      {
+        "name": "Harstad/Narvik , Evenes",
+        "slug": "no-harstad-narvik-airport-evenes",
+        "population": null
+      },
+      {
+        "name": "Haugesund , Karmøy",
+        "slug": "no-haugesund-airport-karm-y",
+        "population": null
+      },
+      {
+        "name": "Kirkenes , Høybuktmoen",
+        "slug": "no-kirkenes-airport-h-ybuktmoen",
+        "population": null
+      },
+      {
+        "name": "Kristiansand , Kjevik",
+        "slug": "no-kristiansand-airport-kjevik",
+        "population": null
+      },
+      {
+        "name": "Kristiansund , Kvernberget",
+        "slug": "no-kristiansund-airport-kvernberget",
+        "population": null
+      },
+      {
+        "name": "Lakselv , Banak",
+        "slug": "no-lakselv-airport-banak",
+        "population": null
+      },
+      {
+        "name": "Mo i Rana , Røssvoll",
+        "slug": "no-mo-i-rana-airport-r-ssvoll",
+        "population": null
+      },
+      {
+        "name": "Molde , Årø",
+        "slug": "no-molde-airport-r",
+        "population": null
+      },
+      {
+        "name": "Oslo , Gardermoen",
+        "slug": "no-oslo-airport-gardermoen",
+        "population": null
+      },
+      {
+        "name": "Rørvik , Ryum",
+        "slug": "no-r-rvik-airport-ryum",
+        "population": null
+      },
+      {
+        "name": "Sandefjord , Torp",
+        "slug": "no-sandefjord-airport-torp",
+        "population": null
+      },
+      {
+        "name": "Sandnessjøen , Stokka",
+        "slug": "no-sandnessj-en-airport-stokka",
+        "population": null
+      },
+      {
+        "name": "Stavanger , Sola",
+        "slug": "no-stavanger-airport-sola",
+        "population": null
+      },
+      {
+        "name": "Stokmarknes , Skagen",
+        "slug": "no-stokmarknes-airport-skagen",
+        "population": null
+      },
+      {
+        "name": "Svalbard , Longyear",
+        "slug": "no-svalbard-airport-longyear",
+        "population": null
+      },
+      {
+        "name": "Svolvær , Helle",
+        "slug": "no-svolv-r-airport-helle",
+        "population": null
+      },
+      {
+        "name": "Tromsø , Langnes",
+        "slug": "no-troms-airport-langnes",
+        "population": null
+      },
+      {
+        "name": "Trondheim , Værnes",
+        "slug": "no-trondheim-airport-v-rnes",
+        "population": null
+      }
+    ],
+    "Nauru": [
+      {
+        "name": "Nauru",
+        "slug": "nr-nauru-international-airport",
+        "population": null
+      }
+    ],
+    "New Zealand": [
+      {
+        "name": "Bay of Islands",
+        "slug": "nz-bay-of-islands-airport",
+        "population": null
+      },
+      {
+        "name": "Hawke's Bay",
+        "slug": "nz-hawke-s-bay-airport",
+        "population": null
+      },
+      {
+        "name": "Marlborough",
+        "slug": "nz-marlborough-airport",
+        "population": null
+      }
+    ],
+    "Oman": [
+      {
+        "name": "Duqm",
+        "slug": "om-duqm",
+        "population": "~15,000 (rapidly growing)"
+      }
+    ],
+    "Panama": [
+      {
+        "name": "Bocas del Toro “Isla Colón”",
+        "slug": "pa-bocas-del-toro-isla-col-n-international-airport",
+        "population": null
+      },
+      {
+        "name": "Enrique Malek",
+        "slug": "pa-enrique-malek-international-airport",
+        "population": null
+      }
+    ],
+    "Papua New Guinea": [
+      {
+        "name": "Jacksons",
+        "slug": "pg-jacksons-international-airport",
+        "population": null
+      },
+      {
+        "name": "Lae Nadzab",
+        "slug": "pg-lae-nadzab-airport",
+        "population": null
+      }
+    ],
+    "Poland": [
+      {
+        "name": "Bydgoszcz Ignacy Jan Paderewski",
+        "slug": "pl-bydgoszcz-ignacy-jan-paderewski-airport",
+        "population": null
+      },
+      {
+        "name": "Gdańsk Lech Wałęsa",
+        "slug": "pl-gda-sk-lech-wa-sa-airport",
+        "population": null
+      },
+      {
+        "name": "John Paul II Kraków-Balice",
+        "slug": "pl-john-paul-ii-krak-w-balice-international-airport",
+        "population": null
+      },
+      {
+        "name": "Łódź Władysław Reymont",
+        "slug": "pl-d-w-adys-aw-reymont-airport",
+        "population": null
+      },
+      {
+        "name": "Olsztyn-Mazury",
+        "slug": "pl-olsztyn-mazury-airport",
+        "population": null
+      },
+      {
+        "name": "Poznań–Ławica",
+        "slug": "pl-pozna-awica-airport",
+        "population": null
+      },
+      {
+        "name": "Rzeszów–Jasionka",
+        "slug": "pl-rzesz-w-jasionka-airport",
+        "population": null
+      },
+      {
+        "name": "Solidarity Szczecin–Goleniów",
+        "slug": "pl-solidarity-szczecin-goleni-w-airport",
+        "population": null
+      },
+      {
+        "name": "Warsaw Chopin",
+        "slug": "pl-warsaw-chopin-airport",
+        "population": null
+      },
+      {
+        "name": "Warsaw Modlin",
+        "slug": "pl-warsaw-modlin-airport",
+        "population": null
+      },
+      {
+        "name": "Warsaw Radom",
+        "slug": "pl-warsaw-radom-airport",
+        "population": null
+      }
+    ],
+    "Portugal": [
+      {
+        "name": "Cristiano Ronaldo Madeira",
+        "slug": "pt-cristiano-ronaldo-madeira-international-airport",
+        "population": null
+      },
+      {
+        "name": "Francisco Sá Carneiro",
+        "slug": "pt-francisco-s-carneiro-airport",
+        "population": null
+      },
+      {
+        "name": "Humberto Delgado",
+        "slug": "pt-humberto-delgado-airport",
+        "population": null
+      },
+      {
+        "name": "João Paulo II",
+        "slug": "pt-jo-o-paulo-ii-airport",
+        "population": null
+      },
+      {
+        "name": "Porto Santo",
+        "slug": "pt-porto-santo-airport",
+        "population": "5,000"
+      }
+    ],
+    "Palau": [
+      {
+        "name": "Roman Tmetuchl",
+        "slug": "pw-roman-tmetuchl-international-airport",
+        "population": null
+      }
+    ],
+    "Romania": [
+      {
+        "name": "Avram Iancu Cluj",
+        "slug": "ro-avram-iancu-cluj-international-airport",
+        "population": null
+      },
+      {
+        "name": "Brașov-Ghimbav",
+        "slug": "ro-bra-ov-ghimbav-international-airport",
+        "population": null
+      },
+      {
+        "name": "Henri Coandă",
+        "slug": "ro-henri-coand-international-airport",
+        "population": null
+      },
+      {
+        "name": "Maramureș",
+        "slug": "ro-maramure-international-airport",
+        "population": null
+      },
+      {
+        "name": "Timișoara Traian Vuia",
+        "slug": "ro-timi-oara-traian-vuia-international-airport",
+        "population": null
+      }
+    ],
+    "Serbia": [
+      {
+        "name": "Belgrade Nikola Tesla",
+        "slug": "rs-belgrade-nikola-tesla-airport",
+        "population": null
+      },
+      {
+        "name": "Morava",
+        "slug": "rs-morava-airport",
+        "population": null
+      },
+      {
+        "name": "Niš Constantine the Great",
+        "slug": "rs-ni-constantine-the-great-airport",
+        "population": null
+      }
+    ],
+    "Seychelles": [
+      {
+        "name": "Seychelles",
+        "slug": "sc-seychelles-international-airport",
+        "population": null
+      }
+    ],
+    "Sudan": [
+      {
+        "name": "Port Sudan New",
+        "slug": "sd-port-sudan-new-international-airport",
+        "population": null
+      }
+    ],
+    "Sweden": [
+      {
+        "name": "Ängelholm–Helsingborg",
+        "slug": "se-ngelholm-helsingborg-airport",
+        "population": null
+      },
+      {
+        "name": "Åre Östersund",
+        "slug": "se-re-stersund-airport",
+        "population": "53,000"
+      },
+      {
+        "name": "Dala",
+        "slug": "se-dala-airport",
+        "population": null
+      },
+      {
+        "name": "Gällivare Lapland",
+        "slug": "se-g-llivare-lapland-airport",
+        "population": null
+      },
+      {
+        "name": "Göteborg Landvetter",
+        "slug": "se-g-teborg-landvetter-airport",
+        "population": null
+      },
+      {
+        "name": "Halmstad City",
+        "slug": "se-halmstad-city-airport",
+        "population": null
+      },
+      {
+        "name": "Hemavan",
+        "slug": "se-hemavan-airport",
+        "population": "300"
+      },
+      {
+        "name": "Kalmar Öland",
+        "slug": "se-kalmar-land-airport",
+        "population": null
+      },
+      {
+        "name": "Linköping City",
+        "slug": "se-link-ping-city-airport",
+        "population": null
+      },
+      {
+        "name": "Stockholm Arlanda",
+        "slug": "se-stockholm-arlanda-airport",
+        "population": null
+      },
+      {
+        "name": "Stockholm Bromma",
+        "slug": "se-stockholm-bromma-airport",
+        "population": null
+      },
+      {
+        "name": "Stockholm Skavsta",
+        "slug": "se-stockholm-skavsta-airport",
+        "population": null
+      },
+      {
+        "name": "Sundsvall Timrå",
+        "slug": "se-sundsvall-timr-airport",
+        "population": null
+      },
+      {
+        "name": "Växjö Småland",
+        "slug": "se-v-xj-sm-land-airport",
+        "population": null
+      }
+    ],
+    "Slovenia": [
+      {
+        "name": "Ljubljana Jože Pučnik",
+        "slug": "si-ljubljana-jo-e-pu-nik-airport",
+        "population": null
+      },
+      {
+        "name": "Maribor Edvard Rusjan",
+        "slug": "si-maribor-edvard-rusjan-airport",
+        "population": null
+      }
+    ],
+    "Slovakia": [
+      {
+        "name": "Poprad-Tatry",
+        "slug": "sk-poprad-tatry-airport",
+        "population": null
+      }
+    ],
+    "Senegal": [
+      {
+        "name": "Blaise Diagne",
+        "slug": "sn-blaise-diagne-international-airport",
+        "population": null
+      }
+    ],
+    "Somalia": [
+      {
+        "name": "Aden Adde",
+        "slug": "so-aden-adde-international-airport",
+        "population": null
+      },
+      {
+        "name": "Egal",
+        "slug": "so-egal-international-airport",
+        "population": null
+      }
+    ],
+    "El Salvador": [
+      {
+        "name": "El Salvador Saint Óscar Arnulfo Romero y Galdámez",
+        "slug": "sv-el-salvador-international-airport-saint-scar-arnulfo-romero-y-gald-mez",
+        "population": null
+      }
+    ],
+    "Syria": [
+      {
+        "name": "Qamishli",
+        "slug": "sy-qamishli",
+        "population": "~180,000"
+      }
+    ],
+    "Eswatini": [
+      {
+        "name": "King Mswati III",
+        "slug": "sz-king-mswati-iii-international-airport",
+        "population": null
+      }
+    ],
+    "Chad": [
+      {
+        "name": "Hassan Djamous",
+        "slug": "td-hassan-djamous-international-airport",
+        "population": null
+      }
+    ],
+    "Togo": [
+      {
+        "name": "Lomé–Tokoin",
+        "slug": "tg-lom-tokoin-international-airport",
+        "population": null
+      }
+    ],
+    "Tunisia": [
+      {
+        "name": "Djerba–Zarzis",
+        "slug": "tn-djerba-zarzis-international-airport",
+        "population": null
+      },
+      {
+        "name": "Enfidha–Hammamet",
+        "slug": "tn-enfidha-hammamet-international-airport",
+        "population": null
+      },
+      {
+        "name": "Monastir Habib Bourguiba",
+        "slug": "tn-monastir-habib-bourguiba-international-airport",
+        "population": null
+      },
+      {
+        "name": "Tunis–Carthage",
+        "slug": "tn-tunis-carthage-international-airport",
+        "population": null
+      }
+    ],
+    "Türkiye": [
+      {
+        "name": "Mersin/Adana region",
+        "slug": "tr-mersin-adana-region",
+        "population": "See Mersin/Adana city populations"
+      }
+    ],
+    "Trinidad and Tobago": [
+      {
+        "name": "A. N. R. Robinson",
+        "slug": "tt-a-n-r-robinson-international-airport",
+        "population": null
+      },
+      {
+        "name": "Piarco",
+        "slug": "tt-piarco-international-airport",
+        "population": null
+      }
+    ],
+    "Tanzania": [
+      {
+        "name": "Abeid Amani Karume",
+        "slug": "tz-abeid-amani-karume-international-airport",
+        "population": null
+      },
+      {
+        "name": "Julius Nyerere",
+        "slug": "tz-julius-nyerere-international-airport",
+        "population": null
+      },
+      {
+        "name": "Kilimanjaro",
+        "slug": "tz-kilimanjaro-international-airport",
+        "population": null
+      }
+    ],
+    "United States": [
+      {
+        "name": "Albuquerque International Sunport",
+        "slug": "us-albuquerque-international-sunport",
+        "population": null
+      },
+      {
+        "name": "Austin–Bergstrom",
+        "slug": "us-austin-bergstrom-international-airport",
+        "population": null
+      },
+      {
+        "name": "Baltimore/Washington Thurgood Marshall",
+        "slug": "us-baltimore-washington-international-thurgood-marshall-airport",
+        "population": null
+      },
+      {
+        "name": "Boston Logan",
+        "slug": "us-boston-logan-international-airport",
+        "population": null
+      },
+      {
+        "name": "Buffalo Niagara",
+        "slug": "us-buffalo-niagara-international-airport",
+        "population": null
+      },
+      {
+        "name": "Charlotte Douglas",
+        "slug": "us-charlotte-douglas-international-airport",
+        "population": null
+      },
+      {
+        "name": "Cincinnati/Northern Kentucky",
+        "slug": "us-cincinnati-northern-kentucky-international-airport",
+        "population": null
+      },
+      {
+        "name": "Cleveland Hopkins",
+        "slug": "us-cleveland-hopkins-international-airport",
+        "population": null
+      },
+      {
+        "name": "Dallas/Fort Worth",
+        "slug": "us-dallas-fort-worth-international-airport",
+        "population": null
+      },
+      {
+        "name": "Daniel K. Inouye",
+        "slug": "us-daniel-k-inouye-international-airport",
+        "population": null
+      },
+      {
+        "name": "Detroit Metropolitan Wayne County",
+        "slug": "us-detroit-metropolitan-wayne-county-airport",
+        "population": null
+      },
+      {
+        "name": "Eppley Airfield",
+        "slug": "us-eppley-airfield",
+        "population": null
+      },
+      {
+        "name": "Fort Lauderdale–Hollywood",
+        "slug": "us-fort-lauderdale-hollywood-international-airport",
+        "population": null
+      },
+      {
+        "name": "George Bush Intercontinental",
+        "slug": "us-george-bush-intercontinental-airport",
+        "population": null
+      },
+      {
+        "name": "Harry Reid",
+        "slug": "us-harry-reid-international-airport",
+        "population": null
+      },
+      {
+        "name": "Hartsfield–Jackson Atlanta",
+        "slug": "us-hartsfield-jackson-atlanta-international-airport",
+        "population": null
+      },
+      {
+        "name": "John F. Kennedy",
+        "slug": "us-john-f-kennedy-international-airport",
+        "population": null
+      },
+      {
+        "name": "John Glenn Columbus",
+        "slug": "us-john-glenn-columbus-international-airport",
+        "population": null
+      },
+      {
+        "name": "Louis Armstrong New Orleans",
+        "slug": "us-louis-armstrong-new-orleans-international-airport",
+        "population": null
+      },
+      {
+        "name": "Louisville Muhammad Ali",
+        "slug": "us-louisville-muhammad-ali-international-airport",
+        "population": null
+      },
+      {
+        "name": "Milwaukee Mitchell",
+        "slug": "us-milwaukee-mitchell-international-airport",
+        "population": null
+      },
+      {
+        "name": "Minneapolis–Saint Paul",
+        "slug": "us-minneapolis-saint-paul-international-airport",
+        "population": null
+      },
+      {
+        "name": "Newark Liberty",
+        "slug": "us-newark-liberty-international-airport",
+        "population": null
+      },
+      {
+        "name": "Norman Y. Mineta San José",
+        "slug": "us-norman-y-mineta-san-jos-international-airport",
+        "population": null
+      },
+      {
+        "name": "O'Hare",
+        "slug": "us-o-hare-international-airport",
+        "population": null
+      },
+      {
+        "name": "Oakland San Francisco Bay",
+        "slug": "us-oakland-san-francisco-bay-airport",
+        "population": null
+      },
+      {
+        "name": "Orlando Sanford",
+        "slug": "us-orlando-sanford-international-airport",
+        "population": null
+      },
+      {
+        "name": "Phoenix Sky Harbor",
+        "slug": "us-phoenix-sky-harbor-international-airport",
+        "population": null
+      },
+      {
+        "name": "Piedmont Triad",
+        "slug": "us-piedmont-triad-international-airport",
+        "population": null
+      },
+      {
+        "name": "Raleigh-Durham",
+        "slug": "us-raleigh-durham-international-airport",
+        "population": null
+      },
+      {
+        "name": "Sarasota-Bradenton",
+        "slug": "us-sarasota-bradenton-international-airport",
+        "population": null
+      },
+      {
+        "name": "Savannah/Hilton Head",
+        "slug": "us-savannah-hilton-head-international-airport",
+        "population": null
+      },
+      {
+        "name": "Seattle–Tacoma",
+        "slug": "us-seattle-tacoma-international-airport",
+        "population": null
+      },
+      {
+        "name": "Southwest Florida",
+        "slug": "us-southwest-florida-international-airport",
+        "population": null
+      },
+      {
+        "name": "St. Louis Lambert",
+        "slug": "us-st-louis-lambert-international-airport",
+        "population": null
+      },
+      {
+        "name": "Ted Stevens Anchorage",
+        "slug": "us-ted-stevens-anchorage-international-airport",
+        "population": null
+      },
+      {
+        "name": "Washington Dulles",
+        "slug": "us-washington-dulles-international-airport",
+        "population": null
+      }
+    ],
+    "Saint Vincent and the Grenadines": [
+      {
+        "name": "Argyle",
+        "slug": "vc-argyle-international-airport",
+        "population": null
+      }
+    ],
+    "Vietnam": [
+      {
+        "name": "Van Don (Quang Ninh)",
+        "slug": "vn-van-don-quang-ninh",
+        "population": "~50,000"
+      }
+    ],
+    "Vanuatu": [
+      {
+        "name": "Bauerfield",
+        "slug": "vu-bauerfield-international-airport",
+        "population": null
+      },
+      {
+        "name": "Santo-Pekoa",
+        "slug": "vu-santo-pekoa-international-airport",
+        "population": null
+      }
+    ],
+    "Samoa": [
+      {
+        "name": "Faleolo",
+        "slug": "ws-faleolo-international-airport",
+        "population": null
+      }
+    ],
+    "Yemen": [
+      {
+        "name": "Seiyun (Hadhramaut)",
+        "slug": "ye-seiyun-hadhramaut",
+        "population": "~230,000"
+      },
+      {
+        "name": "Socotra Island",
+        "slug": "ye-socotra-island",
+        "population": "~60,000"
+      }
+    ],
+    "South Africa": [
+      {
+        "name": "Bram Fischer",
+        "slug": "za-bram-fischer-international-airport",
+        "population": null
+      },
+      {
+        "name": "Chief Dawid Stuurman",
+        "slug": "za-chief-dawid-stuurman-international-airport",
+        "population": null
+      },
+      {
+        "name": "King Phalo",
+        "slug": "za-king-phalo-airport",
+        "population": null
+      },
+      {
+        "name": "King Shaka",
+        "slug": "za-king-shaka-international-airport",
+        "population": null
+      },
+      {
+        "name": "O. R. Tambo",
+        "slug": "za-o-r-tambo-international-airport",
+        "population": null
+      }
+    ],
+    "Zambia": [
+      {
+        "name": "Harry Mwanga Nkumbula",
+        "slug": "zm-harry-mwanga-nkumbula-international-airport",
+        "population": null
+      },
+      {
+        "name": "Kenneth Kaunda",
+        "slug": "zm-kenneth-kaunda-international-airport",
+        "population": null
+      },
+      {
+        "name": "Simon Mwansa Kapwepwe",
+        "slug": "zm-simon-mwansa-kapwepwe-international-airport",
+        "population": null
+      }
+    ],
+    "Zimbabwe": [
+      {
+        "name": "Joshua Mqabuko Nkomo",
+        "slug": "zw-joshua-mqabuko-nkomo-international-airport",
+        "population": null
+      },
+      {
+        "name": "Robert Gabriel Mugabe",
+        "slug": "zw-robert-gabriel-mugabe-international-airport",
+        "population": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,1150 @@
+openapi: 3.0.3
+info:
+  title: Global AI Event Monitoring Platform API
+  version: 1.0.0
+  description: API contract for frontend-backend integration (Phase 0). Do not implement backend code from this file; this is a specification-only artifact.
+servers:
+  - url: /api/v1
+    description: Base API path (relative)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        code:
+          type: string
+          example: INVALID_INPUT
+        message:
+          type: string
+        details:
+          type: object
+      required:
+        - status
+        - code
+        - message
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        perPage:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 123
+        totalPages:
+          type: integer
+          example: 7
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Permission:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    AuthTokens:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+          example: 900
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        name:
+          type: string
+      required:
+        - email
+        - password
+    RefreshRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+      required:
+        - refreshToken
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    ResetPasswordRequest:
+      type: object
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+      required:
+        - token
+        - password
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        category:
+          $ref: '#/components/schemas/Category'
+        country:
+          $ref: '#/components/schemas/Country'
+        city:
+          $ref: '#/components/schemas/City'
+        tags:
+          type: array
+          items:
+            type: string
+        featured:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - slug
+        - title
+    EventCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        categoryId:
+          type: string
+        countryCode:
+          type: string
+        citySlug:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        featured:
+          type: boolean
+      required:
+        - title
+        - startAt
+        - endAt
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+    Country:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+    City:
+      type: object
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        countryCode:
+          type: string
+    SearchResult:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        read:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    UploadPresignRequest:
+      type: object
+      properties:
+        filename:
+          type: string
+        contentType:
+          type: string
+      required:
+        - filename
+        - contentType
+    UploadPresignResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        fields:
+          type: object
+    SavedEvent:
+      type: object
+      properties:
+        userId:
+          type: string
+        eventId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Preference:
+      type: object
+      properties:
+        compactMode:
+          type: boolean
+        reduceMotion:
+          type: boolean
+        language:
+          type: string
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        action:
+          type: string
+        meta:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+security:
+  - {}
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      description: Exchange credentials for access + refresh tokens
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Tokens returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-rate-limit: "10/minute"
+  /auth/register:
+    post:
+      summary: User registration
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created and verification email queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: New tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '401':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/logout:
+    post:
+      summary: Logout and revoke refresh token
+      security:
+        - bearerAuth: []
+      tags: [auth]
+      requestBody:
+        required: false
+      responses:
+        '204':
+          description: Logged out
+        '401':
+          description: Unauthorized
+  /auth/forgot-password:
+    post:
+      summary: Request password reset
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: Reset email queued
+  /auth/reset-password:
+    post:
+      summary: Reset password with token
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset successful
+  /auth/verify-email:
+    post:
+      summary: Verify user email
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        '200':
+          description: Email verified
+  /users/me:
+    get:
+      summary: Get current user
+      security:
+        - bearerAuth: []
+      tags: [users]
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+    patch:
+      summary: Update current user
+      security:
+        - bearerAuth: []
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/me/saved-events:
+    get:
+      summary: List saved events for current user
+      security:
+        - bearerAuth: []
+      tags: [users]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Saved events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Save an event for current user
+      security:
+        - bearerAuth: []
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+              required:
+                - eventId
+      responses:
+        '201':
+          description: Saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavedEvent'
+  /users/me/saved-events/{eventId}:
+    delete:
+      summary: Remove saved event
+      security:
+        - bearerAuth: []
+      tags: [users]
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Removed
+  /users/me/preferences:
+    get:
+      summary: Get user preferences
+      security:
+        - bearerAuth: []
+      tags: [users]
+      responses:
+        '200':
+          description: Preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preference'
+    patch:
+      summary: Update user preferences
+      security:
+        - bearerAuth: []
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preference'
+      responses:
+        '200':
+          description: Updated preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preference'
+  /events:
+    get:
+      summary: List events
+      tags: [events]
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: country
+          in: query
+          schema:
+            type: string
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: tags
+          in: query
+          schema:
+            type: string
+            description: comma-separated tags
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          schema:
+            type: string
+            description: e.g. startAt:asc
+      responses:
+        '200':
+          description: Event list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+      x-rate-limit: "60/minute"
+    post:
+      summary: Create event (admin)
+      security:
+        - bearerAuth: []
+      tags: [events]
+      x-permissions: ["events.create"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreateRequest'
+      responses:
+        '201':
+          description: Created event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+  /events/featured:
+    get:
+      summary: Featured events
+      tags: [events]
+      responses:
+        '200':
+          description: Featured events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /events/{slug}:
+    get:
+      summary: Get event by slug
+      tags: [events]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Not found
+    patch:
+      summary: Update event (admin)
+      security:
+        - bearerAuth: []
+      tags: [events]
+      x-permissions: ["events.update"]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    delete:
+      summary: Delete event (admin)
+      security:
+        - bearerAuth: []
+      x-permissions: ["events.delete"]
+      tags: [events]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+  /categories:
+    get:
+      summary: List categories
+      tags: [catalog]
+      responses:
+        '200':
+          description: Categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+  /countries:
+    get:
+      summary: List countries
+      tags: [catalog]
+      responses:
+        '200':
+          description: Countries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+  /cities:
+    get:
+      summary: List cities (optionally filter by country via query)
+      tags: [catalog]
+      parameters:
+        - name: country
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/City'
+  /countries/{code}/cities:
+    get:
+      summary: Cities for a country
+      tags: [catalog]
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cities for country
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/City'
+  /search:
+    get:
+      summary: Global search endpoint
+      tags: [search]
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: tags
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+  /dashboard/overview:
+    get:
+      summary: Dashboard overview for current user
+      security:
+        - bearerAuth: []
+      tags: [dashboard]
+      responses:
+        '200':
+          description: Overview data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  counts:
+                    type: object
+                    example: { events: 12, notifications: 3 }
+                  recentActivity:
+                    type: array
+                    items:
+                      type: object
+  /notifications:
+    get:
+      summary: List notifications for current user
+      security:
+        - bearerAuth: []
+      tags: [notifications]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notifications list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    post:
+      summary: Create notification (admin/event-driven)
+      security:
+        - bearerAuth: []
+      x-permissions: ["notifications.create"]
+      tags: [notifications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+  /notifications/{id}/read:
+    patch:
+      summary: Mark notification as read
+      security:
+        - bearerAuth: []
+      tags: [notifications]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Marked read
+  /uploads/presign:
+    post:
+      summary: Create upload presign
+      security:
+        - bearerAuth: []
+      tags: [uploads]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadPresignRequest'
+      responses:
+        '200':
+          description: Presign data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadPresignResponse'
+  /roles:
+    get:
+      summary: List roles
+      security:
+        - bearerAuth: []
+      x-permissions: ["roles.read"]
+      tags: [admin]
+      responses:
+        '200':
+          description: Roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+    post:
+      summary: Create role
+      security:
+        - bearerAuth: []
+      x-permissions: ["roles.create"]
+      tags: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Created role
+  /roles/{id}:
+    patch:
+      summary: Update role
+      security:
+        - bearerAuth: []
+      x-permissions: ["roles.update"]
+      tags: [admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Updated role
+  /permissions:
+    get:
+      summary: List permissions
+      security:
+        - bearerAuth: []
+      x-permissions: ["permissions.read"]
+      tags: [admin]
+      responses:
+        '200':
+          description: Permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission'
+  /admin/audit-logs:
+    get:
+      summary: Read audit logs (admin)
+      security:
+        - bearerAuth: []
+      x-permissions: ["audit.read"]
+      tags: [admin]
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: action
+          in: query
+          schema:
+            type: string
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: perPage
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLog'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+  /admin/events/sync:
+    post:
+      summary: Synchronize Pakistan events from configured public sources
+      security:
+        - bearerAuth: []
+      tags: [admin]
+      responses:
+        '200':
+          description: Synchronization summary
+        '401':
+          description: Missing or invalid authentication
+        '403':
+          description: Admin role required
+  /webhooks/events:
+    post:
+      summary: Partner event ingestion webhook
+      description: Validate using HMAC signature header `X-Signature`.
+      tags: [webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreateRequest'
+      parameters:
+        - name: X-Signature
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Invalid payload
+  /health/live:
+    get:
+      summary: Liveness probe
+      tags: [infra]
+      responses:
+        '200':
+          description: OK
+  /health/ready:
+    get:
+      summary: Readiness probe
+      tags: [infra]
+      responses:
+        '200':
+          description: Ready
+  /users/{id}/request-data-deletion:
+    post:
+      summary: Initiate GDPR deletion request
+      tags: [gdpr]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Deletion workflow initiated
+  /users/{id}/export-data:
+    get:
+      summary: Export user data for download
+      tags: [gdpr]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ZIP archive download
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+tags:
+  - name: auth
+  - name: users
+  - name: events
+  - name: catalog
+  - name: search
+  - name: dashboard
+  - name: notifications
+  - name: uploads
+  - name: admin
+  - name: webhooks
+  - name: infra
+  - name: gdpr
+externalDocs:
+  description: Backend Architecture
+  url: ./BACKEND_ARCHITECTURE.md

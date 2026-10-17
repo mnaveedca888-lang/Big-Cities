@@ -1,0 +1,28 @@
+{
+  "city": "Fuzuli",
+  "total_fields": 0,
+  "fields_with_values": {},
+  "missing_fields": [
+    "overview",
+    "nickname",
+    "history",
+    "founded",
+    "historicalSignificance",
+    "area",
+    "elevation",
+    "rivers",
+    "climate",
+    "coordinates",
+    "unescoSites",
+    "famousLandmarks",
+    "museums",
+    "parks",
+    "traditionalFood",
+    "streetFood",
+    "popularRestaurants",
+    "festivals",
+    "culturalEvents",
+    "arts",
+    "music"
+  ]
+}

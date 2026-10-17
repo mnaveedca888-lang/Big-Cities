@@ -1,0 +1,351 @@
+{
+  "continent": "Oceania",
+  "countries": [
+    "Australia",
+    "Federated States of Micronesia",
+    "Fiji",
+    "Kiribati",
+    "Marshall Islands",
+    "Nauru",
+    "New Zealand",
+    "Palau",
+    "Papua New Guinea",
+    "Samoa",
+    "Solomon Islands",
+    "Tonga",
+    "Tuvalu",
+    "Vanuatu"
+  ],
+  "downloaded": [
+    {
+      "country": "Australia",
+      "city": "Sydney",
+      "file": "au-sydney.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Melbourne",
+      "file": "au-melbourne.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Brisbane",
+      "file": "au-brisbane.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Perth",
+      "file": "au-perth.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Adelaide",
+      "file": "au-adelaide.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Gold Coast",
+      "file": "au-gold-coast.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Cairns",
+      "file": "au-cairns.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Darwin",
+      "file": "au-darwin.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Canberra",
+      "file": "au-canberra.webp",
+      "status": "downloaded"
+    },
+    {
+      "country": "Australia",
+      "city": "Hobart",
+      "file": "au-hobart.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Townsville",
+      "file": "au-townsville.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Newcastle",
+      "file": "au-newcastle.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Broome",
+      "file": "au-broome.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Port Hedland",
+      "file": "au-port-hedland.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Ayers Rock",
+      "file": "au-ayers-rock.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Christmas Island",
+      "file": "au-christmas-island.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Australia",
+      "city": "Cocos (Keeling) Islands",
+      "file": "au-cocos-keeling-islands.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Fiji",
+      "city": "Nadi",
+      "file": "fj-nadi.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Fiji",
+      "city": "Suva",
+      "file": "fj-suva.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Kiribati",
+      "city": "Tarawa",
+      "file": "ki-tarawa.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Kiribati",
+      "city": "Kiritimati",
+      "file": "ki-kiritimati.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Marshall Islands",
+      "city": "Majuro",
+      "file": "mh-majuro.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Marshall Islands",
+      "city": "Kwajalein",
+      "file": "mh-kwajalein.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Palikir",
+      "file": "fm-palikir.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Pohnpei",
+      "file": "fm-pohnpei.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Weno",
+      "file": "fm-weno.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Yap",
+      "file": "fm-yap.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Federated States of Micronesia",
+      "city": "Kosrae",
+      "file": "fm-kosrae.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Nauru",
+      "city": "Yaren",
+      "file": "nr-yaren.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Auckland",
+      "file": "nz-auckland.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Christchurch",
+      "file": "nz-christchurch.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Wellington",
+      "file": "nz-wellington.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Queenstown",
+      "file": "nz-queenstown.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Dunedin",
+      "file": "nz-dunedin.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Hamilton",
+      "file": "nz-hamilton.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Rotorua",
+      "file": "nz-rotorua.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Palmerston North",
+      "file": "nz-palmerston-north.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Napier",
+      "file": "nz-napier.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "New Plymouth",
+      "file": "nz-new-plymouth.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Nelson",
+      "file": "nz-nelson.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Invercargill",
+      "file": "nz-invercargill.webp",
+      "status": "downloaded"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Whangārei",
+      "file": "nz-whang-rei.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Blenheim",
+      "file": "nz-blenheim.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Taupō",
+      "file": "nz-taup.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Gisborne",
+      "file": "nz-gisborne.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "New Zealand",
+      "city": "Kerikeri",
+      "file": "nz-kerikeri.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Palau",
+      "city": "Koror",
+      "file": "pw-koror.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Samoa",
+      "city": "Apia",
+      "file": "ws-apia.webp",
+      "status": "downloaded"
+    },
+    {
+      "country": "Solomon Islands",
+      "city": "Honiara",
+      "file": "sb-honiara.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Tonga",
+      "city": "Nuku'alofa",
+      "file": "to-nukualofa.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Tuvalu",
+      "city": "Funafuti",
+      "file": "tv-funafuti.webp",
+      "status": "downloaded"
+    },
+    {
+      "country": "Vanuatu",
+      "city": "Port Vila",
+      "file": "vu-port-vila.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Vanuatu",
+      "city": "Luganville",
+      "file": "vu-luganville.webp",
+      "status": "already_exists"
+    },
+    {
+      "country": "Papua New Guinea",
+      "city": "Port Moresby",
+      "file": "pg-port-moresby.webp",
+      "status": "already_exists"
+    }
+  ],
+  "missing": [],
+  "checked": true,
+  "total_countries": 14,
+  "total_cities": 54,
+  "download_count": 54,
+  "missing_count": 0
+}

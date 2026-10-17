@@ -1,0 +1,112 @@
+{
+  "totalCountries": 195,
+  "uniqueCodes": 195,
+  "namesChanged": 8,
+  "namesAlreadyCorrect": 187,
+  "cityRows": 1230,
+  "eventRows": 1125,
+  "changedNames": [
+    {
+      "code": "BN",
+      "name": "Brunei"
+    },
+    {
+      "code": "CN",
+      "name": "China"
+    },
+    {
+      "code": "CZ",
+      "name": "Czechia"
+    },
+    {
+      "code": "IR",
+      "name": "Iran"
+    },
+    {
+      "code": "LA",
+      "name": "Laos"
+    },
+    {
+      "code": "RU",
+      "name": "Russia"
+    },
+    {
+      "code": "SY",
+      "name": "Syria"
+    },
+    {
+      "code": "US",
+      "name": "United States"
+    }
+  ],
+  "ambiguousNamesRequiringReview": [
+    {
+      "code": "CV",
+      "name": "Cabo Verde"
+    },
+    {
+      "code": "CI",
+      "name": "Côte d'Ivoire"
+    },
+    {
+      "code": "FM",
+      "name": "Federated States of Micronesia"
+    },
+    {
+      "code": "PS",
+      "name": "State of Palestine"
+    },
+    {
+      "code": "CG",
+      "name": "Republic of the Congo"
+    },
+    {
+      "code": "CD",
+      "name": "Democratic Republic of the Congo"
+    },
+    {
+      "code": "GM",
+      "name": "The Gambia"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates"
+    },
+    {
+      "code": "DO",
+      "name": "Dominican Republic"
+    },
+    {
+      "code": "CF",
+      "name": "Central African Republic"
+    },
+    {
+      "code": "KN",
+      "name": "Saint Kitts and Nevis"
+    },
+    {
+      "code": "LC",
+      "name": "Saint Lucia"
+    },
+    {
+      "code": "VC",
+      "name": "Saint Vincent and the Grenadines"
+    },
+    {
+      "code": "ST",
+      "name": "São Tomé and Príncipe"
+    },
+    {
+      "code": "TL",
+      "name": "Timor-Leste"
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    {
+      "code": "US",
+      "name": "United States"
+    }
+  ]
+}

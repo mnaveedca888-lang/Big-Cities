@@ -1,0 +1,1200 @@
+[
+  {
+    "key": "AO|luanda",
+    "actualCity": "Luanda",
+    "country": "Angola",
+    "sourceUrl": "https://images.pexels.com/photos/16094813/pexels-photo-16094813/free-photo-of-clouds-above-sea-and-buildings-in-city.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/clouds-above-sea-and-buildings-in-city-16094813/",
+    "caption": "Beautiful bayfront view of Luanda, Angola with clouds and skyline reflection.",
+    "altText": "Free Beautiful bayfront view of Luanda, Angola with clouds and skyline reflection. Stock Photo"
+  },
+  {
+    "key": "BF|ouagadougou",
+    "actualCity": "Ouagadougou",
+    "country": "Burkina Faso",
+    "sourceUrl": "https://images.pexels.com/photos/10061420/pexels-photo-10061420.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/a-close-up-shot-of-a-young-boy-10061420/",
+    "caption": "Delightful headshot of a smiling young boy in Ouagadougou, capturing pure happiness.",
+    "altText": "Free Delightful headshot of a smiling young boy in Ouagadougou, capturing pure happiness. Stock Photo"
+  },
+  {
+    "key": "BI|bujumbura",
+    "actualCity": "Bujumbura",
+    "country": "Burundi",
+    "sourceUrl": "https://images.pexels.com/photos/30817106/pexels-photo-30817106/free-photo-of-bujumbura-urban-vista-with-church-tower.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/bujumbura-urban-vista-with-church-tower-30817106/",
+    "caption": "Scenic view of Bujumbura cityscape featuring a prominent church tower and palm tree.",
+    "altText": "Free Scenic view of Bujumbura cityscape featuring a prominent church tower and palm tree. Stock Photo"
+  },
+  {
+    "key": "BJ|cotonou",
+    "actualCity": "Cotonou",
+    "country": "Benin",
+    "sourceUrl": "https://images.pexels.com/photos/38166000/pexels-photo-38166000/free-photo-of-street-scene-in-cotonou-benin-with-local-vendors.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/street-scene-in-cotonou-benin-with-local-vendors-38166000/",
+    "caption": "A bustling street scene in Cotonou, Benin, featuring local vendors and everyday life.",
+    "altText": "Free A bustling street scene in Cotonou, Benin, featuring local vendors and everyday life. Stock Photo"
+  },
+  {
+    "key": "BW|gaborone",
+    "actualCity": "Gaborone",
+    "country": "Botswana",
+    "sourceUrl": "https://images.pexels.com/photos/39179468/pexels-photo-39179468/free-photo-of-modern-skyscraper-in-gaborone-landscape.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/modern-skyscraper-in-gaborone-landscape-39179468/",
+    "caption": "Black and white photo of high-rise building in Gaborone, Botswana with a foreground of open grass field.",
+    "altText": "Free Black and white photo of high-rise building in Gaborone, Botswana with a foreground of open grass field. Stock Photo"
+  },
+  {
+    "key": "BW|kasane",
+    "actualCity": "Kasane",
+    "country": "Botswana",
+    "sourceUrl": "https://images.pexels.com/photos/38702527/pexels-photo-38702527/free-photo-of-stylish-man-in-leather-jacket-on-urban-staircase.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/stylish-man-in-leather-jacket-on-urban-staircase-38702527/",
+    "caption": "Fashionable young man poses confidently on a city staircase in Kasane, Botswana.",
+    "altText": "Free Fashionable young man poses confidently on a city staircase in Kasane, Botswana. Stock Photo"
+  },
+  {
+    "key": "BW|maun",
+    "actualCity": "Maun",
+    "country": "Botswana",
+    "sourceUrl": "https://images.pexels.com/photos/17603757/pexels-photo-17603757/free-photo-of-woman-stretching-up-hands.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/woman-stretching-up-hands-17603757/",
+    "caption": "A woman in an orange outfit stretches blissfully at sunset in Maun, Botswana.",
+    "altText": "Free A woman in an orange outfit stretches blissfully at sunset in Maun, Botswana. Stock Photo"
+  },
+  {
+    "key": "CD|goma",
+    "actualCity": "Goma",
+    "country": "Democratic Republic of the Congo",
+    "sourceUrl": "https://images.pexels.com/photos/30164278/pexels-photo-30164278/free-photo-of-traditional-fishing-boat-on-lake-kivu-at-dusk.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/traditional-fishing-boat-on-lake-kivu-at-dusk-30164278/",
+    "caption": "Fishermen in a wooden canoe on Lake Kivu against the backdrop of Goma cityscape and lush hills.",
+    "altText": "Free Fishermen in a wooden canoe on Lake Kivu against the backdrop of Goma cityscape and lush hills. Stock Photo"
+  },
+  {
+    "key": "CD|kindu",
+    "actualCity": "Kindu",
+    "country": "Democratic Republic of the Congo",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 2.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Kindu_church.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=5661808",
+    "caption": "Kindu church",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "creator": "Julien Harneis",
+    "attribution": "\"Kindu church\" by Julien Harneis is licensed under CC BY-SA 2.0."
+  },
+  {
+    "key": "CD|kinshasa",
+    "actualCity": "Kinshasa",
+    "country": "Democratic Republic of the Congo",
+    "sourceUrl": "https://images.pexels.com/photos/29690108/pexels-photo-29690108/free-photo-of-casual-portrait-of-young-man-in-kinshasa.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/casual-portrait-of-young-man-in-kinshasa-29690108/",
+    "caption": "Young man in casual attire sitting on a chair, Kinshasa, DRC.",
+    "altText": "Free Young man in casual attire sitting on a chair, Kinshasa, DRC. Stock Photo"
+  },
+  {
+    "key": "CD|kisangani",
+    "actualCity": "Kisangani",
+    "country": "Democratic Republic of the Congo",
+    "sourceWebsite": "Flickr",
+    "sourceType": "MONUSCO official Flickr photograph, Creative Commons BY-SA",
+    "sourceUrl": "https://live.staticflickr.com/5663/31275592351_06699cf484_b.jpg",
+    "sourcePage": "https://www.flickr.com/photos/monusco/31275592351/",
+    "caption": "Kisangani, Province de la Tshopo, RD Congo : La pêcherie de Wagenia fait partie des sites touristiques et historiques de la ville de Kisangani. Sur cette photo, les populations y pratiquent la pêche artisanale au moyen de grandes nasses. Photo MONUSCO /Alain Wandimoyi == Kisangani, Province of Tshopo, DR Congo: The fishery of Wagenia is part of the tourist and historic sites of the city of Kisangani. On this picture, the populations carry out artisanal fishing by means of large traps. Photo MONUSCO /Alain Wandimoyi ",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/deed.en",
+    "creator": "Alain Wandimoyi / MONUSCO",
+    "attribution": "Photo MONUSCO / Alain Wandimoyi; CC BY-SA 2.0"
+  },
+  {
+    "key": "CD|lubumbashi",
+    "actualCity": "Lubumbashi",
+    "country": "Democratic Republic of the Congo",
+    "sourceUrl": "https://images.pexels.com/photos/10149558/pexels-photo-10149558.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/man-running-with-weights-in-strongman-competition-10149558/",
+    "caption": "African strongman competes with heavy weights at an outdoor event in Lubumbashi.",
+    "altText": "Free African strongman competes with heavy weights at an outdoor event in Lubumbashi. Stock Photo"
+  },
+  {
+    "key": "CG|brazzaville",
+    "actualCity": "Brazzaville",
+    "country": "Republic of the Congo",
+    "sourceUrl": "https://images.pexels.com/photos/25852538/pexels-photo-25852538/free-photo-of-steel-tower-against-the-blue-sky.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/steel-tower-against-the-blue-sky-25852538/",
+    "caption": "Vertical view of Nabemba Tower with a clear blue sky, highlighting modern architecture in Brazzaville.",
+    "altText": "Free Vertical view of Nabemba Tower with a clear blue sky, highlighting modern architecture in Brazzaville. Stock Photo"
+  },
+  {
+    "key": "CG|pointe noire",
+    "actualCity": "Pointe-Noire",
+    "country": "Republic of the Congo",
+    "sourceWebsite": "Flickr",
+    "sourceType": "Openverse-indexed Flickr CC BY photograph",
+    "sourceUrl": "https://live.staticflickr.com/3703/19947634509_0c8c3f6ed3_b.jpg",
+    "sourcePage": "https://www.flickr.com/photos/79721788@N00/19947634509",
+    "caption": "Pointe-Noire Street",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "creator": "D-Stanley",
+    "attribution": "\"Pointe-Noire Street\" by D-Stanley is licensed under CC BY 2.0."
+  },
+  {
+    "key": "CI|abidjan",
+    "actualCity": "Abidjan",
+    "country": "Côte d'Ivoire",
+    "sourceUrl": "https://images.pexels.com/photos/5642426/pexels-photo-5642426.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/waterfront-buildings-in-a-city-5642426/",
+    "caption": "View of Abidjan's skyline above a calm lagoon under cloudy skies.",
+    "altText": "Free View of Abidjan's skyline above a calm lagoon under cloudy skies. Stock Photo"
+  },
+  {
+    "key": "CM|douala",
+    "actualCity": "Douala",
+    "country": "Cameroon",
+    "sourceUrl": "https://images.pexels.com/photos/12251155/pexels-photo-12251155.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/city-houses-and-buildings-during-sunset-12251155/",
+    "caption": "Breathtaking aerial shot of Douala, Cameroon showcasing cityscape and vibrant sunset.",
+    "altText": "Free Breathtaking aerial shot of Douala, Cameroon showcasing cityscape and vibrant sunset. Stock Photo"
+  },
+  {
+    "key": "CM|garoua",
+    "actualCity": "Garoua",
+    "country": "Cameroon",
+    "sourceUrl": "https://images.pexels.com/photos/12401098/pexels-photo-12401098.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/colorful-houses-near-green-trees-under-blue-sky-12401098/",
+    "caption": "Vibrant houses in Garoua, Cameroon under a bright blue sky showcasing colorful urban architecture.",
+    "altText": "Free Vibrant houses in Garoua, Cameroon under a bright blue sky showcasing colorful urban architecture. Stock Photo"
+  },
+  {
+    "key": "CM|maroua",
+    "actualCity": "Maroua",
+    "country": "Cameroon",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 4.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/A_street_in_Maroua.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=89170331",
+    "caption": "A street in Maroua",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "creator": "Minette Lontsie",
+    "attribution": "\"A street in Maroua\" by Minette Lontsie is licensed under CC BY-SA 4.0."
+  },
+  {
+    "key": "CM|yaounde",
+    "actualCity": "Yaoundé",
+    "country": "Cameroon",
+    "sourceUrl": "https://images.pexels.com/photos/17290975/pexels-photo-17290975/free-photo-of-cars-on-roundabout-in-yaounde.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cars-on-roundabout-in-yaounde-17290975/",
+    "caption": "A stunning aerial photograph capturing the bustling traffic and architecture of Yaoundé's central roundabout.",
+    "altText": "Free A stunning aerial photograph capturing the bustling traffic and architecture of Yaoundé's central roundabout. Stock Photo"
+  },
+  {
+    "key": "CV|espargos",
+    "actualCity": "Espargos",
+    "country": "Cabo Verde",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY 3.0 city-street photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Espargos_Street_2.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=4142110",
+    "caption": "Espargos Street 2",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "creator": "Waldir",
+    "attribution": "\"Espargos Street 2\" by Waldir is licensed under CC BY 3.0."
+  },
+  {
+    "key": "CV|praia",
+    "actualCity": "Praia",
+    "country": "Cabo Verde",
+    "sourceUrl": "https://images.pexels.com/photos/15532622/pexels-photo-15532622/free-photo-of-aerial-shot-of-cityscape.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-shot-of-cityscape-15532622/",
+    "caption": "Vibrant aerial view of Praia's colorful rooftops and cityscape under a blue sky.",
+    "altText": "Free Vibrant aerial view of Praia's colorful rooftops and cityscape under a blue sky. Stock Photo"
+  },
+  {
+    "key": "CV|rabil",
+    "actualCity": "Rabil",
+    "country": "Cabo Verde",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY 3.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Pra%C3%A7a_em_Rabil.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=15908459",
+    "caption": "Praça em Rabil",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "creator": "Adriao",
+    "attribution": "\"Praça em Rabil\" by Adriao is licensed under CC BY 3.0."
+  },
+  {
+    "key": "CV|sao pedro",
+    "actualCity": "São Pedro",
+    "country": "Cabo Verde",
+    "sourceUrl": "https://images.pexels.com/photos/6198023/pexels-photo-6198023.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/front-view-of-a-church-6198023/",
+    "caption": "Charming facade of São Pedro Chapel in São Roque, Brazil, on a sunny day.",
+    "altText": "Free Charming facade of São Pedro Chapel in São Roque, Brazil, on a sunny day. Stock Photo"
+  },
+  {
+    "key": "DJ|djibouti",
+    "actualCity": "Djibouti",
+    "country": "Djibouti",
+    "sourceUrl": "https://images.pexels.com/photos/37492534/pexels-photo-37492534/free-photo-of-bustling-street-scene-in-tadjoura-djibouti.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/bustling-street-scene-in-tadjoura-djibouti-37492534/",
+    "caption": "A vibrant street scene in Tadjoura, Djibouti, showcasing local culture amidst a busy market day.",
+    "altText": "Free A vibrant street scene in Tadjoura, Djibouti, showcasing local culture amidst a busy market day. Stock Photo"
+  },
+  {
+    "key": "DZ|algiers",
+    "actualCity": "Algiers",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/11720558/pexels-photo-11720558.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-shot-of-city-buildings-during-sunrise-11720558/",
+    "caption": "A stunning aerial view of Algiers cityscape at sunrise with a golden sky.",
+    "altText": "Free A stunning aerial view of Algiers cityscape at sunrise with a golden sky. Stock Photo"
+  },
+  {
+    "key": "DZ|annaba",
+    "actualCity": "Annaba",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/28447699/pexels-photo-28447699/free-photo-of-panoramic-view-of-annaba-city-and-coastline.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/panoramic-view-of-annaba-city-and-coastline-28447699/",
+    "caption": "Aerial view of Annaba, Algeria with cityscape, coast, and greenery under a cloudy sky.",
+    "altText": "Free Aerial view of Annaba, Algeria with cityscape, coast, and greenery under a cloudy sky. Stock Photo"
+  },
+  {
+    "key": "DZ|bejaia",
+    "actualCity": "Béjaïa",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/33086104/pexels-photo-33086104/free-photo-of-scenic-aerial-view-of-bejaia-harbor-algeria.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/scenic-aerial-view-of-bejaia-harbor-algeria-33086104/",
+    "caption": "A vibrant aerial view of Béjaïa harbor, showcasing the beautiful Algerian coastline and bustling city in the background.",
+    "altText": "Free A vibrant aerial view of Béjaïa harbor, showcasing the beautiful Algerian coastline and bustling city in the background. Stock Photo"
+  },
+  {
+    "key": "DZ|constantine",
+    "actualCity": "Constantine",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/18314359/pexels-photo-18314359/free-photo-of-cityscape-of-constantine-algeria.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cityscape-of-constantine-algeria-18314359/",
+    "caption": "Explore the historic rooftops and architecture of Constantine, Algeria's captivating cityscape.",
+    "altText": "Free Explore the historic rooftops and architecture of Constantine, Algeria's captivating cityscape. Stock Photo"
+  },
+  {
+    "key": "DZ|oran",
+    "actualCity": "Oran",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/37627565/pexels-photo-37627565/free-photo-of-statue-of-virgin-mary-overlooking-oran-cityscape.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/statue-of-virgin-mary-overlooking-oran-cityscape-37627565/",
+    "caption": "A stunning view of the Virgin Mary statue atop Santa Cruz Fort in Oran, Algeria with cityscape below.",
+    "altText": "Free A stunning view of the Virgin Mary statue atop Santa Cruz Fort in Oran, Algeria with cityscape below. Stock Photo"
+  },
+  {
+    "key": "DZ|setif",
+    "actualCity": "Sétif",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/9180226/pexels-photo-9180226.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/ancient-ruins-and-mountains-at-sunrise-9180226/",
+    "caption": "Explore the ancient Roman ruins in Sétif, Algeria, glowing in the serene sunrise.",
+    "altText": "Free Explore the ancient Roman ruins in Sétif, Algeria, glowing in the serene sunrise. Stock Photo"
+  },
+  {
+    "key": "DZ|tlemcen",
+    "actualCity": "Tlemcen",
+    "country": "Algeria",
+    "sourceUrl": "https://images.pexels.com/photos/11463236/pexels-photo-11463236.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/brown-brick-building-under-white-clouds-11463236/",
+    "caption": "Explore the intricate architecture of a historic mosque's minaret in Tlemcen, Algeria.",
+    "altText": "Free Explore the intricate architecture of a historic mosque's minaret in Tlemcen, Algeria. Stock Photo"
+  },
+  {
+    "key": "EG|alexandria",
+    "actualCity": "Alexandria",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/36221970/pexels-photo-36221970/free-photo-of-alexandria-corniche-with-historic-tower-and-beachfront.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/alexandria-corniche-with-historic-tower-and-beachfront-36221970/",
+    "caption": "View of Alexandria's Corniche featuring a historic tower and beachfront with city skyline.",
+    "altText": "Free View of Alexandria's Corniche featuring a historic tower and beachfront with city skyline. Stock Photo"
+  },
+  {
+    "key": "EG|aswan",
+    "actualCity": "Aswan",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/14212455/pexels-photo-14212455.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/sailboats-on-water-near-coast-14212455/",
+    "caption": "Scenic view of sailboats on the Nile River with Aswan skyline in the background.",
+    "altText": "Free Scenic view of sailboats on the Nile River with Aswan skyline in the background. Stock Photo"
+  },
+  {
+    "key": "EG|cairo",
+    "actualCity": "Cairo",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/21405346/pexels-photo-21405346/free-photo-of-view-of-a-city.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/view-of-a-city-21405346/",
+    "caption": "Aerial view of Cairo's urban skyline featuring a historic mosque against the cityscape.",
+    "altText": "Free Aerial view of Cairo's urban skyline featuring a historic mosque against the cityscape. Stock Photo"
+  },
+  {
+    "key": "EG|giza",
+    "actualCity": "Giza",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/33629163/pexels-photo-33629163/free-photo-of-cairo-cityscape-with-the-pyramids-in-view.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cairo-cityscape-with-the-pyramids-in-view-33629163/",
+    "caption": "Aerial view of Cairo, Egypt, showcasing urban buildings with the iconic Pyramids of Giza in the background.",
+    "altText": "Free Aerial view of Cairo, Egypt, showcasing urban buildings with the iconic Pyramids of Giza in the background. Stock Photo"
+  },
+  {
+    "key": "EG|hurghada",
+    "actualCity": "Hurghada",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/22643902/pexels-photo-22643902/free-photo-of-aerial-view-of-hurghada-city-over-the-red-sea.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-hurghada-city-over-the-red-sea-22643902/",
+    "caption": "Stunning aerial view of Hurghada's coastal urban area, Red Sea, Egypt.",
+    "altText": "Free Stunning aerial view of Hurghada's coastal urban area, Red Sea, Egypt. Stock Photo"
+  },
+  {
+    "key": "EG|luxor",
+    "actualCity": "Luxor",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/15131542/pexels-photo-15131542/free-photo-of-sailboats-moored-in-marina.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/sailboats-moored-in-marina-15131542/",
+    "caption": "Sailboats moored in Luxor's marina against historic architecture.",
+    "altText": "Free Sailboats moored in Luxor's marina against historic architecture. Stock Photo"
+  },
+  {
+    "key": "EG|marsa alam",
+    "actualCity": "Marsa Alam",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/29116365/pexels-photo-29116365/free-photo-of-scenic-pier-over-turquoise-waters-in-marsa-alam.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/scenic-pier-over-turquoise-waters-in-marsa-alam-29116365/",
+    "caption": "A long wooden pier stretches over clear turquoise waters in Marsa Alam, Egypt.",
+    "altText": "Free A long wooden pier stretches over clear turquoise waters in Marsa Alam, Egypt. Stock Photo"
+  },
+  {
+    "key": "EG|sharm el sheikh",
+    "actualCity": "Sharm El Sheikh",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/18886592/pexels-photo-18886592/free-photo-of-view-of-the-sharm-el-maya-bay-in-sharm-el-sheikh-egypt.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/view-of-the-sharm-el-maya-bay-in-sharm-el-sheikh-egypt-18886592/",
+    "caption": "A stunning aerial view of Sharm El Sheikh featuring the coastline and city landmarks against a mountainous backdrop.",
+    "altText": "Free A stunning aerial view of Sharm El Sheikh featuring the coastline and city landmarks against a mountainous backdrop. Stock Photo"
+  },
+  {
+    "key": "EG|sohag",
+    "actualCity": "Sohag",
+    "country": "Egypt",
+    "sourceUrl": "https://images.pexels.com/photos/10969148/pexels-photo-10969148.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/ancient-carvings-in-monument-10969148/",
+    "caption": "View of intricate hieroglyphs on a temple ceiling in Sohag, Egypt.",
+    "altText": "Free View of intricate hieroglyphs on a temple ceiling in Sohag, Egypt. Stock Photo"
+  },
+  {
+    "key": "ER|asmara",
+    "actualCity": "Asmara",
+    "country": "Eritrea",
+    "sourceUrl": "https://images.pexels.com/photos/13884544/pexels-photo-13884544.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/the-flag-of-eritrea-13884544/",
+    "caption": "Eritrean flag waving proudly against clear blue sky in Asmara, Eritrea.",
+    "altText": "Free Eritrean flag waving proudly against clear blue sky in Asmara, Eritrea. Stock Photo"
+  },
+  {
+    "key": "ET|addis ababa",
+    "actualCity": "Addis Ababa",
+    "country": "Ethiopia",
+    "sourceUrl": "https://images.pexels.com/photos/14391906/pexels-photo-14391906.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/people-in-black-motorcycle-on-road-14391906/",
+    "caption": "Bikers and cars bustling in Addis Ababa's cityscape with iconic buildings and clear skies.",
+    "altText": "Free Bikers and cars bustling in Addis Ababa's cityscape with iconic buildings and clear skies. Stock Photo"
+  },
+  {
+    "key": "ET|dire dawa",
+    "actualCity": "Dire Dawa",
+    "country": "Ethiopia",
+    "sourceUrl": "https://images.pexels.com/photos/39592008/pexels-photo-39592008/free-photo-of-historic-stone-building-in-dire-dawa-ethiopia.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/historic-stone-building-in-dire-dawa-ethiopia-39592008/",
+    "caption": "A historic stone building in Dire Dawa, Ethiopia, showcasing traditional architecture.",
+    "altText": "Free A historic stone building in Dire Dawa, Ethiopia, showcasing traditional architecture. Stock Photo"
+  },
+  {
+    "key": "GA|franceville",
+    "actualCity": "Franceville",
+    "country": "Gabon",
+    "sourceUrl": "https://images.pexels.com/photos/1796793/pexels-photo-1796793.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/man-in-water-1796793/",
+    "caption": "A lone man enjoys a tranquil sunset at Merville-Franceville-Plage, Normandie.",
+    "altText": "Free A lone man enjoys a tranquil sunset at Merville-Franceville-Plage, Normandie. Stock Photo"
+  },
+  {
+    "key": "GA|libreville",
+    "actualCity": "Libreville",
+    "country": "Gabon",
+    "sourceUrl": "https://images.pexels.com/photos/15948422/pexels-photo-15948422/free-photo-of-two-men-drinking-beer.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/two-men-drinking-beer-15948422/",
+    "caption": "Two friends sitting outdoors in Libreville, enjoying a relaxing day with drinks.",
+    "altText": "Free Two friends sitting outdoors in Libreville, enjoying a relaxing day with drinks. Stock Photo"
+  },
+  {
+    "key": "GA|port gentil",
+    "actualCity": "Port-Gentil",
+    "country": "Gabon",
+    "sourceWebsite": "Flickr",
+    "sourceType": "Openverse-indexed Flickr CC BY photograph",
+    "sourceUrl": "https://live.staticflickr.com/4896/45310769765_d56c000bf8_b.jpg",
+    "sourcePage": "https://www.flickr.com/photos/79721788@N00/45310769765",
+    "caption": "Port Gentil Ferries",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "creator": "D-Stanley",
+    "attribution": "\"Port Gentil Ferries\" by D-Stanley is licensed under CC BY 2.0."
+  },
+  {
+    "key": "GH|accra",
+    "actualCity": "Accra",
+    "country": "Ghana",
+    "sourceUrl": "https://images.pexels.com/photos/32803403/pexels-photo-32803403/free-photo-of-aerial-view-of-tema-cityscape-in-greater-accra.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-tema-cityscape-in-greater-accra-32803403/",
+    "caption": "A scenic aerial shot of Tema cityscape in Ghana showcasing buildings and greenery.",
+    "altText": "Free A scenic aerial shot of Tema cityscape in Ghana showcasing buildings and greenery. Stock Photo"
+  },
+  {
+    "key": "GM|banjul",
+    "actualCity": "Banjul",
+    "country": "The Gambia",
+    "sourceUrl": "https://images.pexels.com/photos/32839809/pexels-photo-32839809/free-photo-of-beautiful-aerial-view-of-arch-22-in-banjul-the-gambia.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/beautiful-aerial-view-of-arch-22-in-banjul-the-gambia-32839809/",
+    "caption": "Scenic aerial view of Arch 22 in Banjul, The Gambia amid lush greenery and cloudy sky.",
+    "altText": "Free Scenic aerial view of Arch 22 in Banjul, The Gambia amid lush greenery and cloudy sky. Stock Photo"
+  },
+  {
+    "key": "GN|conakry",
+    "actualCity": "Conakry",
+    "country": "Guinea",
+    "sourceUrl": "https://images.pexels.com/photos/11755663/pexels-photo-11755663.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/a-man-jumping-near-the-basketball-ring-11755663/",
+    "caption": "Athlete performing an impressive dunk on an outdoor basketball court in Conakry. Vibrant action shot.",
+    "altText": "Free Athlete performing an impressive dunk on an outdoor basketball court in Conakry. Vibrant action shot. Stock Photo"
+  },
+  {
+    "key": "GQ|bata",
+    "actualCity": "Bata",
+    "country": "Equatorial Guinea",
+    "sourceUrl": "https://images.pexels.com/photos/32124619/pexels-photo-32124619/free-photo-of-batik-air-malaysia-aircraft-on-runway-in-kepala-batas.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/batik-air-malaysia-aircraft-on-runway-in-kepala-batas-32124619/",
+    "caption": "Batik Air Malaysia airplane ready for takeoff on a sunny day in Kedah.",
+    "altText": "Free Batik Air Malaysia airplane ready for takeoff on a sunny day in Kedah. Stock Photo"
+  },
+  {
+    "key": "GQ|malabo",
+    "actualCity": "Malabo",
+    "country": "Equatorial Guinea",
+    "sourceUrl": "https://images.pexels.com/photos/36705138/pexels-photo-36705138/free-photo-of-scenic-palm-lined-pathway-in-malabo-park.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/scenic-palm-lined-pathway-in-malabo-park-36705138/",
+    "caption": "Peaceful road lined with palm trees in Malabo, Equatorial Guinea.",
+    "altText": "Free Peaceful road lined with palm trees in Malabo, Equatorial Guinea. Stock Photo"
+  },
+  {
+    "key": "GW|bissau",
+    "actualCity": "Bissau",
+    "country": "Guinea-Bissau",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 3.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/94/Bissau_city_center.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=11497563",
+    "caption": "Bissau city center",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "creator": "Nammarci",
+    "attribution": "\"Bissau city center\" by Nammarci is licensed under CC BY-SA 3.0."
+  },
+  {
+    "key": "KE|eldoret",
+    "actualCity": "Eldoret",
+    "country": "Kenya",
+    "sourceUrl": "https://images.pexels.com/photos/15951837/pexels-photo-15951837/free-photo-of-man-carrying-basket-with-merchandise.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/man-carrying-basket-with-merchandise-15951837/",
+    "caption": "A street vendor carrying goods along a dirt road in Eldoret, Kenya, in summer.",
+    "altText": "Free A street vendor carrying goods along a dirt road in Eldoret, Kenya, in summer. Stock Photo"
+  },
+  {
+    "key": "KE|kisumu",
+    "actualCity": "Kisumu",
+    "country": "Kenya",
+    "sourceUrl": "https://images.pexels.com/photos/8579241/pexels-photo-8579241.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/grayscale-photo-of-children-jumping-on-the-grass-field-8579241/",
+    "caption": "Black and white photo of four happy African boys joyfully jumping outside in Kisumu, Kenya.",
+    "altText": "Free Black and white photo of four happy African boys joyfully jumping outside in Kisumu, Kenya. Stock Photo"
+  },
+  {
+    "key": "KE|mombasa",
+    "actualCity": "Mombasa",
+    "country": "Kenya",
+    "sourceUrl": "https://images.pexels.com/photos/13418220/pexels-photo-13418220.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/buildings-near-body-of-water-13418220/",
+    "caption": "A picturesque view of Mombasa's waterfront featuring buildings and lush greenery.",
+    "altText": "Free A picturesque view of Mombasa's waterfront featuring buildings and lush greenery. Stock Photo"
+  },
+  {
+    "key": "KE|nairobi",
+    "actualCity": "Nairobi",
+    "country": "Kenya",
+    "sourceUrl": "https://images.pexels.com/photos/15496531/pexels-photo-15496531/free-photo-of-clouds-over-city.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/clouds-over-city-15496531/",
+    "caption": "Explore the vibrant skyline of Nairobi with its modern skyscrapers under an overcast sky.",
+    "altText": "Free Explore the vibrant skyline of Nairobi with its modern skyscrapers under an overcast sky. Stock Photo"
+  },
+  {
+    "key": "KM|moroni",
+    "actualCity": "Moroni",
+    "country": "Comoros",
+    "sourceUrl": "https://images.pexels.com/photos/13941008/pexels-photo-13941008.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/comoros-national-flag-13941008/",
+    "caption": "The national flag of Comoros waving on a flagpole under a bright blue sky in Moroni, Ngazidja, Comoros.",
+    "altText": "Free The national flag of Comoros waving on a flagpole under a bright blue sky in Moroni, Ngazidja, Comoros. Stock Photo"
+  },
+  {
+    "key": "LR|monrovia",
+    "actualCity": "Monrovia",
+    "country": "Liberia",
+    "sourceUrl": "https://images.pexels.com/photos/27848721/pexels-photo-27848721/free-photo-of-pile-of-boat.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/pile-of-boat-27848721/",
+    "caption": "Vibrant scene of fishing boats and urban skyline in Monrovia, Liberia.",
+    "altText": "Free Vibrant scene of fishing boats and urban skyline in Monrovia, Liberia. Stock Photo"
+  },
+  {
+    "key": "LS|maseru",
+    "actualCity": "Maseru",
+    "country": "Lesotho",
+    "sourceUrl": "https://images.pexels.com/photos/13941037/pexels-photo-13941037.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/flag-pole-under-a-blue-sky-13941037/",
+    "caption": "Lesotho national flag waving on a flagpole against a clear blue sky in Maseru, Lesotho.",
+    "altText": "Free Lesotho national flag waving on a flagpole against a clear blue sky in Maseru, Lesotho. Stock Photo"
+  },
+  {
+    "key": "LY|benghazi",
+    "actualCity": "Benghazi",
+    "country": "Libya",
+    "sourceUrl": "https://images.pexels.com/photos/30011917/pexels-photo-30011917/free-photo-of-vintage-cadillac-front-view-in-benghazi.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/vintage-cadillac-front-view-in-benghazi-30011917/",
+    "caption": "A classic 1970s red Cadillac with chrome details in Benghazi, Libya.",
+    "altText": "Free A classic 1970s red Cadillac with chrome details in Benghazi, Libya. Stock Photo"
+  },
+  {
+    "key": "LY|misrata",
+    "actualCity": "Misrata",
+    "country": "Libya",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 4.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/6/67/Misrata_Downtown_Square.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=64885093",
+    "caption": "Misrata Downtown Square",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "creator": "Mrwan elGobee",
+    "attribution": "\"Misrata Downtown Square\" by Mrwan elGobee is licensed under CC BY-SA 4.0."
+  },
+  {
+    "key": "LY|sebha",
+    "actualCity": "Sebha",
+    "country": "Libya",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 4.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/90/Old_city%2C_Sebha%2C_Libya.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=58405748",
+    "caption": "Old city, Sebha, Libya",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "creator": "Syed Wali Peeran",
+    "attribution": "\"Old city, Sebha, Libya\" by Syed Wali Peeran is licensed under CC BY-SA 4.0."
+  },
+  {
+    "key": "LY|tripoli",
+    "actualCity": "Tripoli",
+    "country": "Libya",
+    "sourceUrl": "https://images.pexels.com/photos/15449779/pexels-photo-15449779/free-photo-of-abandoned-buildings-in-a-city.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/abandoned-buildings-in-a-city-15449779/",
+    "caption": "High-rise residential buildings in Tripoli, showcasing urban life in Lebanon.",
+    "altText": "Free High-rise residential buildings in Tripoli, showcasing urban life in Lebanon. Stock Photo"
+  },
+  {
+    "key": "MA|agadir",
+    "actualCity": "Agadir",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/35627666/pexels-photo-35627666/free-photo-of-aerial-view-of-agadir-city-and-beach.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-agadir-city-and-beach-35627666/",
+    "caption": "A scenic aerial view of Agadir's coastline and urban landscape in Morocco.",
+    "altText": "Free A scenic aerial view of Agadir's coastline and urban landscape in Morocco. Stock Photo"
+  },
+  {
+    "key": "MA|casablanca",
+    "actualCity": "Casablanca",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/30362133/pexels-photo-30362133/free-photo-of-panoramic-view-of-casablanca-urban-skyline.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/panoramic-view-of-casablanca-urban-skyline-30362133/",
+    "caption": "High-angle view of Casablanca's urban skyline under a vibrant blue sky.",
+    "altText": "Free High-angle view of Casablanca's urban skyline under a vibrant blue sky. Stock Photo"
+  },
+  {
+    "key": "MA|dakhla",
+    "actualCity": "Dakhla",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/38277741/pexels-photo-38277741/free-photo-of-desert-landscape-with-duna-blanca-sign-in-dakhla.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/desert-landscape-with-duna-blanca-sign-in-dakhla-38277741/",
+    "caption": "Expansive desert scene with a sign reading 'Duna Blanca' in Dakhla, under a bright sky.",
+    "altText": "Free Expansive desert scene with a sign reading 'Duna Blanca' in Dakhla, under a bright sky. Stock Photo"
+  },
+  {
+    "key": "MA|fes",
+    "actualCity": "Fès",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/38112351/pexels-photo-38112351/free-photo-of-historical-cityscape-of-fes-morocco.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/historical-cityscape-of-fes-morocco-38112351/",
+    "caption": "Aerial view of Fes city showcasing historic architecture and rustic rooftops under a cloudy sky.",
+    "altText": "Free Aerial view of Fes city showcasing historic architecture and rustic rooftops under a cloudy sky. Stock Photo"
+  },
+  {
+    "key": "MA|laayoune",
+    "actualCity": "Laayoune",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/31659531/pexels-photo-31659531/free-photo-of-traditional-dome-house-in-laayoune-morocco.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/traditional-dome-house-in-laayoune-morocco-31659531/",
+    "caption": "A rustic domed house in Laâyoune, Morocco under a vibrant sky.",
+    "altText": "Free A rustic domed house in Laâyoune, Morocco under a vibrant sky. Stock Photo"
+  },
+  {
+    "key": "MA|marrakesh",
+    "actualCity": "Marrakesh",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/32027529/pexels-photo-32027529/free-photo-of-aerial-view-of-marrakesh-with-koutoubia-mosque.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-marrakesh-with-koutoubia-mosque-32027529/",
+    "caption": "This photo captures the stunning skyline of Marrakesh featuring the iconic Koutoubia Mosque under a vibrant sky.",
+    "altText": "Free This photo captures the stunning skyline of Marrakesh featuring the iconic Koutoubia Mosque under a vibrant sky. Stock Photo"
+  },
+  {
+    "key": "MA|ouarzazate",
+    "actualCity": "Ouarzazate",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/7391795/pexels-photo-7391795.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cars-parked-on-side-of-the-road-near-buildings-7391795/",
+    "caption": "Aerial view of a bustling street in Ouarzazate, showcasing Moroccan architecture.",
+    "altText": "Free Aerial view of a bustling street in Ouarzazate, showcasing Moroccan architecture. Stock Photo"
+  },
+  {
+    "key": "MA|oujda",
+    "actualCity": "Oujda",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/30419023/pexels-photo-30419023/free-photo-of-panoramic-view-of-oujda-oriental.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/panoramic-view-of-oujda-oriental-30419023/",
+    "caption": "Scenic view of Oujda cityscape with palm trees and historic architecture.",
+    "altText": "Free Scenic view of Oujda cityscape with palm trees and historic architecture. Stock Photo"
+  },
+  {
+    "key": "MA|rabat",
+    "actualCity": "Rabat",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/19068574/pexels-photo-19068574/free-photo-of-panorama-of-city-in-morocco.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/panorama-of-city-in-morocco-19068574/",
+    "caption": "Scenic aerial panorama of Rabat, Morocco featuring a prominent landmark and cityscape.",
+    "altText": "Free Scenic aerial panorama of Rabat, Morocco featuring a prominent landmark and cityscape. Stock Photo"
+  },
+  {
+    "key": "MA|tangier",
+    "actualCity": "Tangier",
+    "country": "Morocco",
+    "sourceUrl": "https://images.pexels.com/photos/20890428/pexels-photo-20890428/free-photo-of-cityscape-of-tangier-morocco.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cityscape-of-tangier-morocco-20890428/",
+    "caption": "Explore the bustling skyline of Tangier with its diverse architecture under a clear sky.",
+    "altText": "Free Explore the bustling skyline of Tangier with its diverse architecture under a clear sky. Stock Photo"
+  },
+  {
+    "key": "MG|antananarivo",
+    "actualCity": "Antananarivo",
+    "country": "Madagascar",
+    "sourceUrl": "https://images.pexels.com/photos/18870790/pexels-photo-18870790/free-photo-of-cityscape-of-antananarivo-in-summer.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cityscape-of-antananarivo-in-summer-18870790/",
+    "caption": "Vibrant cityscape of Antananarivo, Madagascar, showcasing colorful buildings under a bright blue sky.",
+    "altText": "Free Vibrant cityscape of Antananarivo, Madagascar, showcasing colorful buildings under a bright blue sky. Stock Photo"
+  },
+  {
+    "key": "MG|antsiranana",
+    "actualCity": "Antsiranana",
+    "country": "Madagascar",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY 2.0 city-architecture photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/24/Antsiranana_Diego_Suarez_typical_Arab-influenced_architecture_Madagascar.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=19600464",
+    "caption": "Antsiranana Diego Suarez typical Arab-influenced architecture Madagascar",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "creator": "BelgianChocolate",
+    "attribution": "\"Antsiranana Diego Suarez typical Arab-influenced architecture Madagascar\" by BelgianChocolate is licensed under CC BY 2.0."
+  },
+  {
+    "key": "MG|mahajanga",
+    "actualCity": "Mahajanga",
+    "country": "Madagascar",
+    "sourceUrl": "https://images.pexels.com/photos/9392601/pexels-photo-9392601.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/palm-trees-near-slides-9392601/",
+    "caption": "Explore the lush greenery and water slide at a tropical resort in Mahajanga.",
+    "altText": "Free Explore the lush greenery and water slide at a tropical resort in Mahajanga. Stock Photo"
+  },
+  {
+    "key": "MG|toamasina",
+    "actualCity": "Toamasina",
+    "country": "Madagascar",
+    "sourceUrl": "https://images.pexels.com/photos/3880176/pexels-photo-3880176.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/brown-dock-on-the-shore-during-night-time-3880176/",
+    "caption": "Serene view of a wooden dock at sunrise over calm waters in Toamasina Province, Madagascar.",
+    "altText": "Free Serene view of a wooden dock at sunrise over calm waters in Toamasina Province, Madagascar. Stock Photo"
+  },
+  {
+    "key": "MG|toliara",
+    "actualCity": "Toliara",
+    "country": "Madagascar",
+    "sourceUrl": "https://images.pexels.com/photos/33923824/pexels-photo-33923824/free-photo-of-waves-crashing-on-toliara-beach-at-sunset.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/waves-crashing-on-toliara-beach-at-sunset-33923824/",
+    "caption": "Capture of ocean waves crashing on Toliara beach, Madagascar during sunset.",
+    "altText": "Free Capture of ocean waves crashing on Toliara beach, Madagascar during sunset. Stock Photo"
+  },
+  {
+    "key": "ML|bamako",
+    "actualCity": "Bamako",
+    "country": "Mali",
+    "sourceUrl": "https://images.pexels.com/photos/17676147/pexels-photo-17676147/free-photo-of-view-of-a-riverbank.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/view-of-a-riverbank-17676147/",
+    "caption": "Aerial view of wooden boats along the Niger River in Bamako, Mali. Busy riverbank activity.",
+    "altText": "Free Aerial view of wooden boats along the Niger River in Bamako, Mali. Busy riverbank activity. Stock Photo"
+  },
+  {
+    "key": "ML|mopti",
+    "actualCity": "Mopti",
+    "country": "Mali",
+    "sourceWebsite": "Flickr",
+    "sourceType": "Openverse-indexed Flickr CC BY photograph",
+    "sourceUrl": "https://live.staticflickr.com/3399/3333335172_4675993f73_b.jpg",
+    "sourcePage": "https://www.flickr.com/photos/35914311@N03/3333335172",
+    "caption": "Market in Mopti, Mali, W. Africa",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "creator": "emilio labrador",
+    "attribution": "\"Market in Mopti, Mali, W. Africa\" by emilio labrador is licensed under CC BY 2.0."
+  },
+  {
+    "key": "MR|nouadhibou",
+    "actualCity": "Nouadhibou",
+    "country": "Mauritania",
+    "sourceUrl": "https://images.pexels.com/photos/13904585/pexels-photo-13904585.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/ashore-13904585/",
+    "caption": "Fishing boats beached on a sunny day in Nouadhibou, Mauritania, showcasing vibrant colors under a clear sky.",
+    "altText": "Free Fishing boats beached on a sunny day in Nouadhibou, Mauritania, showcasing vibrant colors under a clear sky. Stock Photo"
+  },
+  {
+    "key": "MR|nouakchott",
+    "actualCity": "Nouakchott",
+    "country": "Mauritania",
+    "sourceUrl": "https://images.pexels.com/photos/33952949/pexels-photo-33952949/free-photo-of-aerial-view-of-nouakchott-mauritania-cityscape.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-nouakchott-mauritania-cityscape-33952949/",
+    "caption": "Stunning aerial shot of Nouakchott, Mauritania, showcasing urban sprawl under a bright blue sky.",
+    "altText": "Free Stunning aerial shot of Nouakchott, Mauritania, showcasing urban sprawl under a bright blue sky. Stock Photo"
+  },
+  {
+    "key": "MW|blantyre",
+    "actualCity": "Blantyre",
+    "country": "Malawi",
+    "sourceUrl": "https://images.pexels.com/photos/17556816/pexels-photo-17556816/free-photo-of-man-in-black-clothes-standing-on-sidewalk.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/man-in-black-clothes-standing-on-sidewalk-17556816/",
+    "caption": "A young man stands on a bustling street in Blantyre, Malawi, showcasing contemporary urban life.",
+    "altText": "Free A young man stands on a bustling street in Blantyre, Malawi, showcasing contemporary urban life. Stock Photo"
+  },
+  {
+    "key": "MW|lilongwe",
+    "actualCity": "Lilongwe",
+    "country": "Malawi",
+    "sourceUrl": "https://images.pexels.com/photos/34936103/pexels-photo-34936103/free-photo-of-street-view-in-lilongwe-malawi-on-a-cloudy-day.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/street-view-in-lilongwe-malawi-on-a-cloudy-day-34936103/",
+    "caption": "A man walking with buckets on a street in Lilongwe, Malawi, showcasing local life.",
+    "altText": "Free A man walking with buckets on a street in Lilongwe, Malawi, showcasing local life. Stock Photo"
+  },
+  {
+    "key": "MZ|maputo",
+    "actualCity": "Maputo",
+    "country": "Mozambique",
+    "sourceUrl": "https://images.pexels.com/photos/30188142/pexels-photo-30188142/free-photo-of-aerial-view-of-maputo-city-skyline.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-maputo-city-skyline-30188142/",
+    "caption": "Aerial view of Maputo's urban landscape with buildings and coastline.",
+    "altText": "Free Aerial view of Maputo's urban landscape with buildings and coastline. Stock Photo"
+  },
+  {
+    "key": "MZ|vilankulo",
+    "actualCity": "Vilankulo",
+    "country": "Mozambique",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 4.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/37/Market_in_Vilankulo%2C_Mozambique_%2822-06-2010%29_145.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=88807119",
+    "caption": "Market in Vilankulo, Mozambique (22-06-2010) 145",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "creator": "Edward Middleton",
+    "attribution": "\"Market in Vilankulo, Mozambique (22-06-2010) 145\" by Edward Middleton is licensed under CC BY-SA 4.0."
+  },
+  {
+    "key": "NA|walvis bay",
+    "actualCity": "Walvis Bay",
+    "country": "Namibia",
+    "sourceUrl": "https://images.pexels.com/photos/17698406/pexels-photo-17698406/free-photo-of-building-on-sea-shore-in-black-and-white.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/building-on-sea-shore-in-black-and-white-17698406/",
+    "caption": "Black and white image of a building on stilts in Walvis Bay, Namibia, along the shoreline.",
+    "altText": "Free Black and white image of a building on stilts in Walvis Bay, Namibia, along the shoreline. Stock Photo"
+  },
+  {
+    "key": "NA|windhoek",
+    "actualCity": "Windhoek",
+    "country": "Namibia",
+    "sourceUrl": "https://images.pexels.com/photos/11520633/pexels-photo-11520633.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/photo-of-a-man-smoking-11520633/",
+    "caption": "A man in colorful outfit smoking outdoors in Windhoek, Namibia, with urban backdrop.",
+    "altText": "Free A man in colorful outfit smoking outdoors in Windhoek, Namibia, with urban backdrop. Stock Photo"
+  },
+  {
+    "key": "NE|niamey",
+    "actualCity": "Niamey",
+    "country": "Niger",
+    "sourceUrl": "https://images.pexels.com/photos/8236054/pexels-photo-8236054.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-brown-field-8236054/",
+    "caption": "Stunning aerial view of Niamey, Niger, capturing desert landscape from airplane window.",
+    "altText": "Free Stunning aerial view of Niamey, Niger, capturing desert landscape from airplane window. Stock Photo"
+  },
+  {
+    "key": "NG|abuja",
+    "actualCity": "Abuja",
+    "country": "Nigeria",
+    "sourceUrl": "https://images.pexels.com/photos/16237804/pexels-photo-16237804/free-photo-of-aerial-view-of-abuja-in-fog-nigeria.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-abuja-in-fog-nigeria-16237804/",
+    "caption": "Discover the sprawling urban landscape of Abuja, Nigeria's capital, captured from above with misty mountains in the background.",
+    "altText": "Free Discover the sprawling urban landscape of Abuja, Nigeria's capital, captured from above with misty mountains in the background. Stock Photo"
+  },
+  {
+    "key": "NG|enugu",
+    "actualCity": "Enugu",
+    "country": "Nigeria",
+    "sourceUrl": "https://images.pexels.com/photos/38099166/pexels-photo-38099166/free-photo-of-aerial-view-of-enugu-city-with-landscape-and-buildings.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-enugu-city-with-landscape-and-buildings-38099166/",
+    "caption": "Aerial view of Enugu, Nigeria showcasing urban landscape, lush greenery, and residential structures.",
+    "altText": "Free Aerial view of Enugu, Nigeria showcasing urban landscape, lush greenery, and residential structures. Stock Photo"
+  },
+  {
+    "key": "NG|kano",
+    "actualCity": "Kano",
+    "country": "Nigeria",
+    "sourceUrl": "https://images.pexels.com/photos/31729409/pexels-photo-31729409/free-photo-of-aerial-view-of-urban-landscape-in-kano-nigeria.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-urban-landscape-in-kano-nigeria-31729409/",
+    "caption": "Aerial cityscape of Kano, Nigeria showcasing dense urban architecture and sprawling rooftops.",
+    "altText": "Free Aerial cityscape of Kano, Nigeria showcasing dense urban architecture and sprawling rooftops. Stock Photo"
+  },
+  {
+    "key": "NG|katsina",
+    "actualCity": "Katsina",
+    "country": "Nigeria",
+    "sourceUrl": "https://images.pexels.com/photos/33662816/pexels-photo-33662816/free-photo-of-welcome-to-katsina-city-entrance-archway.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/welcome-to-katsina-city-entrance-archway-33662816/",
+    "caption": "Entrance archway to Katsina City, distinct architectural design on a sunny day.",
+    "altText": "Free Entrance archway to Katsina City, distinct architectural design on a sunny day. Stock Photo"
+  },
+  {
+    "key": "NG|lagos",
+    "actualCity": "Lagos",
+    "country": "Nigeria",
+    "sourceUrl": "https://images.pexels.com/photos/37405043/pexels-photo-37405043/free-photo-of-modern-lagos-skyline-with-watercraft-in-lagoon.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/modern-lagos-skyline-with-watercraft-in-lagoon-37405043/",
+    "caption": "Scenic view of Lagos skyline featuring modern buildings and a motorboat in the lagoon under a bright sky.",
+    "altText": "Free Scenic view of Lagos skyline featuring modern buildings and a motorboat in the lagoon under a bright sky. Stock Photo"
+  },
+  {
+    "key": "NG|owerri",
+    "actualCity": "Owerri",
+    "country": "Nigeria",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 4.0 photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/be/Akachi_Monument%2C_Owerri%2C_Imo_State_Nigeria.jpg",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=51964749",
+    "caption": "Akachi Monument, Owerri, Imo State Nigeria",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "creator": "Alagboso",
+    "attribution": "\"Akachi Monument, Owerri, Imo State Nigeria\" by Alagboso is licensed under CC BY-SA 4.0."
+  },
+  {
+    "key": "NG|port harcourt",
+    "actualCity": "Port Harcourt",
+    "country": "Nigeria",
+    "sourceUrl": "https://images.pexels.com/photos/15010364/pexels-photo-15010364/free-photo-of-industrial-tower-and-buildings-roofs-in-city.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/industrial-tower-and-buildings-roofs-in-city-15010364/",
+    "caption": "Explore the urban landscape of Port Harcourt, Nigeria with distinct buildings and lush greenery.",
+    "altText": "Free Explore the urban landscape of Port Harcourt, Nigeria with distinct buildings and lush greenery. Stock Photo"
+  },
+  {
+    "key": "RW|kigali",
+    "actualCity": "Kigali",
+    "country": "Rwanda",
+    "sourceUrl": "https://images.pexels.com/photos/31466702/pexels-photo-31466702/free-photo-of-aerial-view-of-kigali-s-modern-skyline.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-kigali-s-modern-skyline-31466702/",
+    "caption": "An aerial shot showcasing the modern skyline and architecture of Kigali, Rwanda.",
+    "altText": "Free An aerial shot showcasing the modern skyline and architecture of Kigali, Rwanda. Stock Photo"
+  },
+  {
+    "key": "SC|victoria",
+    "actualCity": "Victoria",
+    "country": "Seychelles",
+    "sourceUrl": "https://images.pexels.com/photos/13463136/pexels-photo-13463136.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-city-buildings-13463136/",
+    "caption": "A stunning aerial shot capturing the vibrant rooftops and architecture of Victoria, Seychelles.",
+    "altText": "Free A stunning aerial shot capturing the vibrant rooftops and architecture of Victoria, Seychelles. Stock Photo"
+  },
+  {
+    "key": "SD|khartoum",
+    "actualCity": "Khartoum",
+    "country": "Sudan",
+    "sourceUrl": "https://images.pexels.com/photos/19036693/pexels-photo-19036693/free-photo-of-birds-flying-on-clear-sky.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/birds-flying-on-clear-sky-19036693/",
+    "caption": "A flock of birds flying high in a clear sky framed by palm trees in Khartoum, Sudan.",
+    "altText": "Free A flock of birds flying high in a clear sky framed by palm trees in Khartoum, Sudan. Stock Photo"
+  },
+  {
+    "key": "SD|port sudan",
+    "actualCity": "Port Sudan",
+    "country": "Sudan",
+    "sourceWebsite": "Wikimedia Commons",
+    "sourceType": "Openverse-indexed Wikimedia Commons CC BY-SA 3.0 archival harbor photograph",
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Hafenarbeiter_bei_der_Verladung_von_Sackgut_-_MS_Rothenstein_NDL%2C_Port_Sudan_1960.png",
+    "sourcePage": "https://commons.wikimedia.org/w/index.php?curid=25122811",
+    "caption": "Hafenarbeiter bei der Verladung von Sackgut - MS Rothenstein NDL, Port Sudan 1960",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "creator": "Buonasera",
+    "attribution": "\"Hafenarbeiter bei der Verladung von Sackgut - MS Rothenstein NDL, Port Sudan 1960\" by Buonasera is licensed under CC BY-SA 3.0."
+  },
+  {
+    "key": "SL|freetown",
+    "actualCity": "Freetown",
+    "country": "Sierra Leone",
+    "sourceUrl": "https://images.pexels.com/photos/36607738/pexels-photo-36607738/free-photo-of-scenic-view-of-mount-aureol-in-freetown.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/scenic-view-of-mount-aureol-in-freetown-36607738/",
+    "caption": "A vibrant aerial view of Mount Aureol and its colorful houses in Freetown, Sierra Leone.",
+    "altText": "Free A vibrant aerial view of Mount Aureol and its colorful houses in Freetown, Sierra Leone. Stock Photo"
+  },
+  {
+    "key": "SN|dakar",
+    "actualCity": "Dakar",
+    "country": "Senegal",
+    "sourceUrl": "https://images.pexels.com/photos/18189724/pexels-photo-18189724/free-photo-of-traffic-on-street-in-town-in-senegal.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/traffic-on-street-in-town-in-senegal-18189724/",
+    "caption": "City street in Dakar with motorbikes and cars navigating heavy traffic, showcasing urban life.",
+    "altText": "Free City street in Dakar with motorbikes and cars navigating heavy traffic, showcasing urban life. Stock Photo"
+  },
+  {
+    "key": "SO|hargeisa",
+    "actualCity": "Hargeisa",
+    "country": "Somalia",
+    "sourceUrl": "https://images.pexels.com/photos/29248948/pexels-photo-29248948/free-photo-of-stunning-sunset-over-hargeisa-somalia.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/stunning-sunset-over-hargeisa-somalia-29248948/",
+    "caption": "Capture of a breathtaking sunset over the cityscape of Hargeisa, Somalia.",
+    "altText": "Free Capture of a breathtaking sunset over the cityscape of Hargeisa, Somalia. Stock Photo"
+  },
+  {
+    "key": "SO|mogadishu",
+    "actualCity": "Mogadishu",
+    "country": "Somalia",
+    "sourceUrl": "https://images.pexels.com/photos/33836939/pexels-photo-33836939/free-photo-of-skyscraper-construction-in-mogadishu-somalia.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/skyscraper-construction-in-mogadishu-somalia-33836939/",
+    "caption": "A tall building under construction in Mogadishu, showcasing the skyline against a clear blue sky.",
+    "altText": "Free A tall building under construction in Mogadishu, showcasing the skyline against a clear blue sky. Stock Photo"
+  },
+  {
+    "key": "SS|juba",
+    "actualCity": "Juba",
+    "country": "South Sudan",
+    "sourceUrl": "https://images.pexels.com/photos/6921052/pexels-photo-6921052.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/women-posing-beside-each-other-6921052/",
+    "caption": "Three smiling women posing together in Juba, South Sudan. Indoor setting.",
+    "altText": "Free Three smiling women posing together in Juba, South Sudan. Indoor setting. Stock Photo"
+  },
+  {
+    "key": "ST|sao tome",
+    "actualCity": "São Tomé",
+    "country": "São Tomé and Príncipe",
+    "sourceUrl": "https://images.pexels.com/photos/803099/pexels-photo-803099.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-trees-and-houses-803099/",
+    "caption": "Panoramic view of São Tomé das Letras with lush landscape and historical architecture.",
+    "altText": "Free Panoramic view of São Tomé das Letras with lush landscape and historical architecture. Stock Photo"
+  },
+  {
+    "key": "TD|n djamena",
+    "actualCity": "N'Djamena",
+    "country": "Chad",
+    "sourceWebsite": "Flickr",
+    "sourceType": "Openverse-indexed Flickr CC BY cityscape photograph",
+    "sourceUrl": "https://live.staticflickr.com/3771/12930379053_6d26921cae_b.jpg",
+    "sourcePage": "https://www.flickr.com/photos/45673145@N00/12930379053",
+    "caption": "Approach to Hassan Djammous airport, N'Djamena, Chad, across the Chari river in dry season.",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "creator": "Ken Doerr",
+    "attribution": "\"Approach to Hassan Djammous airport, N'Djamena, Chad, across the Chari river in dry season\" by Ken Doerr is licensed under CC BY 2.0."
+  },
+  {
+    "key": "TG|lome",
+    "actualCity": "Lomé",
+    "country": "Togo",
+    "sourceUrl": "https://images.pexels.com/photos/37904067/pexels-photo-37904067/free-photo-of-street-vendor-in-lome-pushing-cart.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/street-vendor-in-lome-pushing-cart-37904067/",
+    "caption": "A street vendor in a green dress pushes a cart along an urban street in Lomé, Togo.",
+    "altText": "Free A street vendor in a green dress pushes a cart along an urban street in Lomé, Togo. Stock Photo"
+  },
+  {
+    "key": "TN|djerba",
+    "actualCity": "Djerba",
+    "country": "Tunisia",
+    "sourceUrl": "https://images.pexels.com/photos/6460890/pexels-photo-6460890.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/an-arch-at-an-alley-in-djerbahood-6460890/",
+    "caption": "Discover the vibrant street art and architectural charm of Djerbahood in Djerba, Tunisia.",
+    "altText": "Free Discover the vibrant street art and architectural charm of Djerbahood in Djerba, Tunisia. Stock Photo"
+  },
+  {
+    "key": "TN|monastir",
+    "actualCity": "Monastir",
+    "country": "Tunisia",
+    "sourceUrl": "https://images.pexels.com/photos/891116/pexels-photo-891116.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/the-ribat-of-monastir-891116/",
+    "caption": "Explore the ancient Ribat of Monastir in Tunisia, showcasing stunning architecture and ocean views.",
+    "altText": "Free Explore the ancient Ribat of Monastir in Tunisia, showcasing stunning architecture and ocean views. Stock Photo"
+  },
+  {
+    "key": "TN|tunis",
+    "actualCity": "Tunis",
+    "country": "Tunisia",
+    "sourceUrl": "https://images.pexels.com/photos/29787870/pexels-photo-29787870/free-photo-of-rooftop-satellite-dishes-and-minaret-in-tunis.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/rooftop-satellite-dishes-and-minaret-in-tunis-29787870/",
+    "caption": "Urban rooftops with satellite dishes beneath a towering minaret in Tunis, Tunisia.",
+    "altText": "Free Urban rooftops with satellite dishes beneath a towering minaret in Tunis, Tunisia. Stock Photo"
+  },
+  {
+    "key": "TZ|dar es salaam",
+    "actualCity": "Dar es Salaam",
+    "country": "Tanzania",
+    "sourceUrl": "https://images.pexels.com/photos/18806088/pexels-photo-18806088/free-photo-of-aerial-view-of-the-harbor-in-dar-es-salaam-tanzania.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-view-of-the-harbor-in-dar-es-salaam-tanzania-18806088/",
+    "caption": "A stunning aerial view of Dar es Salaam showcasing its bustling harbor and urban skyline.",
+    "altText": "Free A stunning aerial view of Dar es Salaam showcasing its bustling harbor and urban skyline. Stock Photo"
+  },
+  {
+    "key": "TZ|kilimanjaro",
+    "actualCity": "Kilimanjaro",
+    "country": "Tanzania",
+    "sourceUrl": "https://images.pexels.com/photos/36841474/pexels-photo-36841474/free-photo-of-majestic-view-of-mount-kilimanjaro-at-sunrise.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/majestic-view-of-mount-kilimanjaro-at-sunrise-36841474/",
+    "caption": "Stunning aerial view of Mount Kilimanjaro at sunrise, showcasing its snow-capped peak and surrounding clouds.",
+    "altText": "Free Stunning aerial view of Mount Kilimanjaro at sunrise, showcasing its snow-capped peak and surrounding clouds. Stock Photo"
+  },
+  {
+    "key": "TZ|mwanza",
+    "actualCity": "Mwanza",
+    "country": "Tanzania",
+    "sourceUrl": "https://images.pexels.com/photos/7101649/pexels-photo-7101649.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/aerial-photography-of-city-buildings-7101649/",
+    "caption": "A stunning aerial view of Mwanza, Tanzania, showcasing the city's landscape and Lake Victoria.",
+    "altText": "Free A stunning aerial view of Mwanza, Tanzania, showcasing the city's landscape and Lake Victoria. Stock Photo"
+  },
+  {
+    "key": "TZ|zanzibar city",
+    "actualCity": "Zanzibar City",
+    "country": "Tanzania",
+    "sourceUrl": "https://images.pexels.com/photos/14401119/pexels-photo-14401119.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/an-aerial-photography-of-city-near-the-sea-under-the-blue-sky-and-white-clouds-14401119/",
+    "caption": "Stunning aerial view over Zanzibar City showcasing vibrant coastal urban scenery with blue ocean backdrop.",
+    "altText": "Free Stunning aerial view over Zanzibar City showcasing vibrant coastal urban scenery with blue ocean backdrop. Stock Photo"
+  },
+  {
+    "key": "UG|entebbe",
+    "actualCity": "Entebbe",
+    "country": "Uganda",
+    "sourceUrl": "https://images.pexels.com/photos/11948635/pexels-photo-11948635.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/grayscale-photo-of-boats-in-the-water-11948635/",
+    "caption": "Black and white silhouette of boats on Lake Victoria during twilight, Entebbe, Uganda.",
+    "altText": "Free Black and white silhouette of boats on Lake Victoria during twilight, Entebbe, Uganda. Stock Photo"
+  },
+  {
+    "key": "ZA|bloemfontein",
+    "actualCity": "Bloemfontein",
+    "country": "South Africa",
+    "sourceUrl": "https://images.pexels.com/photos/30680723/pexels-photo-30680723/free-photo-of-modern-architecture-of-bloemfontein-city-street.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/modern-architecture-of-bloemfontein-city-street-30680723/",
+    "caption": "Street view of modern buildings in Bloemfontein, South Africa, with palm trees and cars lining the road.",
+    "altText": "Free Street view of modern buildings in Bloemfontein, South Africa, with palm trees and cars lining the road. Stock Photo"
+  },
+  {
+    "key": "ZA|cape town",
+    "actualCity": "Cape Town",
+    "country": "South Africa",
+    "sourceUrl": "https://images.pexels.com/photos/34862400/pexels-photo-34862400/free-photo-of-cape-town-skyline-at-sunset-with-table-mountain.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/cape-town-skyline-at-sunset-with-table-mountain-34862400/",
+    "caption": "View of Cape Town's skyline at sunset with Table Mountain in the background. Vibrant, urban cityscape.",
+    "altText": "Free View of Cape Town's skyline at sunset with Table Mountain in the background. Vibrant, urban cityscape. Stock Photo"
+  },
+  {
+    "key": "ZA|durban",
+    "actualCity": "Durban",
+    "country": "South Africa",
+    "sourceUrl": "https://images.pexels.com/photos/3814193/pexels-photo-3814193.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/city-skyline-under-cloudy-sky-3814193/",
+    "caption": "Aerial view of Durban's modern cityscape against the Indian Ocean with high-rise buildings.",
+    "altText": "Free Aerial view of Durban's modern cityscape against the Indian Ocean with high-rise buildings. Stock Photo"
+  },
+  {
+    "key": "ZA|east london",
+    "actualCity": "East London",
+    "country": "South Africa",
+    "sourceUrl": "https://images.pexels.com/photos/28086833/pexels-photo-28086833/free-photo-of-black-and-white-cat-with-ball.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/black-and-white-cat-with-ball-28086833/",
+    "caption": "Charming tuxedo cat playing with a tennis ball on grass in East London, South Africa.",
+    "altText": "Free Charming tuxedo cat playing with a tennis ball on grass in East London, South Africa. Stock Photo"
+  },
+  {
+    "key": "ZA|gqeberha",
+    "actualCity": "Gqeberha",
+    "country": "South Africa",
+    "sourceUrl": "https://images.pexels.com/photos/28451042/pexels-photo-28451042/free-photo-of-beach-walk-at-gqeberha-coastal-shore-south-africa.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/beach-walk-at-gqeberha-coastal-shore-south-africa-28451042/",
+    "caption": "A scenic view of people walking along Gqeberha Beach with city skyline in the background.",
+    "altText": "Free A scenic view of people walking along Gqeberha Beach with city skyline in the background. Stock Photo"
+  },
+  {
+    "key": "ZA|johannesburg",
+    "actualCity": "Johannesburg",
+    "country": "South Africa",
+    "sourceUrl": "https://images.pexels.com/photos/14660445/pexels-photo-14660445.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/view-of-johannesburg-downtown-south-africa-14660445/",
+    "caption": "A panoramic view of Johannesburg cityscape during sunset, featuring modern skyscrapers and iconic towers.",
+    "altText": "Free A panoramic view of Johannesburg cityscape during sunset, featuring modern skyscrapers and iconic towers. Stock Photo"
+  },
+  {
+    "key": "ZM|lusaka",
+    "actualCity": "Lusaka",
+    "country": "Zambia",
+    "sourceUrl": "https://images.pexels.com/photos/5074871/pexels-photo-5074871.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/man-in-black-jacket-standing-near-glass-window-5074871/",
+    "caption": "A man gazes out a window, capturing a thoughtful moment in Lusaka's urban landscape.",
+    "altText": "Free A man gazes out a window, capturing a thoughtful moment in Lusaka's urban landscape. Stock Photo"
+  },
+  {
+    "key": "ZW|bulawayo",
+    "actualCity": "Bulawayo",
+    "country": "Zimbabwe",
+    "sourceUrl": "https://images.pexels.com/photos/11599315/pexels-photo-11599315.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/low-angle-view-of-a-building-in-city-under-blue-sky-11599315/",
+    "caption": "View of a contemporary office building against a clear blue sky in urban Bulawayo, Zimbabwe.",
+    "altText": "Free View of a contemporary office building against a clear blue sky in urban Bulawayo, Zimbabwe. Stock Photo"
+  },
+  {
+    "key": "ZW|harare",
+    "actualCity": "Harare",
+    "country": "Zimbabwe",
+    "sourceUrl": "https://images.pexels.com/photos/14093842/pexels-photo-14093842.jpeg?auto=compress&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/joina-city-shopping-mall-in-harare-14093842/",
+    "caption": "Tall modern skyscraper in Harare, Zimbabwe captured during sunset with city streets bustling below.",
+    "altText": "Free Tall modern skyscraper in Harare, Zimbabwe captured during sunset with city streets bustling below. Stock Photo"
+  },
+  {
+    "key": "ZW|victoria falls",
+    "actualCity": "Victoria Falls",
+    "country": "Zimbabwe",
+    "sourceUrl": "https://images.pexels.com/photos/27878404/pexels-photo-27878404/free-photo-of-an-aerial-view-of-victoria-falls-in-zimbabwe.jpeg?cs=tinysrgb&dpr=1&w=1600",
+    "sourcePage": "https://www.pexels.com/photo/an-aerial-view-of-victoria-falls-in-zimbabwe-27878404/",
+    "caption": "Stunning aerial shot of Victoria Falls, showcasing its breathtaking beauty and surrounding landscape.",
+    "altText": "Free Stunning aerial shot of Victoria Falls, showcasing its breathtaking beauty and surrounding landscape. Stock Photo"
+  }
+]
