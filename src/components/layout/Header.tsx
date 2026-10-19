@@ -4,15 +4,15 @@ import { Bell, Moon, Search, Sun, Globe2, Menu, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTheme } from '@/contexts/ThemeContext';
-import { apiBaseUrl } from '@/config/runtime';
 import { useAuth } from '@/contexts/AuthContext';
 import { siteConfig } from '@/config/site';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 import { getCountries } from '@/services/catalog';
 import type { CountryItem } from '@/types';
+import { SafeImage } from '@/components/ui/safe-image';
 
-const logoImage = `${apiBaseUrl}/images/Logo_design_for_Big_Cities_202608061337_11zon.webp`;
+const logoImage = '/images/Logo_design_for_Big_Cities_202608061337_11zon.webp';
 
 export function Header() {
   const { resolvedTheme, setMode } = useTheme();
@@ -83,10 +83,11 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-slate-950/30">
       <div className="relative z-10 mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3">
-          <img
+          <SafeImage
             src={logoImage}
             alt="Big Cities Event Monitor logo"
             className="h-10 w-10 rounded-2xl object-contain bg-white shadow-sm dark:bg-slate-900"
+            fallbackClassName="h-10 w-10 rounded-2xl bg-white dark:bg-slate-900"
           />
           <div>
             <p className="text-sm font-semibold text-slate-950 dark:text-white">Big Cities</p>

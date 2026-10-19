@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import AuthService from './auth.service';
 import { z } from 'zod';
+import { normalizeLocalImageUrl } from '../images/local-image';
 
 const registerSchema = z.object({ name: z.string().min(1), email: z.string().email(), password: z.string().min(8) });
 const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
@@ -13,7 +14,7 @@ function sanitizeUser(user: any) {
     name: user.name,
     email: user.email,
     role: user.role?.name ?? 'member',
-    avatar: user.avatarUrl ?? '',
+    avatar: normalizeLocalImageUrl(user.avatarUrl) ?? '',
     isEmailVerified: Boolean(user.isEmailVerified),
   };
 }

@@ -1,20 +1,17 @@
-import { apiBaseUrl } from '@/config/runtime';
+import { normalizeImageUrl } from '@/utils/imageValidation';
 
-const baseImagePath = `${apiBaseUrl}/images`;
-const encodeImagePath = (...segments: string[]) => segments.map((segment) => encodeURIComponent(segment)).join('/');
-
-export const pakistanCountryImage = `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Pakistan.jpg')}`;
+export const pakistanCountryImage = normalizeImageUrl('/images/Pakistan%20cities%20images/Pakistan.jpg') ?? '';
 
 export const pakistanCityImages: Record<string, string> = {
-  'pk-lahore': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Lahore.png')}`,
-  'pk-karachi': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Karachi.png')}`,
-  'pk-islamabad': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Islamabad.jpg')}`,
-  'pk-rawalpindi': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Rawalpindi.jpeg')}`,
-  'pk-faisalabad': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Faisalabad.png')}`,
-  'pk-multan': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Multan.png')}`,
-  'pk-peshawar': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Peshawar.png')}`,
-  'pk-quetta': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Quetta.png')}`,
-  'pk-sialkot': `${baseImagePath}/${encodeImagePath('Pakistan cities images', 'Sialkot.png')}`,
+  'pk-lahore': normalizeImageUrl('/images/Pakistan%20cities%20images/Lahore.png') ?? '',
+  'pk-karachi': normalizeImageUrl('/images/Pakistan%20cities%20images/Karachi.png') ?? '',
+  'pk-islamabad': normalizeImageUrl('/images/Pakistan%20cities%20images/Islamabad.jpg') ?? '',
+  'pk-rawalpindi': normalizeImageUrl('/images/Pakistan%20cities%20images/Rawalpindi.jpeg') ?? '',
+  'pk-faisalabad': normalizeImageUrl('/images/Pakistan%20cities%20images/Faisalabad.png') ?? '',
+  'pk-multan': normalizeImageUrl('/images/Pakistan%20cities%20images/Multan.png') ?? '',
+  'pk-peshawar': normalizeImageUrl('/images/Pakistan%20cities%20images/Peshawar.png') ?? '',
+  'pk-quetta': normalizeImageUrl('/images/Pakistan%20cities%20images/Quetta.png') ?? '',
+  'pk-sialkot': normalizeImageUrl('/images/Pakistan%20cities%20images/Sialkot.png') ?? '',
 };
 
 export function getPakistanCityImage(slug: string): string | null {

@@ -3,6 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import EventService from './event.service';
 import AuthService from '../auth/auth.service';
 import { z } from 'zod';
+import { normalizeLocalImageUrl } from '../images/local-image';
+
+const localImageSchema = z.string().trim().refine(
+  (value) => normalizeLocalImageUrl(value) !== null,
+  'Image URL must reference an existing local /images/ file',
+);
 
 const createSchema = z.object({
   title: z.string().min(1),
@@ -16,7 +22,7 @@ const createSchema = z.object({
   featured: z.boolean().optional(),
   trending: z.boolean().optional(),
   enabled: z.boolean().optional(),
-  image: z.string().trim().url().optional().nullable(),
+  image: localImageSchema.optional().nullable(),
 });
 
 const updateSchema = createSchema.partial();

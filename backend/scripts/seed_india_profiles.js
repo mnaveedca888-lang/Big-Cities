@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
+const installLocalImageWriteGuard = require('./local-image-write-guard.cjs');
 
 const prisma = new PrismaClient();
+installLocalImageWriteGuard(prisma);
 
 const countryProfile = {
   shortDescription: 'India is a populous South Asian republic known for its cultural diversity, technology sector, and rapidly growing economy.',

@@ -1,4 +1,5 @@
 import Fastify, { type FastifyInstance } from 'fastify';
+import jwt from 'jsonwebtoken';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EVENT_SLUG_MAX_LENGTH, registerEventRoutes, resolveCategoryId } from './event.controller';
 
@@ -6,15 +7,17 @@ const apps: FastifyInstance[] = [];
 
 async function createEventApi(events: Map<string, Record<string, unknown>>) {
   const eventFindUnique = vi.fn(async ({ where }: { where: { slug: string } }) => events.get(where.slug) ?? null);
+  const eventCreate = vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({ id: 'created-event', ...data }));
   const prisma = {
-    event: { findUnique: eventFindUnique },
+    event: { findUnique: eventFindUnique, create: eventCreate },
     category: { findFirst: vi.fn() },
+    user: { findUnique: vi.fn().mockResolvedValue({ id: 'admin-user', role: { name: 'admin' } }) },
   } as any;
   const app = Fastify({ maxParamLength: EVENT_SLUG_MAX_LENGTH });
   apps.push(app);
   registerEventRoutes(app, prisma);
   await app.ready();
-  return { app, eventFindUnique };
+  return { app, eventFindUnique, eventCreate };
 }
 
 afterEach(async () => {
@@ -94,5 +97,60 @@ describe('event detail slug route', () => {
     expect(malformedResponse.statusCode).toBe(400);
     expect(excessiveResponse.statusCode).toBe(404);
     expect(eventFindUnique).not.toHaveBeenCalled();
+  });
+});
+
+describe('event image writes', () => {
+  const originalSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
+
+  afterEach(() => {
+    if (originalSecret === undefined) delete process.env.JWT_ACCESS_TOKEN_SECRET;
+    else process.env.JWT_ACCESS_TOKEN_SECRET = originalSecret;
+  });
+
+  it.each([
+    'https://images.unsplash.com/photo.jpg',
+    '/images/not-downloaded/event.webp',
+  ])('rejects non-local or missing image path %s before creating an event', async (image) => {
+    process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
+    const { app, eventCreate } = await createEventApi(new Map());
+    const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/events',
+      headers: { authorization: `Bearer ${token}` },
+      payload: {
+        title: 'Local Image Validation Event',
+        startAt: '2026-11-01T10:00:00.000Z',
+        endAt: '2026-11-01T11:00:00.000Z',
+        image,
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(eventCreate).not.toHaveBeenCalled();
+  });
+
+  it('accepts an existing local image path', async () => {
+    process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
+    const { app, eventCreate } = await createEventApi(new Map());
+    const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
+    const image = '/images/Logo_design_for_Big_Cities_202608061337_11zon.webp';
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/events',
+      headers: { authorization: `Bearer ${token}` },
+      payload: {
+        title: 'Local Image Validation Event',
+        startAt: '2026-11-01T10:00:00.000Z',
+        endAt: '2026-11-01T11:00:00.000Z',
+        image,
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+    expect(eventCreate).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ image }) }));
   });
 });

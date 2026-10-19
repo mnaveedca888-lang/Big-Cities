@@ -17,11 +17,15 @@ import registerEventRoutes, { EVENT_SLUG_MAX_LENGTH } from './events/event.contr
 import registerSearchRoutes from './search/search.controller';
 import { registerEventDiscoveryRoutes } from './events/discovery.controller';
 import { startEventSyncScheduler } from './events/ingestion/scheduler';
+import { databaseWritesEnabled, registerStagingWriteGuard } from './staging-write-guard';
+import { installLocalImageWriteGuard } from './images/local-image';
 
 const prisma = new PrismaClient();
+installLocalImageWriteGuard(prisma);
 
 async function start() {
   const app = Fastify({ logger: true, maxParamLength: EVENT_SLUG_MAX_LENGTH });
+  registerStagingWriteGuard(app);
 
   await app.register(helmet as any, {
     crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -97,7 +101,11 @@ async function start() {
     app.log.error('Failed to register routes', err as any);
   }
 
-  const stopEventSyncScheduler = startEventSyncScheduler(prisma, app.log);
+  const syncEnabled = databaseWritesEnabled() && process.env.EVENT_SYNC_ENABLED === 'true';
+  const stopEventSyncScheduler = syncEnabled ? startEventSyncScheduler(prisma, app.log) : null;
+  if (!stopEventSyncScheduler) {
+    app.log.info('Automatic event synchronization remains disabled for staging safety');
+  }
   let shuttingDown = false;
   const shutdown = async (signal: string) => {
     if (shuttingDown) return;

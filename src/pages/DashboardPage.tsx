@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { SEO } from '@/components/seo/SEO';
 import { apiClient } from '@/api/client';
+import { normalizeImageUrl } from '@/utils/imageValidation';
 import { apiBaseUrl } from '@/config/runtime';
 import { getCategories, getCountries, getCountryCities, updateCountry, updateCity } from '@/services/catalog';
 import { getEvents, updateEvent } from '@/services/events';
@@ -293,7 +294,9 @@ async function uploadImageFile(file: File) {
   });
   const uploadedUrl = response.data?.data?.[0]?.url;
   if (!uploadedUrl) throw new Error('Upload failed');
-  return uploadedUrl.startsWith('http') ? uploadedUrl : `${apiBaseUrl}${uploadedUrl.startsWith('/') ? uploadedUrl : `/${uploadedUrl}`}`;
+  const localImageUrl = normalizeImageUrl(uploadedUrl);
+  if (!localImageUrl) throw new Error('Upload returned a non-local image path');
+  return localImageUrl;
 }
 
 function buildCountryProfileState(country: CountryItem | null): Record<string, unknown> {

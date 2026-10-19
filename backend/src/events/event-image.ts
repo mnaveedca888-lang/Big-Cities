@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { localImageUrl } from '../images/local-image';
 
-const IMAGE_PREFIX = '/images';
-const PAKISTAN_IMAGES_DIR = path.join(__dirname, '..', '..', 'public', 'images', 'Events in Pakistan');
-const AZERBAIJAN_IMAGES_DIR = path.join(__dirname, '..', '..', 'public', 'images', 'Azerbaijan events images');
+const PAKISTAN_IMAGES_DIR = path.join(__dirname, '..', '..', 'public', 'Images', 'Events in Pakistan');
+const AZERBAIJAN_IMAGES_DIR = path.join(__dirname, '..', '..', 'public', 'Images', 'Azerbaijan events images');
 
 const pakistaniEventFileNames = fs.existsSync(PAKISTAN_IMAGES_DIR)
   ? fs.readdirSync(PAKISTAN_IMAGES_DIR).filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName))
@@ -26,32 +26,20 @@ const normalizeKey = (value: string) =>
     .trim()
     .replace(/\s+/g, ' ');
 
-const normalizeToTokens = (value: string) =>
-  normalizeKey(value)
-    .split(' ')
-    .map((token) => token.trim())
-    .filter(Boolean)
-    .filter((token) => token.length >= 3)
-    .filter((token) => !['the', 'a', 'an', 'of', 'in', 'on', 'and', 'for', 'to', 'near', 'at', 'by', 'with', 'day', 'festival', 'celebrations', 'celebration', 'show', 'conference', 'mela'].includes(token));
-
 const eventImageMap = new Map<string, string>();
-const eventImageTokens = new Map<string, string[]>();
 
 for (const fileName of pakistaniEventFileNames) {
   const fileBase = fileName.replace(/\.[^.]+$/, '');
   const normalizedKey = normalizeKey(fileBase);
   eventImageMap.set(normalizedKey, fileName);
-  eventImageTokens.set(normalizedKey, normalizeToTokens(fileBase));
 }
 
 const azerbaijanEventImageMap = new Map<string, string>();
-const azerbaijanEventImageTokens = new Map<string, string[]>();
 
 for (const fileName of azerbaijanEventFileNames) {
   const fileBase = fileName.replace(/\.[^.]+$/, '');
   const normalizedKey = normalizeKey(fileBase);
   azerbaijanEventImageMap.set(normalizedKey, fileName);
-  azerbaijanEventImageTokens.set(normalizedKey, normalizeToTokens(fileBase));
 }
 
 const titleAliases: Record<string, string> = {
@@ -64,11 +52,10 @@ const titleAliases: Record<string, string> = {
 };
 
 function buildImageUrl(fileName: string, folder: string) {
-  const encodedPath = [folder, fileName].map(encodeURIComponent).join('/');
-  return `${IMAGE_PREFIX}/${encodedPath}`;
+  return localImageUrl(folder, fileName);
 }
 
-function findBestEventImageFile(title: string, eventImageMap: Map<string, string>, eventImageTokens: Map<string, string[]>): string | null {
+function findEventImageFile(title: string, eventImageMap: Map<string, string>): string | null {
   const normalizedTitle = normalizeKey(title);
   if (!normalizedTitle) return null;
 
@@ -78,42 +65,13 @@ function findBestEventImageFile(title: string, eventImageMap: Map<string, string
     if (aliased) return aliased;
   }
 
-  const exactFile = eventImageMap.get(normalizedTitle);
-  if (exactFile) return exactFile;
-
-  const titleTokens = normalizeToTokens(title);
-  const normalizedTitleWithSpaces = normalizedTitle.replace(/\s+/g, ' ');
-
-  let bestMatch: { file: string; score: number } | null = null;
-
-  for (const [imageKey, fileName] of eventImageMap.entries()) {
-    const imageTokens = eventImageTokens.get(imageKey) ?? [];
-    const normalizedImageKey = imageKey.replace(/\s+/g, ' ');
-
-    if (normalizedImageKey === normalizedTitleWithSpaces) {
-      return fileName;
-    }
-
-    if (normalizedImageKey.includes(normalizedTitleWithSpaces) || normalizedTitleWithSpaces.includes(normalizedImageKey)) {
-      return fileName;
-    }
-
-    const matchedTokens = imageTokens.filter((token) => titleTokens.some((titleToken) => titleToken.includes(token) || token.includes(titleToken)));
-    if (matchedTokens.length < 2) continue;
-    const score = matchedTokens.length - Math.abs(imageTokens.length - titleTokens.length) * 0.1;
-
-    if (score > 0 && (!bestMatch || score > bestMatch.score)) {
-      bestMatch = { file: fileName, score };
-    }
-  }
-
-  return bestMatch?.file ?? null;
+  return eventImageMap.get(normalizedTitle) ?? null;
 }
 
 export function resolveImageUrlForTitle(title?: string | null) {
   if (!title) return null;
 
-  const fileName = findBestEventImageFile(title, eventImageMap, eventImageTokens);
+  const fileName = findEventImageFile(title, eventImageMap);
   if (!fileName) return null;
 
   return buildImageUrl(fileName, 'Events in Pakistan');
@@ -122,7 +80,7 @@ export function resolveImageUrlForTitle(title?: string | null) {
 export function resolveImageUrlForAzerbaijanEvent(title?: string | null) {
   if (!title) return null;
 
-  const fileName = findBestEventImageFile(title, azerbaijanEventImageMap, azerbaijanEventImageTokens);
+  const fileName = findEventImageFile(title, azerbaijanEventImageMap);
   if (!fileName) return null;
 
   return buildImageUrl(fileName, 'Azerbaijan events images');

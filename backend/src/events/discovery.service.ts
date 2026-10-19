@@ -520,7 +520,7 @@ async function discoverRecordsForQuery(prisma: PrismaClient, country: { code: st
         }
         metrics.within48Hours += 1;
         metrics.verificationPassed += 1;
-        records.push({ title, description: description || null, sourceUrl: primarySourceUrl || url, discoverySourceUrl, discoverySourceName, primarySourceUrl, primarySourceName: primarySourceUrl ? new URL(primarySourceUrl).hostname : null, image: canonicalUrl(text(event.image)), startAt, endAt, dateOnly: /^\d{4}-\d{2}-\d{2}$/.test(text(event.startDate)), city, venue: text(location?.name) || null, organizer, category, source });
+        records.push({ title, description: description || null, sourceUrl: primarySourceUrl || url, discoverySourceUrl, discoverySourceName, primarySourceUrl, primarySourceName: primarySourceUrl ? new URL(primarySourceUrl).hostname : null, image: null, startAt, endAt, dateOnly: /^\d{4}-\d{2}-\d{2}$/.test(text(event.startDate)), city, venue: text(location?.name) || null, organizer, category, source });
         acceptedStructuredEvent = true;
       }
       if (!acceptedStructuredEvent) {

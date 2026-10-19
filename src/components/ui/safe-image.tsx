@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getFallbackImageUrl, normalizeImageUrl } from '@/utils/imageValidation';
+import { normalizeImageUrl } from '@/utils/imageValidation';
 
 type SafeImageProps = {
   src?: string | null;

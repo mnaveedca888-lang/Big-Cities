@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { DAILY_EVENT_CATEGORIES, discoverAndStoreEvents } from './discovery.service';
+import { databaseWritesEnabled } from '../staging-write-guard';
 
 const querySchema = z.object({
   country: z.string().trim().min(2),
@@ -14,6 +15,9 @@ export function registerEventDiscoveryRoutes(app: FastifyInstance, prisma: Prism
   const auth = new AuthService(prisma as any);
   const requestCounts = new Map<string, { startedAt: number; count: number }>();
   app.get('/events/discover', async (request, reply) => {
+    if (!databaseWritesEnabled() || process.env.EVENT_DISCOVERY_ENABLED !== 'true') {
+      return reply.code(403).send({ success: false, error: { message: 'Event discovery is disabled in staging.' } });
+    }
     try {
       const authHeader = (request.headers.authorization || '') as string;
       const token = authHeader.startsWith('Bearer ') ? authHeader.slice('Bearer '.length) : null;

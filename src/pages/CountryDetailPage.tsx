@@ -115,7 +115,7 @@ export default function CountryDetailPage() {
   const profileHeroImage = typeof profile?.heroImageUrl === 'string' && profile.heroImageUrl.trim() ? profile.heroImageUrl.trim() : null;
   const profileFlagImage = typeof profile?.flagImageUrl === 'string' && profile.flagImageUrl.trim() ? profile.flagImageUrl.trim() : null;
   const heroImage = profileHeroImage ?? apiCountryImage ?? (isPakistanCountry ? pakistanCountryImage : null);
-  const flagImage = profileFlagImage ?? apiCountryFlag ?? (isPakistanCountry ? pakistanCountryImage : null);
+  const flagImage = profileFlagImage ?? apiCountryFlag;
   const cityList = Array.isArray(cities.data) ? cities.data : [];
 
   if (import.meta.env.DEV) {
@@ -197,7 +197,7 @@ export default function CountryDetailPage() {
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="mt-4 shrink-0">
-                    <SafeImage src={flagImage} fallbackSrc={apiCountryFlag} alt={`${countryName} flag`} className="h-8 w-12 rounded border border-slate-200 object-contain object-center" fallbackClassName="flex h-8 w-12 items-center justify-center rounded border border-slate-200 bg-slate-100 text-[10px] text-slate-500" />
+                    <SafeImage src={flagImage} alt={`${countryName} flag`} className="h-8 w-12 rounded border border-slate-200 object-contain object-center" fallbackClassName="flex h-8 w-12 items-center justify-center rounded border border-slate-200 bg-slate-100 text-[10px] text-slate-500" />
                   </div>
                   <h1 className="text-3xl font-semibold text-slate-950 dark:text-white">{countryName}</h1>
                 </div>

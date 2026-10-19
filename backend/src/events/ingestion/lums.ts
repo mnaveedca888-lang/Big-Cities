@@ -33,11 +33,6 @@ function absoluteUrl(value: string) {
   }
 }
 
-function imageUrl(value: string) {
-  const url = absoluteUrl(value);
-  return url?.includes('/sites/default/files/') ? url : null;
-}
-
 export function parseLumsEvents(html: string): CollectedEvent[] {
   const events: CollectedEvent[] = [];
   const cards = /<li[^>]*class=["'][^"']*col-xs12[^"']*["'][^>]*>([\s\S]*?)<\/li>/gi;
@@ -50,7 +45,6 @@ export function parseLumsEvents(html: string): CollectedEvent[] {
     const endAt = parseDate(dates[1] ?? dates[0] ?? '', true);
     const category = text(card.match(/class=["']event-category["'][^>]*>([\s\S]*?)<\/div>/i)?.[1]);
     const venue = text(card.match(/class=["']event-location["'][^>]*>([\s\S]*?)<\/div>/i)?.[1]) || 'LUMS';
-    const image = imageUrl(attribute(card.match(/<img[^>]+>/i)?.[0] ?? '', 'src'));
     const categoryName = mapCategory(`${title} ${category}`, null);
     const externalEventId = sourceUrl ? new URL(sourceUrl).pathname.split('/').filter(Boolean).pop() ?? null : null;
     const officialAasSchedule = externalEventId === AAS_EVENT_ID;
@@ -67,7 +61,7 @@ export function parseLumsEvents(html: string): CollectedEvent[] {
       startAt: officialStartAt,
       endAt: officialEndAt,
       dateOnly: !officialAasSchedule && /^\d{4}-\d{2}-\d{2}$/.test(dates[0] ?? ''),
-      image,
+      image: null,
       sourceName: SOURCE_NAME,
       sourceUrl,
       externalEventId,

@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
+const installLocalImageWriteGuard = require('./local-image-write-guard.cjs');
 
 const prisma = new PrismaClient();
+installLocalImageWriteGuard(prisma);
 
 function slugify(value) {
   return String(value)

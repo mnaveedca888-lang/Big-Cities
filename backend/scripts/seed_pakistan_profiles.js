@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
+const installLocalImageWriteGuard = require('./local-image-write-guard.cjs');
 
 const prisma = new PrismaClient();
+installLocalImageWriteGuard(prisma);
 
 const countryProfile = {
   heroImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Minar-e-Pakistan%2C_Lahore.jpg',

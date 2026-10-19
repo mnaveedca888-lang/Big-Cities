@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import AuthService from '../auth/auth.service';
 import { buildPagination } from '../utils/pagination';
 import { syncPakistanEvents } from '../events/ingestion/sync-service';
+import { databaseWritesEnabled } from '../staging-write-guard';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
@@ -23,6 +24,9 @@ export function registerAdminRoutes(app: FastifyInstance, prisma: PrismaClient) 
   const auth = new AuthService(prisma as any);
 
   app.post('/admin/events/sync', async (request, reply) => {
+    if (!databaseWritesEnabled() || process.env.EVENT_SYNC_ENABLED !== 'true') {
+      return reply.code(403).send({ success: false, error: { message: 'Event sync is disabled in staging.' } });
+    }
     try {
       const token = getBearerToken(request);
       if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });

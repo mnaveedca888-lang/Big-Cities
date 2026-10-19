@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { createHash, randomUUID } from 'crypto';
 import { categorySlug } from './ingestion/categories';
+import { normalizeLocalImageUrl } from '../images/local-image';
 
 export class EventService {
   constructor(private prisma: PrismaClient) {}
@@ -22,7 +23,7 @@ export class EventService {
   private mapEvent(event: any) {
     return {
       ...event,
-      image: typeof event.image === 'string' && event.image.trim() ? event.image : null,
+      image: normalizeLocalImageUrl(event.image),
     };
   }
 
@@ -62,7 +63,7 @@ export class EventService {
             featured: data.featured || false,
             trending: data.trending || false,
             enabled: data.enabled ?? true,
-            image: data.image || null,
+            image: normalizeLocalImageUrl(data.image),
           },
         });
         return created;
@@ -86,7 +87,7 @@ export class EventService {
         featured: data.featured || false,
         trending: data.trending || false,
         enabled: data.enabled ?? true,
-        image: data.image || null,
+        image: normalizeLocalImageUrl(data.image),
       },
     });
   }
@@ -182,7 +183,7 @@ export class EventService {
     if (patch.featured !== undefined) data.featured = patch.featured;
     if (patch.trending !== undefined) data.trending = patch.trending;
     if (patch.enabled !== undefined) data.enabled = patch.enabled;
-    if (patch.image !== undefined) data.image = patch.image;
+    if (patch.image !== undefined) data.image = normalizeLocalImageUrl(patch.image);
 
     return this.prisma.event.update({ where: { slug }, data });
   }
@@ -198,7 +199,8 @@ export class EventService {
   }
 
   async getById(id: string) {
-    return this.prisma.event.findUnique({ where: { id } });
+    const event = await this.prisma.event.findUnique({ where: { id } });
+    return event ? this.mapEvent(event) : null;
   }
 
   async list(opts: {

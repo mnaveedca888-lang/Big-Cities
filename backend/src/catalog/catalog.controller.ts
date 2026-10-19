@@ -7,6 +7,7 @@ import AuthService from '../auth/auth.service';
 import { buildPagination } from '../utils/pagination';
 import { buildCanonicalCountryProfile } from './countryProfile';
 import { buildCanonicalCityProfile } from './cityProfile';
+import { localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
 
 const PAKISTAN_IMAGE_FOLDER = 'Pakistan cities images';
 const PAKISTAN_COUNTRY_IMAGE_FILE = 'Pakistan.jpg';
@@ -120,17 +121,8 @@ const AUSTRALIA_CITY_IMAGE_ALIASES: Record<string, string> = {
 };
 const COUNTRY_IMAGE_FOLDER = 'Country images';
 
-function getRequestOrigin(request: FastifyRequest) {
-  const forwardedProto = (request.headers['x-forwarded-proto'] as string | undefined)?.split(',')[0]?.trim();
-  const socket = (request.raw as any).socket as { encrypted?: boolean } | undefined;
-  const protocol = forwardedProto || (socket?.encrypted ? 'https' : 'http');
-  const host = (request.headers.host || 'localhost:4001').trim();
-  return `${protocol}://${host}`;
-}
-
 function getPakistanImageUrl(filename: string, request: FastifyRequest) {
-  const origin = getRequestOrigin(request);
-  return `${origin}/images/${encodeURIComponent(PAKISTAN_IMAGE_FOLDER)}/${encodeURIComponent(filename)}`;
+  return localImageUrl(PAKISTAN_IMAGE_FOLDER, filename);
 }
 
 function getPakistanCityImageUrl(slug: string | undefined | null, request: FastifyRequest) {
@@ -145,8 +137,7 @@ function getPakistanCountryImageUrl(request: FastifyRequest) {
 }
 
 function getAzerbaijanImageUrl(filename: string, request: FastifyRequest) {
-  const origin = getRequestOrigin(request);
-  return `${origin}/images/${encodeURIComponent(AZERBAIJAN_IMAGE_FOLDER)}/${encodeURIComponent(filename)}`;
+  return localImageUrl(AZERBAIJAN_IMAGE_FOLDER, filename);
 }
 
 function getAzerbaijanCityImageUrl(slug: string | undefined | null, request: FastifyRequest) {
@@ -157,8 +148,7 @@ function getAzerbaijanCityImageUrl(slug: string | undefined | null, request: Fas
 }
 
 function getAsiaImageUrl(filename: string, request: FastifyRequest) {
-  const origin = getRequestOrigin(request);
-  return `${origin}/images/${encodeURIComponent(ASIA_IMAGE_FOLDER)}/${encodeURIComponent(filename)}`;
+  return localImageUrl(ASIA_IMAGE_FOLDER, filename);
 }
 
 function getCountryImageFilenameByCode(directoryName: string, countryCode: string) {
@@ -176,8 +166,7 @@ function getCountryImageFilenameByCode(directoryName: string, countryCode: strin
 function getStaticCountryImageUrl(directoryName: string, countryCode: string, request: FastifyRequest) {
   const filename = getCountryImageFilenameByCode(directoryName, countryCode);
   if (!filename) return null;
-  const origin = getRequestOrigin(request);
-  return `${origin}/images/${encodeURIComponent(directoryName)}/${encodeURIComponent(filename)}`;
+  return localImageUrl(directoryName, filename);
 }
 
 function getCountryImageUrl(country: { code?: string | null; continent?: { name?: string | null } | null }, request: FastifyRequest) {
@@ -191,12 +180,6 @@ function getCountryImageUrl(country: { code?: string | null; continent?: { name?
 function getAsiaCountryImageUrl(country: { code?: string | null; name?: string | null; continent?: { name?: string | null } | null }, request: FastifyRequest) {
   if (country.continent?.name !== 'Asia' || !country.code) return null;
   return getStaticCountryImageUrl(ASIA_IMAGE_FOLDER, country.code, request);
-}
-
-function getAsiaCountryFlagUrl(country: { code?: string | null; continent?: { name?: string | null } | null }) {
-  const code = country.code?.trim().toLowerCase();
-  if (country.continent?.name !== 'Asia' || !code || !/^[a-z]{2}$/.test(code)) return null;
-  return `https://flagcdn.com/w80/${code}.png`;
 }
 
 function getAsiaCityImageUrl(slug: string | undefined | null, request: FastifyRequest) {
@@ -216,8 +199,7 @@ function getSouthAmericaCityImageUrl(countryCode: string | undefined | null, slu
   const filename = `${normalizedSlug}.webp`;
   const imagePath = path.join(__dirname, '..', '..', 'public', 'Images', SOUTH_AMERICA_IMAGE_FOLDER, filename);
   if (!fs.existsSync(imagePath)) return null;
-  const origin = getRequestOrigin(request);
-  return `${origin}/images/${encodeURIComponent(SOUTH_AMERICA_IMAGE_FOLDER)}/${encodeURIComponent(filename)}`;
+  return localImageUrl(SOUTH_AMERICA_IMAGE_FOLDER, filename);
 }
 
 function normalizeLookupToken(value: string) {
@@ -242,8 +224,7 @@ function getNorthAmericaCityImageUrl(countryCode: string | undefined | null, slu
   const normalizedSlug = slug?.trim().toLowerCase();
   const aliasFilename = normalizedSlug ? NORTH_AMERICA_CITY_IMAGE_ALIASES[normalizedSlug] : null;
   if (aliasFilename?.startsWith(`${normalizedCountryCode}-`) && fs.existsSync(path.join(folderPath, aliasFilename))) {
-    const origin = getRequestOrigin(request);
-    return `${origin}/images/${encodeURIComponent(NORTH_AMERICA_IMAGE_FOLDER)}/${encodeURIComponent(aliasFilename)}`;
+    return localImageUrl(NORTH_AMERICA_IMAGE_FOLDER, aliasFilename);
   }
 
   const cityNameSlug = cityName?.trim().toLowerCase().replace(/'/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
@@ -254,8 +235,7 @@ function getNorthAmericaCityImageUrl(countryCode: string | undefined | null, slu
 
   if (!match) return null;
 
-  const origin = getRequestOrigin(request);
-  return `${origin}/images/${encodeURIComponent(NORTH_AMERICA_IMAGE_FOLDER)}/${encodeURIComponent(match)}`;
+  return localImageUrl(NORTH_AMERICA_IMAGE_FOLDER, match);
 }
 
 function getAustraliaCityImageUrl(countryCode: string | undefined | null, slug: string | undefined | null, request: FastifyRequest) {
@@ -274,7 +254,7 @@ function getAustraliaCityImageUrl(countryCode: string | undefined | null, slug: 
     })
     .sort((left, right) => right.length - left.length)[0];
   if (!filename || !fs.existsSync(path.join(imageDirectory, filename))) return null;
-  return `${getRequestOrigin(request)}/images/${encodeURIComponent(AUSTRALIA_IMAGE_FOLDER)}/${encodeURIComponent(filename)}`;
+  return localImageUrl(AUSTRALIA_IMAGE_FOLDER, filename);
 }
 
 const listQuery = z.object({
@@ -304,11 +284,32 @@ const categoryCreateSchema = z.object({
 
 const categoryUpdateSchema = categoryCreateSchema.partial();
 
+function hasInvalidProfileImage(value: unknown, path: Array<string | number>, context: z.RefinementCtx): boolean {
+  if (!value || typeof value !== 'object') return false;
+  let invalid = false;
+  for (const [key, entry] of Object.entries(value)) {
+    const entryPath = [...path, key];
+    if (/(image|thumbnail|avatar|flag|logo)/i.test(key)) {
+      if (entry !== null && (typeof entry !== 'string' || normalizeLocalImageUrl(entry) === null)) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'Image references must use an existing local /images/ file.' });
+        invalid = true;
+      }
+    } else if (entry && typeof entry === 'object') {
+      invalid = hasInvalidProfileImage(entry, entryPath, context) || invalid;
+    }
+  }
+  return invalid;
+}
+
+const profileSchema = z.object({}).catchall(z.any()).superRefine((profile, context) => {
+  hasInvalidProfileImage(profile, [], context);
+});
+
 const countryCreateSchema = z.object({
   code: z.string().trim().min(1),
   name: z.string().trim().min(1),
   continentId: z.string().uuid().optional().nullable(),
-  profile: z.object({}).catchall(z.any()).optional().nullable(),
+  profile: profileSchema.optional().nullable(),
 });
 
 const countryUpdateSchema = countryCreateSchema.partial();
@@ -317,39 +318,10 @@ const cityCreateSchema = z.object({
   slug: z.string().trim().min(1),
   name: z.string().trim().min(1),
   countryCode: z.string().trim().min(1),
-  profile: z.object({}).catchall(z.any()).optional().nullable(),
+  profile: profileSchema.optional().nullable(),
 });
 
 const cityUpdateSchema = cityCreateSchema.partial();
-
-const imageUrlSchema = z.string().trim().refine((value) => {
-  if (value.startsWith('/images/')) {
-    const localPath = value.split(/[?#]/, 1)[0];
-    try {
-      const segments = localPath.split('/').slice(1).map((segment) => decodeURIComponent(segment));
-      return segments.every((segment) => segment && segment !== '.' && segment !== '..') && /\.(jpg|jpeg|png|webp|svg)$/i.test(localPath);
-    } catch {
-      return false;
-    }
-  }
-  let parsed: URL;
-  try {
-    parsed = new URL(value);
-  } catch {
-    return false;
-  }
-  const hostname = parsed.hostname.toLowerCase();
-  const path = parsed.pathname.toLowerCase();
-  const isTrustedHost = ['images.unsplash.com', 'images.pexels.com', 'pixabay.com', 'upload.wikimedia.org', 'flagcdn.com'].some((host) => hostname === host || hostname.endsWith(`.${host}`));
-  if (!isTrustedHost || !['http:', 'https:'].includes(parsed.protocol)) return false;
-  return /\.(jpg|jpeg|png|webp|svg)(\?.*)?$/i.test(value) || path.startsWith('/photo') || path.startsWith('/photos/') || path.startsWith('/wp-content/');
-}, 'Image URL must be a direct image file endpoint from a trusted public image host');
-
-const profileImageSchema = z.object({
-  heroImageUrl: imageUrlSchema.optional().nullable(),
-  flagImageUrl: imageUrlSchema.optional().nullable(),
-  thumbnail: imageUrlSchema.optional().nullable(),
-}).passthrough();
 
 const countryParamSchema = z.object({
   code: z.string().trim().min(1),
@@ -389,7 +361,6 @@ function normalizeCountry(country: any, cityCount = 0, eventCount = 0, request: 
   const localCountryImage = country.code?.toString().trim().toUpperCase() === 'PK' ? getPakistanCountryImageUrl(request) : null;
   const staticCountryImage = getCountryImageUrl(country, request);
   const asiaCountryImage = getAsiaCountryImageUrl(country, request);
-  const asiaCountryFlag = getAsiaCountryFlagUrl(country);
   const resolvedCountryImage = localCountryImage ?? staticCountryImage ?? asiaCountryImage;
   if (profile && resolvedCountryImage) {
     profile.heroImageUrl = resolvedCountryImage;
@@ -401,7 +372,7 @@ function normalizeCountry(country: any, cityCount = 0, eventCount = 0, request: 
     cities: cityCount,
     events: eventCount,
     image: resolvedCountryImage ?? profile?.heroImageUrl ?? null,
-    flagImage: asiaCountryFlag ?? profile?.flagImageUrl ?? null,
+    flagImage: profile?.flagImageUrl ?? null,
     profile,
   };
 }
@@ -456,18 +427,18 @@ function normalizeCity(city: any, request: FastifyRequest) {
   };
 }
 
-function sanitizeProfileImages(profile: any) {
+function sanitizeProfileImages(profile: any): any {
   if (!profile || typeof profile !== 'object') return null;
-  const normalized: Record<string, unknown> = { ...(profile as Record<string, unknown>) };
-  for (const key of ['heroImageUrl', 'flagImageUrl', 'thumbnail']) {
-    const value = normalized[key];
-    if (typeof value === 'string') {
-      const parsed = imageUrlSchema.safeParse(value);
-      normalized[key] = parsed.success ? parsed.data : null;
-    } else if (value == null) {
-      normalized[key] = null;
+  if (Array.isArray(profile)) return profile.map(sanitizeProfileImages);
+
+  const normalized: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(profile as Record<string, unknown>)) {
+    if (/(image|thumbnail|avatar|flag|logo)/i.test(key)) {
+      normalized[key] = value == null ? null : normalizeLocalImageUrl(value);
+    } else if (value && typeof value === 'object') {
+      normalized[key] = sanitizeProfileImages(value);
     } else {
-      normalized[key] = null;
+      normalized[key] = value;
     }
   }
   return normalized;

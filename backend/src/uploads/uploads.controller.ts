@@ -4,6 +4,7 @@ import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import AuthService from '../auth/auth.service';
+import { databaseWritesEnabled } from '../staging-write-guard';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
@@ -18,7 +19,12 @@ const presignSchema = z.object({
 export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient) {
   const auth = new AuthService(prisma as any);
 
+  const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true';
+
   app.post('/uploads/presign', async (request, reply) => {
+    if (!uploadsEnabled()) {
+      return reply.code(403).send({ success: false, error: { message: 'Uploads are disabled in staging.' } });
+    }
     try {
       const token = getBearerToken(request);
       if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
@@ -37,6 +43,9 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient)
   });
 
   app.post('/uploads/files', async (request, reply) => {
+    if (!uploadsEnabled()) {
+      return reply.code(403).send({ success: false, error: { message: 'Uploads are disabled in staging.' } });
+    }
     try {
       const token = getBearerToken(request);
       if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });

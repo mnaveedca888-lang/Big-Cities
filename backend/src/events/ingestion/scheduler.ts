@@ -2,6 +2,7 @@ import type { PrismaClient } from '@prisma/client';
 import { syncPakistanEvents } from './sync-service';
 import { DAILY_EVENT_CATEGORIES, type DailyEventCategory, type SyncLogger } from './types';
 import { discoverAndStoreEvents, selectOldestCategory } from '../discovery.service';
+import { databaseWritesEnabled } from '../../staging-write-guard';
 
 let schedulerStarted = false;
 
@@ -92,8 +93,9 @@ async function runAutomaticDiscovery(prisma: PrismaClient, logger: SyncLogger) {
 }
 
 export function startEventSyncScheduler(prisma: PrismaClient, logger: SyncLogger) {
-  if (process.env.EVENT_SYNC_ENABLED === 'false') {
-    logger.info('Event sync scheduler is disabled');
+  const enabled = databaseWritesEnabled() && process.env.EVENT_SYNC_ENABLED === 'true';
+  if (!enabled) {
+    logger.info('Event sync scheduler is disabled by default for staging safety');
     return null;
   }
 
@@ -115,7 +117,9 @@ export function startEventSyncScheduler(prisma: PrismaClient, logger: SyncLogger
     try {
       await expireYouComEvents(prisma);
       await syncPakistanEvents(prisma, logger);
-      await runAutomaticDiscovery(prisma, logger);
+      if (process.env.EVENT_DISCOVERY_ENABLED === 'true') {
+        await runAutomaticDiscovery(prisma, logger);
+      }
     } catch (error) {
       logger.error('Automatic event sync failed', error);
     } finally {
@@ -129,8 +133,9 @@ export function startEventSyncScheduler(prisma: PrismaClient, logger: SyncLogger
   const boundaryTimer = setTimeout(() => { void run(); }, Math.max(1, nextWindow.getTime() - now.getTime()));
   if (typeof timer.unref === 'function') timer.unref();
   if (typeof boundaryTimer.unref === 'function') boundaryTimer.unref();
-  if (process.env.EVENT_SYNC_RUN_ON_START !== 'false') void run();
-  logger.info('Automatic event discovery scheduler enabled', { intervalMinutes, runOnStart: process.env.EVENT_SYNC_RUN_ON_START !== 'false' });
+  const runOnStart = process.env.EVENT_SYNC_RUN_ON_START === 'true';
+  if (runOnStart) void run();
+  logger.info('Automatic event discovery scheduler enabled', { intervalMinutes, runOnStart });
   return () => {
     clearInterval(timer);
     clearTimeout(boundaryTimer);

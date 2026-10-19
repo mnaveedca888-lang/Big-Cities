@@ -33,17 +33,6 @@ function externalIdFromUrl(url: string) {
   return url.match(/tickets-(\d+)/i)?.[1] ?? null;
 }
 
-function trustedImageUrl(value: string) {
-  try {
-    const url = new URL(value);
-    const hostname = url.hostname.toLowerCase();
-    if (url.protocol !== 'https:' || !(hostname === 'evbuc.com' || hostname.endsWith('.evbuc.com'))) return null;
-    return url.toString();
-  } catch {
-    return null;
-  }
-}
-
 function extractJsonLd(html: string): unknown[] {
   const values: unknown[] = [];
   const scriptPattern = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
@@ -93,7 +82,7 @@ export function parseEventbriteJsonLd(html: string): CollectedEvent[] {
         startAt,
         endAt,
         dateOnly: /^\d{4}-\d{2}-\d{2}$/.test(startValue),
-        image: trustedImageUrl(text(event.image)),
+        image: null,
         sourceName: SOURCE_NAME,
         sourceUrl,
         externalEventId: externalIdFromUrl(sourceUrl),

@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { buildPagination } from '../utils/pagination';
+import { normalizeLocalImageUrl } from '../images/local-image';
 
 function sanitizeUser(user: any) {
   return {
@@ -10,7 +11,7 @@ function sanitizeUser(user: any) {
     name: user.name,
     email: user.email,
     role: user.role?.name ?? 'member',
-    avatar: user.avatarUrl ?? '',
+    avatar: normalizeLocalImageUrl(user.avatarUrl) ?? '',
     isEmailVerified: Boolean(user.isEmailVerified),
   };
 }

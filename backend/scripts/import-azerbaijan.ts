@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
+const installLocalImageWriteGuard = require('./local-image-write-guard.cjs') as (client: PrismaClient) => void;
+installLocalImageWriteGuard(prisma);
 
 // Azerbaijan Country Data
 const azerbaijanCountry = {

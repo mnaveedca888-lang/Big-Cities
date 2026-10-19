@@ -16,6 +16,7 @@ describe('LUMS ingestion', () => {
     expect(event.sourceCity).toBe('Lahore');
     expect(event.categoryName).toBe('Conferences');
     expect(event.externalEventId).toBe('aas-asia-2026-conference-lums');
+    expect(event.image).toBeNull();
     expect(event.startAt.toISOString()).toBe('2026-09-25T11:00:00.000Z');
     expect(event.endAt.toISOString()).toBe('2026-09-25T12:00:00.000Z');
     expect(event.dateOnly).toBe(false);

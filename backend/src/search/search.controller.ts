@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
+import { normalizeLocalImageUrl } from '../images/local-image';
 
 const MAX_RESULTS_PER_GROUP = 8;
 const excludedEventTitles = new Set(['Jashn-e-Baharan (Basant)']);
@@ -134,7 +135,7 @@ export function registerSearchRoutes(app: FastifyInstance, prisma: PrismaClient)
           date: event.startAt.toISOString(),
           time: event.startAt.toISOString(),
           price: '',
-          image: event.image ?? null,
+          image: normalizeLocalImageUrl(event.image),
           featured: event.featured,
           organizer: '',
           venue: '',

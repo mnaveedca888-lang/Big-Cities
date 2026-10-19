@@ -22,6 +22,7 @@ describe('Eventbrite ingestion', () => {
     expect(event.sourceCity).toBe('Lahore');
     expect(event.externalEventId).toBe('12345');
     expect(event.categoryName).toBe('Tech Events');
+    expect(event.image).toBeNull();
     expect(event.endAt.toISOString()).toBe('2026-10-10T23:59:59.999Z');
   });
 

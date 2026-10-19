@@ -1,6 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
+const installLocalImageWriteGuard = require('./local-image-write-guard.cjs');
 
 const prisma = new PrismaClient();
+installLocalImageWriteGuard(prisma);
 
 const countryProfile = {
   shortDescription: 'A landlocked South-Central Asian country at the crossroads of Central and South Asia, known for its mountainous geography, long history and diverse cultural heritage.',
