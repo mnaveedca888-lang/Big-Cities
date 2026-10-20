@@ -20,6 +20,7 @@ import { startEventSyncScheduler } from './events/ingestion/scheduler';
 import { databaseWritesEnabled, registerStagingWriteGuard } from './staging-write-guard';
 import { installLocalImageWriteGuard } from './images/local-image';
 import { getCorsOptions } from './cors';
+import { registerHealthRoutes } from './health';
 
 const prisma = new PrismaClient();
 installLocalImageWriteGuard(prisma);
@@ -57,17 +58,7 @@ async function start() {
     }
   });
 
-  // health endpoints
-  app.get('/health/live', async () => ({ status: 'ok' }));
-  app.get('/health/ready', async () => {
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-      return { status: 'ready' };
-    } catch (err) {
-      app.log.error('DB readiness check failed', err as any);
-      return { status: 'not_ready' };
-    }
-  });
+  registerHealthRoutes(app, prisma);
 
   const port = Number(process.env.PORT || 4001);
 
