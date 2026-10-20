@@ -19,6 +19,7 @@ import { registerEventDiscoveryRoutes } from './events/discovery.controller';
 import { startEventSyncScheduler } from './events/ingestion/scheduler';
 import { databaseWritesEnabled, registerStagingWriteGuard } from './staging-write-guard';
 import { installLocalImageWriteGuard } from './images/local-image';
+import { getCorsOptions } from './cors';
 
 const prisma = new PrismaClient();
 installLocalImageWriteGuard(prisma);
@@ -30,7 +31,7 @@ async function start() {
   await app.register(helmet as any, {
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   });
-  await app.register(cors as any, { origin: true });
+  await app.register(cors as any, getCorsOptions());
   // lightweight in-memory rate limiter for auth endpoints (per-IP)
   const rateMap = new Map<string, { count: number; windowStart: number }>();
   const RATE_MAX = 20;
