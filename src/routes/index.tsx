@@ -1,4 +1,4 @@
-import { createBrowserRouter, type RouteObject } from 'react-router-dom';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router-dom';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
@@ -29,7 +29,6 @@ import SettingsPage from '@/pages/SettingsPage';
 import ContactPage from '@/pages/ContactPage';
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
 import TermsPage from '@/pages/TermsPage';
-import AdminPage from '@/pages/AdminPage';
 import LoadingPage from '@/pages/LoadingPage';
 import ErrorPage from '@/pages/ErrorPage';
 import OfflinePage from '@/pages/OfflinePage';
@@ -120,16 +119,18 @@ const routes: RouteObject[] = [
       },
       {
         element: <AdminRoute />,
-        children: [{
-          element: <AdminLayout />,
-          children: [
-            { path: '/admin', element: <AdminPage /> },
+        children: [
+          { path: '/admin', element: <Navigate to="/dashboard" replace /> },
+          {
+            element: <AdminLayout />,
+            children: [
             { path: '/admin/analytics', element: <AdminAnalyticsPage /> },
             { path: '/admin/calendar', element: <AdminCalendarPage /> },
             { path: '/admin/settings', element: <AdminSettingsPage /> },
             { path: '/admin/users', element: <AdminUsersPage /> },
-          ],
-        }],
+            ],
+          },
+        ],
       },
     ],
   },
