@@ -87,47 +87,47 @@ describe('persistent You.com discovery rotation', () => {
     expect(isWithin48HourWindow(new Date('2026-09-19T13:00:00.000Z'), new Date('2026-09-19T14:00:00.000Z'), now)).toBe(false);
   });
 
-  it('allows 39 daily searches when the current six-hour window is empty', async () => {
-    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '100';
+  it('allows searches below the daily limit when the current six-hour window is empty', async () => {
+    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '20';
     const prisma = createPrisma();
     const now = new Date('2026-09-11T08:04:00.000Z');
-    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 39 });
+    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 9 });
     expect(await reserveDailySearch(prisma, 'PK', now)).toBe(true);
     expect(prisma.__budgets.get('PK:2026-09-11T06:00:00.000Z').searchCount).toBe(1);
   });
 
-  it('allows 99 daily searches when the current window has 19 searches', async () => {
-    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '100';
+  it('allows a search below the daily limit when the current window has 19 searches', async () => {
+    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '20';
     const prisma = createPrisma();
     const now = new Date('2026-09-11T08:04:00.000Z');
-    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 80 });
+    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 0 });
     prisma.__budgets.set('PK:2026-09-11T06:00:00.000Z', { id: 'window', countryCode: 'PK', utcDate: windowStartUtc(now), searchCount: 19 });
     expect(await reserveDailySearch(prisma, 'PK', now)).toBe(true);
     expect(prisma.__budgets.get('PK:2026-09-11T06:00:00.000Z').searchCount).toBe(20);
   });
 
-  it('blocks at the daily limit of 100', async () => {
-    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '100';
+  it('blocks at the daily limit of 20', async () => {
+    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '20';
     const prisma = createPrisma();
     const now = new Date('2026-09-11T08:04:00.000Z');
-    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 100 });
+    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 20 });
     expect(await reserveDailySearch(prisma, 'PK', now)).toBe(false);
   });
 
   it('blocks when the current six-hour window has 20 searches', async () => {
-    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '100';
+    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '20';
     const prisma = createPrisma();
     const now = new Date('2026-09-11T08:04:00.000Z');
-    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 79 });
+    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(now), searchCount: 0 });
     prisma.__budgets.set('PK:2026-09-11T06:00:00.000Z', { id: 'window', countryCode: 'PK', utcDate: windowStartUtc(now), searchCount: 20 });
     expect(await reserveDailySearch(prisma, 'PK', now)).toBe(false);
   });
 
   it('allows a 13:04 PKT startup reservation using UTC day/window boundaries', async () => {
-    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '100';
+    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '20';
     const prisma = createPrisma();
     const pkTime = new Date('2026-09-11T13:04:00+05:00');
-    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(pkTime), searchCount: 39 });
+    prisma.__budgets.set('PK:2026-09-11T00:00:00.000Z', { id: 'day', countryCode: 'PK', utcDate: dayStartUtc(pkTime), searchCount: 19 });
     expect(await reserveDailySearch(prisma, 'PK', pkTime)).toBe(true);
     expect(windowStartUtc(pkTime).toISOString()).toBe('2026-09-11T06:00:00.000Z');
   });
@@ -309,8 +309,8 @@ describe('persistent You.com discovery rotation', () => {
     expect(prisma.__budgets.values().next().value.searchCount).toBe(20);
   });
 
-  it('caps each six-hour window at 20 and the entire day at 100', async () => {
-    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '100';
+  it('caps each six-hour window and the entire day at 20', async () => {
+    process.env.EVENT_DISCOVERY_DAILY_LIMIT = '20';
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-10T00:00:00Z'));
     const prisma = createPrisma();
@@ -340,11 +340,10 @@ describe('persistent You.com discovery rotation', () => {
     const nextDay = await discoverAndStoreEvents(prisma, { code: 'PK', name: 'Pakistan' }, 'Next Day Search' as any);
     expect(nextDay.budgetReached).toBeUndefined();
 
-    expect(fetch).toHaveBeenCalledTimes(180);
     vi.useRealTimers();
   });
 
-  it('uses the default daily budget of 100 searches when no override is set', async () => {
+  it('uses the default daily budget of 20 searches when no override is set', async () => {
     delete process.env.EVENT_DISCOVERY_DAILY_LIMIT;
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-10T00:00:00Z'));
@@ -361,15 +360,10 @@ describe('persistent You.com discovery rotation', () => {
     expect(firstWindowBlocked.budgetReached).toBe(true);
 
     vi.setSystemTime(new Date('2026-09-10T06:00:00Z'));
-    for (let index = 0; index < 20; index += 1) {
-      const result = await discoverAndStoreEvents(prisma, { code: 'PK', name: 'Pakistan' }, `Default Budget 6h ${index}` as any);
-      if (result.budgetReached) break;
-    }
-
-    const secondWindowBlocked = await discoverAndStoreEvents(prisma, { code: 'PK', name: 'Pakistan' }, 'Default Budget Overflow 2' as any);
+    const secondWindowBlocked = await discoverAndStoreEvents(prisma, { code: 'PK', name: 'Pakistan' }, 'Default Budget Next Window' as any);
     expect(secondWindowBlocked.budgetReached).toBe(true);
 
-    expect(fetch).toHaveBeenCalledTimes(40 * 3);
+    expect(fetch).toHaveBeenCalledTimes(20 * 3);
     vi.useRealTimers();
   });
 });

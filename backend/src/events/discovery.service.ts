@@ -215,7 +215,7 @@ const pakistanDiscoveryCities = [
 ];
 
 const SIX_HOUR_WINDOW_MS = 6 * 60 * 60 * 1000;
-const DAILY_SEARCH_LIMIT = 100;
+const DAILY_SEARCH_LIMIT = 20;
 const SIX_HOUR_WINDOW_LIMIT = 20;
 
 function getDailySearchLimit() {

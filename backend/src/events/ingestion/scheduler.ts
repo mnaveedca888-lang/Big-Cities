@@ -32,7 +32,7 @@ async function runAutomaticDiscovery(prisma: PrismaClient, logger: SyncLogger) {
     logger.info('Daily Events AI discovery started', {
       country: country.code,
       categories: DAILY_EVENT_CATEGORIES,
-      dailyLimit: process.env.EVENT_DISCOVERY_DAILY_LIMIT || '100',
+      dailyLimit: process.env.EVENT_DISCOVERY_DAILY_LIMIT || '20',
     });
     while (processedCategories.length < DAILY_EVENT_CATEGORIES.length) {
       try {
@@ -45,7 +45,7 @@ async function runAutomaticDiscovery(prisma: PrismaClient, logger: SyncLogger) {
           logger.info('Daily Events AI category deferred because the search budget is exhausted', {
             country: country.code,
             category,
-            dailyLimit: process.env.EVENT_DISCOVERY_DAILY_LIMIT || '100',
+            dailyLimit: process.env.EVENT_DISCOVERY_DAILY_LIMIT || '20',
           });
           break;
         }

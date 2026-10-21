@@ -19,6 +19,8 @@ import { registerEventDiscoveryRoutes } from './events/discovery.controller';
 import { startEventSyncScheduler } from './events/ingestion/scheduler';
 import { databaseWritesEnabled, registerStagingWriteGuard } from './staging-write-guard';
 import { installLocalImageWriteGuard } from './images/local-image';
+import { getCorsOptions } from './cors';
+import { registerHealthRoutes } from './health';
 
 const prisma = new PrismaClient();
 installLocalImageWriteGuard(prisma);
@@ -30,7 +32,7 @@ async function start() {
   await app.register(helmet as any, {
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   });
-  await app.register(cors as any, { origin: true });
+  await app.register(cors as any, getCorsOptions());
   // lightweight in-memory rate limiter for auth endpoints (per-IP)
   const rateMap = new Map<string, { count: number; windowStart: number }>();
   const RATE_MAX = 20;
@@ -56,17 +58,7 @@ async function start() {
     }
   });
 
-  // health endpoints
-  app.get('/health/live', async () => ({ status: 'ok' }));
-  app.get('/health/ready', async () => {
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-      return { status: 'ready' };
-    } catch (err) {
-      app.log.error('DB readiness check failed', err as any);
-      return { status: 'not_ready' };
-    }
-  });
+  registerHealthRoutes(app, prisma);
 
   const port = Number(process.env.PORT || 4001);
 
