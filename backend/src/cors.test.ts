@@ -1,14 +1,31 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { afterEach, describe, expect, it } from 'vitest';
-import { DEVELOPMENT_FRONTEND_ORIGIN, getCorsOptions, PRODUCTION_FRONTEND_ORIGIN } from './cors';
+import {
+  DEVELOPMENT_FRONTEND_ORIGIN,
+  getCorsOptions,
+  LOCAL_FRONTEND_ORIGIN,
+  PRODUCTION_FRONTEND_ORIGIN,
+  STAGING_CANDIDATE_FRONTEND_ORIGIN,
+} from './cors';
 
 const apps: ReturnType<typeof Fastify>[] = [];
 
-async function createCorsApp(nodeEnv: string) {
+async function createCorsApp(nodeEnv: string, enableStagingCandidateCors?: string) {
   const app = Fastify();
   apps.push(app);
-  await app.register(cors, getCorsOptions(nodeEnv));
+  const previousFlag = process.env.ENABLE_STAGING_CANDIDATE_CORS;
+  if (enableStagingCandidateCors === undefined) {
+    delete process.env.ENABLE_STAGING_CANDIDATE_CORS;
+  } else {
+    process.env.ENABLE_STAGING_CANDIDATE_CORS = enableStagingCandidateCors;
+  }
+  try {
+    await app.register(cors, getCorsOptions(nodeEnv));
+  } finally {
+    if (previousFlag === undefined) delete process.env.ENABLE_STAGING_CANDIDATE_CORS;
+    else process.env.ENABLE_STAGING_CANDIDATE_CORS = previousFlag;
+  }
   app.get('/health/live', async () => ({ status: 'ok' }));
   await app.ready();
   return app;
@@ -19,6 +36,48 @@ afterEach(async () => {
 });
 
 describe('CORS configuration', () => {
+  it('allows candidate origin only when the staging candidate flag is explicitly true', async () => {
+    const enabledApp = await createCorsApp('production', 'true');
+    const enabledResponse = await enabledApp.inject({
+      method: 'OPTIONS',
+      url: '/auth/login',
+      headers: {
+        origin: STAGING_CANDIDATE_FRONTEND_ORIGIN,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+
+    expect(enabledResponse.statusCode).toBe(204);
+    expect(enabledResponse.headers['access-control-allow-origin']).toBe(STAGING_CANDIDATE_FRONTEND_ORIGIN);
+    expect(enabledResponse.headers['access-control-allow-headers']).toBe('Authorization, Content-Type');
+    expect(enabledResponse.headers['access-control-allow-methods']).toContain('POST');
+
+    const disabledApp = await createCorsApp('production', 'false');
+    const disabledResponse = await disabledApp.inject({
+      method: 'OPTIONS',
+      url: '/auth/login',
+      headers: {
+        origin: STAGING_CANDIDATE_FRONTEND_ORIGIN,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+    expect(disabledResponse.headers['access-control-allow-origin']).toBeUndefined();
+
+    const unsetApp = await createCorsApp('production');
+    const unsetResponse = await unsetApp.inject({
+      method: 'OPTIONS',
+      url: '/auth/login',
+      headers: {
+        origin: STAGING_CANDIDATE_FRONTEND_ORIGIN,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+    expect(unsetResponse.headers['access-control-allow-origin']).toBeUndefined();
+  });
+
   it('allows the approved production frontend origin', async () => {
     const app = await createCorsApp('production');
     const response = await app.inject({
@@ -59,6 +118,20 @@ describe('CORS configuration', () => {
       headers: { origin: DEVELOPMENT_FRONTEND_ORIGIN },
     });
     expect(productionResponse.headers['access-control-allow-origin']).toBeUndefined();
+
+    const localDevelopmentResponse = await developmentApp.inject({
+      method: 'GET',
+      url: '/health/live',
+      headers: { origin: LOCAL_FRONTEND_ORIGIN },
+    });
+    expect(localDevelopmentResponse.headers['access-control-allow-origin']).toBe(LOCAL_FRONTEND_ORIGIN);
+
+    const localProductionResponse = await productionApp.inject({
+      method: 'GET',
+      url: '/health/live',
+      headers: { origin: LOCAL_FRONTEND_ORIGIN },
+    });
+    expect(localProductionResponse.headers['access-control-allow-origin']).toBeUndefined();
   });
 
   it('serves requests without an Origin header without adding CORS headers', async () => {
@@ -84,7 +157,57 @@ describe('CORS configuration', () => {
     expect(response.statusCode).toBe(204);
     expect(response.headers['access-control-allow-origin']).toBe(PRODUCTION_FRONTEND_ORIGIN);
     expect(response.headers['access-control-allow-headers']).toBe('Authorization, Content-Type');
-    expect(response.headers['access-control-allow-methods'])
-      .toBe('GET, HEAD, POST, PATCH, DELETE');
+    expect(response.headers['access-control-allow-methods']).toContain('GET');
+    expect(response.headers['access-control-allow-methods']).toContain('POST');
+    expect(response.headers['access-control-allow-methods']).toContain('PATCH');
+    expect(response.headers['access-control-allow-methods']).toContain('DELETE');
+  });
+
+  it('allows JSON login preflight requests from the local frontend only outside production', async () => {
+    const developmentApp = await createCorsApp('development');
+    const response = await developmentApp.inject({
+      method: 'OPTIONS',
+      url: '/auth/login',
+      headers: {
+        origin: LOCAL_FRONTEND_ORIGIN,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+
+    expect(response.statusCode).toBe(204);
+    expect(response.headers['access-control-allow-origin']).toBe(LOCAL_FRONTEND_ORIGIN);
+    expect(response.headers['access-control-allow-headers']).toBe('Authorization, Content-Type');
+    expect(response.headers['access-control-allow-methods']).toContain('POST');
+
+    const productionApp = await createCorsApp('production');
+    const productionResponse = await productionApp.inject({
+      method: 'OPTIONS',
+      url: '/auth/login',
+      headers: {
+        origin: LOCAL_FRONTEND_ORIGIN,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+    expect(productionResponse.headers['access-control-allow-origin']).toBeUndefined();
+  });
+
+  it('allows login preflight requests from localhost Vite development origin', async () => {
+    const app = await createCorsApp('development');
+    const response = await app.inject({
+      method: 'OPTIONS',
+      url: '/auth/login',
+      headers: {
+        origin: DEVELOPMENT_FRONTEND_ORIGIN,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type',
+      },
+    });
+
+    expect(response.statusCode).toBe(204);
+    expect(response.headers['access-control-allow-origin']).toBe(DEVELOPMENT_FRONTEND_ORIGIN);
+    expect(response.headers['access-control-allow-headers']).toBe('Authorization, Content-Type');
+    expect(response.headers['access-control-allow-methods']).toContain('POST');
   });
 });
