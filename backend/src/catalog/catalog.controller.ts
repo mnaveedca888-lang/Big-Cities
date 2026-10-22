@@ -120,6 +120,13 @@ const AUSTRALIA_CITY_IMAGE_ALIASES: Record<string, string> = {
   'ws-faleolo-international-airport': 'ws-apia.webp',
 };
 const COUNTRY_IMAGE_FOLDER = 'Country images';
+const cityDirectoryQuerySchema = z.object({
+  q: z.string().trim().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  perPage: z.coerce.number().int().min(1).max(100).default(12),
+  aliasSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
+  excludeSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
+});
 
 function getPakistanImageUrl(filename: string, request: FastifyRequest) {
   return localImageUrl(PAKISTAN_IMAGE_FOLDER, filename);
@@ -729,6 +736,50 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
     const where = { isVerifiedCity: true, ...(query.country ? { countryCode: query.country } : {}) };
     const cities = await prisma.city.findMany({ where, orderBy: { name: 'asc' } });
     reply.send({ success: true, data: cities.map((city) => normalizeCity(city, request)) });
+  });
+
+  app.get('/cities/directory', async (request, reply) => {
+    const query = cityDirectoryQuerySchema.parse(request.query || {});
+    const aliasSlugs = query.aliasSlugs?.split(',') ?? [];
+    const excludeSlugs = query.excludeSlugs?.split(',') ?? [];
+    const where = {
+      isVerifiedCity: true,
+      ...(query.q
+        ? {
+            AND: [
+              {
+                OR: [
+                  { name: { contains: query.q, mode: 'insensitive' as const } },
+                  ...(aliasSlugs.length ? [{ slug: { in: aliasSlugs } }] : []),
+                ],
+              },
+              ...(excludeSlugs.length ? [{ slug: { notIn: excludeSlugs } }] : []),
+            ],
+          }
+        : {}),
+    };
+    const [cities, total] = await Promise.all([
+      prisma.city.findMany({
+        where,
+        orderBy: { name: 'asc' },
+        skip: (query.page - 1) * query.perPage,
+        take: query.perPage,
+        select: { slug: true, name: true },
+      }),
+      prisma.city.count({ where }),
+    ]);
+    reply.send({
+      success: true,
+      data: {
+        items: cities,
+        pagination: buildPagination(query.page, query.perPage, total, 100),
+      },
+    });
+  });
+
+  app.get('/cities/count', async (_request, reply) => {
+    const count = await prisma.city.count({ where: { isVerifiedCity: true } });
+    reply.send({ success: true, data: count });
   });
 
   app.get('/countries/:code/cities', async (request, reply) => {
