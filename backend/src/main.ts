@@ -27,12 +27,12 @@ installLocalImageWriteGuard(prisma);
 
 async function start() {
   const app = Fastify({ logger: true, maxParamLength: EVENT_SLUG_MAX_LENGTH });
-  registerStagingWriteGuard(app);
 
   await app.register(helmet as any, {
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   });
   await app.register(cors as any, getCorsOptions());
+  registerStagingWriteGuard(app);
   // lightweight in-memory rate limiter for auth endpoints (per-IP)
   const rateMap = new Map<string, { count: number; windowStart: number }>();
   const RATE_MAX = 20;

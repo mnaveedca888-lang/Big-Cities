@@ -98,7 +98,6 @@ describe('staging write route protection', () => {
     ['PATCH', '/categories/category'],
     ['DELETE', '/categories/category'],
     ['POST', '/countries'],
-    ['PATCH', '/countries/PK'],
     ['DELETE', '/countries/PK'],
     ['POST', '/countries/PK/cities'],
     ['PATCH', '/cities/lahore'],
@@ -114,6 +113,16 @@ describe('staging write route protection', () => {
 
     expect(response.statusCode).toBe(503);
     expect(response.json()).toMatchObject({ error: { code: 'STAGING_READ_ONLY' } });
+    expect(writeMock).not.toHaveBeenCalled();
+    expect(mkdirSpy).not.toHaveBeenCalled();
+    expect(writeFileSpy).not.toHaveBeenCalled();
+  });
+
+  it('lets the country patch route reach controller authorization without a token', async () => {
+    const response = await app.inject({ method: 'PATCH', url: '/countries/PK', payload: { name: 'Pakistan' } });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ error: { message: 'Missing token' } });
     expect(writeMock).not.toHaveBeenCalled();
     expect(mkdirSpy).not.toHaveBeenCalled();
     expect(writeFileSpy).not.toHaveBeenCalled();
