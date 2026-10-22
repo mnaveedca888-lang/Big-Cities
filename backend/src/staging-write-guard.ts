@@ -7,6 +7,7 @@ export const databaseWritesEnabled = () => process.env.DATABASE_WRITES_ENABLED =
 export function registerStagingWriteGuard(app: FastifyInstance) {
   app.addHook('onRequest', async (request, reply) => {
     if (databaseWritesEnabled() || !WRITE_METHODS.has(request.method)) return;
+    if (request.method === 'POST' && request.routeOptions.url === '/auth/login') return;
 
     return reply.code(503).send({
       success: false,

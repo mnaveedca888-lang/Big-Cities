@@ -86,7 +86,6 @@ describe('staging write route protection', () => {
 
   it.each([
     ['POST', '/auth/register'],
-    ['POST', '/auth/login'],
     ['POST', '/auth/refresh'],
     ['POST', '/auth/logout'],
     ['PATCH', '/users/me'],
@@ -115,6 +114,20 @@ describe('staging write route protection', () => {
 
     expect(response.statusCode).toBe(503);
     expect(response.json()).toMatchObject({ error: { code: 'STAGING_READ_ONLY' } });
+    expect(writeMock).not.toHaveBeenCalled();
+    expect(mkdirSpy).not.toHaveBeenCalled();
+    expect(writeFileSpy).not.toHaveBeenCalled();
+  });
+
+  it('lets login reach authentication without enabling database writes', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/auth/login',
+      payload: { email: 'admin@example.test', password: 'provided-by-test' },
+    });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ error: { code: 'INVALID_CREDENTIALS' } });
     expect(writeMock).not.toHaveBeenCalled();
     expect(mkdirSpy).not.toHaveBeenCalled();
     expect(writeFileSpy).not.toHaveBeenCalled();

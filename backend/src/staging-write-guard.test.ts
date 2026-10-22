@@ -13,6 +13,7 @@ describe('staging write guard', () => {
     app = Fastify();
     registerStagingWriteGuard(app);
     app.post('/write', writeHandler);
+    app.post('/auth/login', writeHandler);
     app.patch('/write', writeHandler);
     app.delete('/write', writeHandler);
     app.get('/health/live', async () => ({ status: 'ok' }));
@@ -32,6 +33,13 @@ describe('staging write guard', () => {
     expect(response.statusCode).toBe(503);
     expect(response.json()).toMatchObject({ error: { code: 'STAGING_READ_ONLY' } });
     expect(writeHandler).not.toHaveBeenCalled();
+  });
+
+  it('allows the login handler while staging writes remain disabled', async () => {
+    const response = await app.inject({ method: 'POST', url: '/auth/login' });
+
+    expect(response.statusCode).toBe(200);
+    expect(writeHandler).toHaveBeenCalledOnce();
   });
 
   it('leaves health and read-only GET requests available', async () => {
