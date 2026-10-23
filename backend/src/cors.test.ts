@@ -1,7 +1,13 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { afterEach, describe, expect, it } from 'vitest';
-import { DEVELOPMENT_FRONTEND_ORIGIN, getCorsOptions, PRODUCTION_FRONTEND_ORIGIN } from './cors';
+import {
+  DEVELOPMENT_FRONTEND_ORIGIN,
+  getCorsOptions,
+  PRODUCTION_FRONTEND_ORIGIN,
+  STAGING_CANDIDATE_FRONTEND_ORIGIN,
+  STAGING_PREVIEW_FRONTEND_ORIGIN,
+} from './cors';
 
 const apps: ReturnType<typeof Fastify>[] = [];
 
@@ -19,6 +25,62 @@ afterEach(async () => {
 });
 
 describe('CORS configuration', () => {
+  it('allows only exact staging candidate origins when the staging flag is enabled', async () => {
+    const previousFlag = process.env.ENABLE_STAGING_CANDIDATE_CORS;
+    try {
+      process.env.ENABLE_STAGING_CANDIDATE_CORS = 'true';
+      const enabledApp = await createCorsApp('production');
+      for (const origin of [STAGING_CANDIDATE_FRONTEND_ORIGIN, STAGING_PREVIEW_FRONTEND_ORIGIN]) {
+        const response = await enabledApp.inject({
+          method: 'OPTIONS',
+          url: '/auth/login',
+          headers: {
+            origin,
+            'access-control-request-method': 'POST',
+            'access-control-request-headers': 'content-type',
+          },
+        });
+
+        expect(response.statusCode).toBe(204);
+        expect(response.headers['access-control-allow-origin']).toBe(origin);
+        expect(response.headers['access-control-allow-methods']).toContain('POST');
+      }
+
+      process.env.ENABLE_STAGING_CANDIDATE_CORS = 'false';
+      const disabledApp = await createCorsApp('production');
+      for (const origin of [STAGING_CANDIDATE_FRONTEND_ORIGIN, STAGING_PREVIEW_FRONTEND_ORIGIN]) {
+        const response = await disabledApp.inject({
+          method: 'OPTIONS',
+          url: '/auth/login',
+          headers: {
+            origin,
+            'access-control-request-method': 'POST',
+            'access-control-request-headers': 'content-type',
+          },
+        });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.headers['access-control-allow-origin']).toBeUndefined();
+      }
+
+      process.env.ENABLE_STAGING_CANDIDATE_CORS = 'true';
+      const unrelatedResponse = await enabledApp.inject({
+        method: 'OPTIONS',
+        url: '/auth/login',
+        headers: {
+          origin: 'https://unrelated-preview.workers.dev',
+          'access-control-request-method': 'POST',
+          'access-control-request-headers': 'content-type',
+        },
+      });
+      expect(unrelatedResponse.statusCode).toBe(404);
+      expect(unrelatedResponse.headers['access-control-allow-origin']).toBeUndefined();
+    } finally {
+      if (previousFlag === undefined) delete process.env.ENABLE_STAGING_CANDIDATE_CORS;
+      else process.env.ENABLE_STAGING_CANDIDATE_CORS = previousFlag;
+    }
+  });
+
   it('allows the approved production frontend origin', async () => {
     const app = await createCorsApp('production');
     const response = await app.inject({
