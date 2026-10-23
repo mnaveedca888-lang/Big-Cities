@@ -1,110 +1,93 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import BigCitiesPage from '../BigCitiesPage';
 
-const mockGetCities = vi.fn();
+const mockGetCityDirectory = vi.fn();
 
 vi.mock('@/services/catalog', () => ({
-  getCities: (...args: unknown[]) => mockGetCities(...args),
+  getCityDirectory: (...args: unknown[]) => mockGetCityDirectory(...args),
 }));
 
+const mangshi = { slug: 'cn-mangshi-dehong', name: 'Mangshi International Airport' };
+
+function directoryResponse(items: typeof mangshi[], page: number, total: number) {
+  return {
+    items,
+    pagination: { page, perPage: 12, total, totalPages: Math.ceil(total / 12) },
+  };
+}
+
+function renderPage() {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+  render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/cities']}>
+        <Routes>
+          <Route path="/cities" element={<BigCitiesPage />} />
+          <Route path="/city/:slug" element={<h1>Existing city detail route</h1>} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
+}
+
 describe('BigCitiesPage', () => {
-  it('searches cities case-insensitively, paginates results, and opens the existing detail route', async () => {
-    const cityNames = ['Lahore', 'Islamabad', 'Karachi', 'Peshawar', 'Quetta', 'Multan', 'Faisalabad', 'Sialkot', 'Rawalpindi', 'Gujranwala', 'Hyderabad', 'Abbottabad', 'Mangshi (Dehong)'];
-    mockGetCities.mockResolvedValue([...cityNames.map((name, index) => ({
-      slug: index === 0 ? 'pk-lahore' : index === cityNames.length - 1 ? 'cn-mangshi-dehong' : `city-${index}`,
-      name,
-      countryCode: index === cityNames.length - 1 ? 'CN' : 'PK',
-      image: index === 0 ? '/images/Pakistan%20cities%20images/Lahore.png' : null,
-      population: index === 0 ? '11,000,000' : null,
-      shortDescription: index === 0 ? 'Lahore description must not appear.' : null,
-      profile: index === 0 ? { heroImageUrl: '/images/lahore.webp', shortDescription: 'Profile description must not appear.' } : null,
-    })),
-    { slug: 'cn-changchun', name: 'Changchun Longjia International Airport', countryCode: 'CN' },
-    { slug: 'kr-yangyang', name: 'Yangyang International Airport', countryCode: 'KR' },
-    ]);
-    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  it('uses server pagination and searches display-name aliases and exclusions after a debounce', async () => {
+    const firstPage = [
+      'Lahore', 'Islamabad', 'Karachi', 'Peshawar', 'Quetta', 'Multan',
+      'Faisalabad', 'Sialkot', 'Rawalpindi', 'Gujranwala', 'Hyderabad', 'Abbottabad',
+    ].map((name, index) => ({ slug: `city-${index}`, name }));
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={['/cities']}>
-          <Routes>
-            <Route path="/cities" element={<BigCitiesPage />} />
-            <Route path="/city/:slug" element={<h1>Existing city detail route</h1>} />
-          </Routes>
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
+    mockGetCityDirectory.mockImplementation(async ({ q, page }: { q?: string; page?: number }) => {
+      if (q === 'Dehong') return directoryResponse([mangshi], 1, 1);
+      if (q === 'Quatro') return directoryResponse([], 1, 0);
+      return page === 2 ? directoryResponse([mangshi], 2, 13) : directoryResponse(firstPage, 1, 13);
+    });
+    renderPage();
 
-    expect(screen.getByRole('heading', { name: 'Big Cities' })).toBeInTheDocument();
-    expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
+    expect(await screen.findByText('13 cities')).toBeInTheDocument();
+    expect(screen.getByText('Page 1 of 2')).toBeInTheDocument();
+    expect(mockGetCityDirectory).toHaveBeenCalledWith(expect.objectContaining({ page: 1, perPage: 12 }));
+
     fireEvent.click(screen.getByRole('button', { name: 'Next' }));
-    expect(await screen.findByRole('link', { name: /Mangshi \(Dehong\)/ })).toHaveAttribute('href', '/city/cn-mangshi-dehong');
-    fireEvent.change(screen.getByRole('textbox', { name: 'Search cities' }), { target: { value: 'lAh' } });
+    const secondPageLink = await screen.findByRole('link', { name: 'Mangshi (Dehong) International Airport' });
+    expect(screen.getByText('Page 2 of 2')).toBeInTheDocument();
+    expect(secondPageLink).toHaveAttribute('href', '/city/cn-mangshi-dehong');
 
-    const lahoreLink = await screen.findByRole('link', { name: /Lahore/ });
-    expect(lahoreLink).toHaveAttribute('href', '/city/pk-lahore');
-  expect(lahoreLink).toHaveTextContent(/^Lahore$/);
-    expect(screen.queryByRole('link', { name: /Islamabad/ })).not.toBeInTheDocument();
-  expect(screen.queryByRole('img')).not.toBeInTheDocument();
-  expect(screen.queryByText('PK')).not.toBeInTheDocument();
-  expect(screen.queryByText('Population: 11,000,000')).not.toBeInTheDocument();
-  expect(screen.queryByText('Lahore description must not appear.')).not.toBeInTheDocument();
-  expect(screen.queryByText('Profile description must not appear.')).not.toBeInTheDocument();
-
-    fireEvent.change(screen.getByRole('textbox', { name: 'Search cities' }), { target: { value: 'Changchun International Airport' } });
-    const changchunLink = await screen.findByRole('link', { name: 'Changchun International Airport' });
-    expect(changchunLink).toHaveAttribute('href', '/city/cn-changchun');
-
-    fireEvent.change(screen.getByRole('textbox', { name: 'Search cities' }), { target: { value: 'Yangyang International Airport' } });
-    const reviewLink = await screen.findByRole('link', { name: 'Yangyang International Airport' });
-    expect(reviewLink).toHaveAttribute('href', '/city/kr-yangyang');
-
-    fireEvent.change(screen.getByRole('textbox', { name: 'Search cities' }), { target: { value: 'lAh' } });
-    const updatedLahoreLink = await screen.findByRole('link', { name: /Lahore/ });
-
-    fireEvent.click(updatedLahoreLink);
+    const search = screen.getByRole('textbox', { name: 'Search cities' });
+    fireEvent.change(search, { target: { value: 'Dehong' } });
+    await waitFor(() => {
+      expect(mockGetCityDirectory).toHaveBeenCalledWith(expect.objectContaining({
+        q: 'Dehong',
+        page: 1,
+        aliasSlugs: ['cn-mangshi-dehong'],
+        excludeSlugs: [],
+      }));
+    }, { timeout: 3000 });
+    const aliasLink = await screen.findByRole('link', { name: 'Mangshi (Dehong) International Airport' }, { timeout: 3000 });
+    fireEvent.click(aliasLink);
     expect(await screen.findByRole('heading', { name: 'Existing city detail route' })).toBeInTheDocument();
   });
 
-  it('shows verified Azerbaijan city names without changing slugs or Baku and Lankaran labels', async () => {
-    const cityRecords = [
-      { slug: 'az-baku', name: 'Baku', displayName: 'Baku' },
-      { slug: 'az-fuzuli', name: 'Fuzuli International Airport', displayName: 'Fuzuli' },
-      { slug: 'az-gabala', name: 'Gabala International Airport', displayName: 'Gabala' },
-      { slug: 'az-ganja', name: 'Ganja International Airport', displayName: 'Ganja' },
-      { slug: 'az-lachin', name: 'Lachin International Airport', displayName: 'Lachin' },
-      { slug: 'az-lankaran', name: 'Lankaran', displayName: 'Lankaran' },
-      { slug: 'az-nakhchivan', name: 'Nakhchivan International Airport', displayName: 'Nakhchivan' },
-      { slug: 'az-zangilan', name: 'Zangilan International Airport', displayName: 'Zangilan' },
-      { slug: 'az-zaqatala', name: 'Zaqatala International Airport', displayName: 'Zaqatala' },
-    ];
-    mockGetCities.mockResolvedValue(cityRecords.map(({ slug, name }) => ({ slug, name, countryCode: 'AZ' })));
-    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  it('excludes raw airport names when they do not match the displayed city name', async () => {
+    mockGetCityDirectory.mockImplementation(async ({ q }: { q?: string }) => (
+      q === 'Quatro'
+        ? directoryResponse([], 1, 0)
+        : directoryResponse([{ slug: 'pk-lahore', name: 'Lahore' }], 1, 1)
+    ));
+    renderPage();
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={['/cities']}>
-          <Routes>
-            <Route path="/cities" element={<BigCitiesPage />} />
-            <Route path="/city/:slug" element={<h1>Existing city detail route</h1>} />
-          </Routes>
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-
-    for (const city of cityRecords) {
-      const link = await screen.findByRole('link', { name: city.displayName });
-      expect(link).toHaveAttribute('href', `/city/${city.slug}`);
-      if (city.name !== city.displayName) {
-        expect(screen.queryByRole('link', { name: city.name, exact: true })).not.toBeInTheDocument();
-      }
-    }
-    expect(await screen.findAllByRole('link')).toHaveLength(9);
-
-    fireEvent.click(screen.getByRole('link', { name: 'Fuzuli' }));
-    expect(await screen.findByRole('heading', { name: 'Existing city detail route' })).toBeInTheDocument();
+    fireEvent.change(screen.getByRole('textbox', { name: 'Search cities' }), { target: { value: 'Quatro' } });
+    expect(await screen.findByText('No cities found')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(mockGetCityDirectory).toHaveBeenCalledWith(expect.objectContaining({
+        q: 'Quatro',
+        aliasSlugs: [],
+        excludeSlugs: ['ao-quatro-de-fevereiro-international-airport-lad-luanda'],
+      }));
+    }, { timeout: 3000 });
   });
 });

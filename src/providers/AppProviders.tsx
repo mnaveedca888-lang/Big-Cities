@@ -9,12 +9,13 @@ import { AppErrorBoundary } from '@/components/system/AppErrorBoundary';
 import { PermissionsProvider } from '@/contexts/PermissionsContext';
 import { ToastProvider } from '@/components/ui/toast';
 import { ReactNode, useState } from 'react';
+import { shouldRetryQuery } from '@/providers/queryRetry';
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [client] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        retry: 1,
+        retry: shouldRetryQuery,
         refetchOnWindowFocus: false,
         staleTime: 1000 * 60 * 5,
       },

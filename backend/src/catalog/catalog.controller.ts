@@ -747,6 +747,17 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       }),
       prisma.country.count({ where }),
     ]);
+    const eventCounts = await prisma.event.groupBy({
+      by: ['countryCode'],
+      _count: { _all: true },
+      where: { countryCode: { in: countries.map((country: { code: string }) => country.code) } },
+    });
+    const eventCountMap = new Map(
+      eventCounts.map((row: { countryCode: string | null; _count: { _all: number } }) => [
+        row.countryCode,
+        Number(row._count._all),
+      ]),
+    );
     reply.send({
       success: true,
       data: {
@@ -754,6 +765,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
           code: country.code,
           name: country.name,
           continent: country.continent?.name ?? null,
+          events: eventCountMap.get(country.code) ?? 0,
         })),
         pagination: buildPagination(page, perPage, total, 500),
       },

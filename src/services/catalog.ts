@@ -1,5 +1,6 @@
 import { apiClient } from '@/api/client';
-import type { ApiResponse, CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
+import type { ApiResponse } from '@/types/api';
+import type { CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
 
 const HIDDEN_UI_CATEGORY_NAMES = new Set(['Memorial Day', 'Live Performances', 'Historical Commemoration', 'Traditional Festival', 'National Holiday']);
 
@@ -59,6 +60,11 @@ export async function getCountries(params?: { q?: string; continent?: string; pa
   return response.data.data;
 }
 
+export async function getCountryDirectory(params?: { q?: string; continent?: string; page?: number; perPage?: number }) {
+  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CountryItem, 'code' | 'name' | 'continent' | 'events'>>>>('/countries/directory', { params });
+  return response.data.data;
+}
+
 export async function getCountry(code: string) {
   const response = await apiClient.get<ApiResponse<CountryItem>>(`/countries/${code}`);
   return response.data.data;
@@ -86,5 +92,28 @@ export async function updateCity(slug: string, payload: { name?: string; country
 
 export async function getCities() {
   const response = await apiClient.get<ApiResponse<CityItem[]>>('/cities');
+  return response.data.data;
+}
+
+export async function getCityDirectory(params: {
+  q?: string;
+  page?: number;
+  perPage?: number;
+  aliasSlugs?: string[];
+  excludeSlugs?: string[];
+}) {
+  const { aliasSlugs, excludeSlugs, ...queryParams } = params;
+  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CityItem, 'slug' | 'name'>>>>('/cities/directory', {
+    params: {
+      ...queryParams,
+      ...(aliasSlugs?.length ? { aliasSlugs: aliasSlugs.join(',') } : {}),
+      ...(excludeSlugs?.length ? { excludeSlugs: excludeSlugs.join(',') } : {}),
+    },
+  });
+  return response.data.data;
+}
+
+export async function getVerifiedCityCount() {
+  const response = await apiClient.get<ApiResponse<number>>('/cities/count');
   return response.data.data;
 }

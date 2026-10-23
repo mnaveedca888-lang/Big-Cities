@@ -1,8 +1,9 @@
 ﻿import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
+import { prefetchCityPage, prefetchEventPage } from '@/services/routePrefetch';
 import { getBigCityDisplayName } from '@/data/bigCitiesAirportDisplayNames';
 import { getCategories, getCountry, getCountryCities } from '@/services/catalog';
 import { getEvents } from '@/services/events';import { buildCanonicalCountryProfile } from '@/utils/countryProfile';import { pakistanCountryImage } from '@/utils/pakistanImages';
@@ -89,22 +90,22 @@ function filterCountryEvents(events: Array<{ countryCode?: string | null } | und
 }
 
 export default function CountryDetailPage() {
+  const queryClient = useQueryClient();
   const { code = '' } = useParams();
   const normalizedCode = code.trim().toUpperCase();
-  const country = useQuery({ queryKey: ['country', normalizedCode], queryFn: () => getCountry(normalizedCode), enabled: Boolean(normalizedCode), refetchOnMount: 'always' });
-  const cities = useQuery({ queryKey: ['country-cities', normalizedCode], queryFn: () => getCountryCities(normalizedCode), enabled: Boolean(normalizedCode), refetchOnMount: 'always' });
-  const events = useQuery({ queryKey: ['country-events', normalizedCode], queryFn: () => getEvents({ country: normalizedCode, perPage: 100 }), enabled: Boolean(normalizedCode), refetchOnMount: 'always' });
+  const country = useQuery({ queryKey: ['country', normalizedCode], queryFn: () => getCountry(normalizedCode), enabled: Boolean(normalizedCode) });
+  const cities = useQuery({ queryKey: ['country-cities', normalizedCode], queryFn: () => getCountryCities(normalizedCode), enabled: Boolean(normalizedCode) });
+  const events = useQuery({ queryKey: ['country-events', normalizedCode], queryFn: () => getEvents({ country: normalizedCode, perPage: 100 }), enabled: Boolean(normalizedCode) });
   const isPakistanDailyEventsQuery = normalizedCode === 'PK';
   const dailyEvents = useQuery({
     queryKey: ['country-daily-events', normalizedCode],
     queryFn: () => getEvents({ country: normalizedCode, perPage: 100, dailyOnly: true }),
     enabled: isPakistanDailyEventsQuery,
-    refetchOnMount: 'always',
     refetchInterval: isPakistanDailyEventsQuery ? 30_000 : false,
     refetchIntervalInBackground: false,
     staleTime: 15_000,
   });
-  const categories = useQuery({ queryKey: ['event-categories'], queryFn: () => getCategories({ perPage: 100 }), enabled: normalizedCode === 'PK', refetchOnMount: 'always' });
+  const categories = useQuery({ queryKey: ['event-categories'], queryFn: () => getCategories({ perPage: 100 }), enabled: normalizedCode === 'PK' });
   const profile = (country.data?.profile as Record<string, unknown> | null | undefined) ?? null;
   const canonicalProfile = buildCanonicalCountryProfile(profile);
   const countryName = (country.data?.name ?? normalizedCode) || 'Country';
@@ -190,7 +191,7 @@ export default function CountryDetailPage() {
       <div className="space-y-8">
         <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white/80 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
           <div className="h-72 w-full overflow-hidden bg-slate-100 sm:h-80 lg:h-96 dark:bg-slate-950">
-            <SafeImage src={heroImage} fallbackSrc={isPakistanCountry ? pakistanCountryImage : null} alt={country.data?.name ?? 'Country'} className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
+            <SafeImage src={heroImage} fallbackSrc={isPakistanCountry ? pakistanCountryImage : null} alt={country.data?.name ?? 'Country'} loading="eager" fetchPriority="high" className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
           </div>
           <div className="p-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -284,7 +285,13 @@ export default function CountryDetailPage() {
                     ? getBigCityDisplayName(slug, city.name ?? '')
                     : city.name;
                   return (
-                    <Link key={slug || city.name} to={`/city/${slug}`} className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white">
+                    <Link
+                      key={slug || city.name}
+                      to={`/city/${slug}`}
+                      onMouseEnter={() => void prefetchCityPage(queryClient, slug)}
+                      onFocus={() => void prefetchCityPage(queryClient, slug)}
+                      className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white"
+                    >
                       {displayName}
                     </Link>
                   );
@@ -306,7 +313,13 @@ export default function CountryDetailPage() {
             {dedupedEvents.length > 0 ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {dedupedEvents.map((event: any) => (
-                  <Link key={event.id} to={`/event/${event.slug}`} className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white">
+                  <Link
+                    key={event.id}
+                    to={`/event/${event.slug}`}
+                    onMouseEnter={() => void prefetchEventPage(queryClient, event.slug)}
+                    onFocus={() => void prefetchEventPage(queryClient, event.slug)}
+                    className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white"
+                  >
                     {event.title}
                   </Link>
                 ))}
@@ -357,4 +370,3 @@ export default function CountryDetailPage() {
     </>
   );
 }
-

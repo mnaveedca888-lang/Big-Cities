@@ -1,20 +1,28 @@
 ﻿import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { getContinents, getCountries } from '@/services/catalog';
+import { useDebounce } from '@/hooks/useDebounce';
+import { getContinents, getCountryDirectory } from '@/services/catalog';
+import { prefetchCountryPage } from '@/services/routePrefetch';
 
 export default function CountriesPage() {
+  const queryClient = useQueryClient();
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query.trim(), 250);
   const [page, setPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
   const continent = searchParams.get('continent') ?? '';
-  const continents = useQuery({ queryKey: ['continents'], queryFn: getContinents, keepPreviousData: true });
-  const countries = useQuery({ queryKey: ['countries', query, continent, page], queryFn: () => getCountries({ q: query || undefined, continent: continent || undefined, page, perPage: 12, sort: 'name' }), keepPreviousData: true });
+  const continents = useQuery({ queryKey: ['continents'], queryFn: getContinents });
+  const countries = useQuery({
+    queryKey: ['countries', 'directory', debouncedQuery, continent, page],
+    queryFn: () => getCountryDirectory({ q: debouncedQuery || undefined, continent: continent || undefined, page, perPage: 12 }),
+    placeholderData: keepPreviousData,
+  });
   const items = countries.data?.items ?? [];
   const pagination = countries.data?.pagination;
 
@@ -48,7 +56,12 @@ export default function CountriesPage() {
         <DataState isLoading={countries.isLoading} error={countries.error ? `Countries are unavailable right now. ${countries.error?.message ?? ''}` : undefined} onRetry={() => void countries.refetch()} isEmpty={!countries.isLoading && items.length === 0} emptyTitle="No countries found" emptyDescription="Try adjusting the search or continent filter.">
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {items.map((country) => (
-              <Link key={country.code} to={`/country/${country.code}`}>
+              <Link
+                key={country.code}
+                to={`/country/${country.code}`}
+                onMouseEnter={() => void prefetchCountryPage(queryClient, country.code)}
+                onFocus={() => void prefetchCountryPage(queryClient, country.code)}
+              >
                 <Card className="space-y-3 transition hover:-translate-y-1">
                   <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-600">{country.code}</p>
                   <h2 className="text-xl font-semibold text-slate-950 dark:text-white">{country.name}</h2>
@@ -64,4 +77,3 @@ export default function CountriesPage() {
     </>
   );
 }
-

@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Header } from '../Header';
 import { Footer } from '../Footer';
@@ -13,24 +15,37 @@ vi.mock('@/contexts/AuthContext', () => ({
   useAuth: () => mockUseAuth(),
 }));
 
-const { mockUseAuth } = vi.hoisted(() => ({ mockUseAuth: vi.fn() }));
+const { mockUseAuth, mockGetCountryDirectory } = vi.hoisted(() => ({
+  mockUseAuth: vi.fn(),
+  mockGetCountryDirectory: vi.fn(),
+}));
 
 vi.mock('@/services/catalog', () => ({
-  getCountries: vi.fn().mockResolvedValue({ items: [] }),
+  getCountryDirectory: (...args: unknown[]) => mockGetCountryDirectory(...args),
 }));
+
+function renderWithProviders(children: ReactNode, initialEntries = ['/']) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+    </QueryClientProvider>,
+  );
+}
 
 describe('Header mobile navigation', () => {
   beforeEach(() => {
     mockUseAuth.mockReturnValue({ isAuthenticated: false, signOut: vi.fn() });
+    mockGetCountryDirectory.mockResolvedValue({ items: [], pagination: { page: 1, perPage: 50, total: 0, totalPages: 0 } });
   });
 
   it('keeps primary navigation in the intended order without unrelated entries', () => {
-    const { container } = render(
-      <MemoryRouter>
+    const { container } = renderWithProviders(
+      <>
         <Header />
         <AdminLayout />
         <Footer />
-      </MemoryRouter>,
+      </>,
     );
     const expectedMainLinks = [
       ['Home', '/'],
@@ -68,7 +83,7 @@ describe('Header mobile navigation', () => {
   });
 
   it('opens, closes, and closes after selecting a mobile route', () => {
-    render(<MemoryRouter><Header /></MemoryRouter>);
+    renderWithProviders(<Header />);
 
     const toggle = screen.getByRole('button', { name: 'Open navigation menu' });
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -83,7 +98,7 @@ describe('Header mobile navigation', () => {
   });
 
   it('closes when the toggle is clicked again', () => {
-    render(<MemoryRouter><Header /></MemoryRouter>);
+    renderWithProviders(<Header />);
     const openToggle = screen.getByRole('button', { name: 'Open navigation menu' });
     fireEvent.click(openToggle);
     fireEvent.click(screen.getByRole('button', { name: 'Close navigation menu' }));
@@ -91,7 +106,7 @@ describe('Header mobile navigation', () => {
   });
 
   it('marks About as the active route in desktop and mobile navigation', () => {
-    const { container } = render(<MemoryRouter initialEntries={['/about']}><Header /></MemoryRouter>);
+    const { container } = renderWithProviders(<Header />, ['/about']);
     const desktopAbout = container.querySelector('header nav.hidden a[href="/about"]');
     expect(desktopAbout).toHaveAttribute('aria-current', 'page');
     expect(desktopAbout).toHaveClass('text-cyan-800');
@@ -104,10 +119,24 @@ describe('Header mobile navigation', () => {
 
   it('does not show a Dashboard shortcut in the authenticated public header', () => {
     mockUseAuth.mockReturnValue({ isAuthenticated: true, signOut: vi.fn() });
-    render(<MemoryRouter><Header /></MemoryRouter>);
+    renderWithProviders(<Header />);
 
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Dashboard' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Dashboard' })).not.toBeInTheDocument();
+  });
+
+  it('uses the lightweight country directory for cached header suggestions', async () => {
+    mockGetCountryDirectory.mockResolvedValue({
+      items: [{ code: 'PK', name: 'Pakistan', continent: 'Asia' }],
+      pagination: { page: 1, perPage: 50, total: 1, totalPages: 1 },
+    });
+    renderWithProviders(<Header />);
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Search countries' }), { target: { value: 'Pak' } });
+    fireEvent.focus(screen.getByRole('textbox', { name: 'Search countries' }));
+
+    expect(await screen.findByRole('button', { name: /Pakistan/ })).toBeInTheDocument();
+    expect(mockGetCountryDirectory).toHaveBeenCalledWith({ q: 'Pak', page: 1, perPage: 50 });
   });
 });

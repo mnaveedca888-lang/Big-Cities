@@ -1,5 +1,5 @@
 ﻿import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { SEO } from '@/components/seo/SEO';
@@ -310,6 +310,7 @@ function buildCityProfileState(city: CityItem | null): Record<string, unknown> {
 }
 
 export default function DashboardPage() {
+  const queryClient = useQueryClient();
   const overview = useQuery({ queryKey: ['dashboard-overview'], queryFn: getDashboardOverview });
   const countriesQuery = useQuery({
     queryKey: ['dashboard-countries'],
@@ -327,14 +328,7 @@ export default function DashboardPage() {
   const [saveCountryState, setSaveCountryState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveCountryMessage, setSaveCountryMessage] = useState('');
 
-  const searchCountriesQuery = useQuery({
-    queryKey: ['dashboard-countries-search', countrySearch],
-    queryFn: () => getCountries({ q: countrySearch.trim() || undefined, perPage: 500, sort: 'name' }),
-    enabled: Boolean(countrySearch.trim()),
-    keepPreviousData: true,
-  });
-
-  const countries = countrySearch.trim() ? searchCountriesQuery.data?.items ?? [] : countriesQuery.data?.items ?? [];
+  const countries = countriesQuery.data?.items ?? [];
   const filteredCountries = useMemo(() => {
     if (!countrySearch.trim()) return countries;
     const query = countrySearch.toLowerCase();
@@ -447,7 +441,15 @@ export default function DashboardPage() {
       if (countryForm.heroImageUrl.trim()) mergedProfile.heroImageUrl = countryForm.heroImageUrl.trim();
       if (countryForm.flagImageUrl.trim()) mergedProfile.flagImageUrl = countryForm.flagImageUrl.trim();
       await updateCountry(selectedCountry.code, { name: countryForm.name, profile: mergedProfile });
-      await countriesQuery.refetch();
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['country', selectedCountry.code] }),
+        queryClient.invalidateQueries({ queryKey: ['countries'] }),
+        queryClient.invalidateQueries({ queryKey: ['countries-list'] }),
+        queryClient.invalidateQueries({ queryKey: ['header-country-search'] }),
+        queryClient.invalidateQueries({ queryKey: ['search'] }),
+        queryClient.invalidateQueries({ queryKey: ['home-countries'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] }),
+      ]);
       setSaveCountryState('saved');
       setSaveCountryMessage('Country updated successfully.');
     } catch (error) {
@@ -468,7 +470,15 @@ export default function DashboardPage() {
         countryCode: cityForm.countryCode || selectedCountry?.code || selectedCity.countryCode,
         profile: mergedProfile,
       });
-      await countryCitiesQuery.refetch();
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['city', selectedCity.slug] }),
+        queryClient.invalidateQueries({ queryKey: ['cities'] }),
+        queryClient.invalidateQueries({ queryKey: ['country-cities'] }),
+        queryClient.invalidateQueries({ queryKey: ['home-cities'] }),
+        queryClient.invalidateQueries({ queryKey: ['about-cities'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard-country-cities'] }),
+        queryClient.invalidateQueries({ queryKey: ['search'] }),
+      ]);
       setSaveCityState('saved');
     } catch (error) {
       console.error(error);
@@ -498,7 +508,21 @@ export default function DashboardPage() {
         featured: eventForm.featured,
         trending: eventForm.trending,
       });
-      await countryEventsQuery.refetch();
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['event', selectedEvent.slug] }),
+        queryClient.invalidateQueries({ queryKey: ['events'] }),
+        queryClient.invalidateQueries({ queryKey: ['events-list'] }),
+        queryClient.invalidateQueries({ queryKey: ['country-events'] }),
+        queryClient.invalidateQueries({ queryKey: ['country-daily-events'] }),
+        queryClient.invalidateQueries({ queryKey: ['search'] }),
+        queryClient.invalidateQueries({ queryKey: ['home-featured-events'] }),
+        queryClient.invalidateQueries({ queryKey: ['home-location-events'] }),
+        queryClient.invalidateQueries({ queryKey: ['gallery-events'] }),
+        queryClient.invalidateQueries({ queryKey: ['about-events'] }),
+        queryClient.invalidateQueries({ queryKey: ['home-platform-counts'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard-overview'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard-country-events'] }),
+      ]);
       setSaveEventState('saved');
     } catch (error) {
       console.error(error);
@@ -849,4 +873,3 @@ export default function DashboardPage() {
     </>
   );
 }
-

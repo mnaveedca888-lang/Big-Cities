@@ -2,13 +2,14 @@ import { apiClient } from '@/api/client';
 import type { ApiResponse } from '@/types/api';
 import type { SearchParams, SearchResult } from '@/types/search';
 
-export async function searchEvents(params: SearchParams) {
+export async function searchEvents(params: SearchParams, signal?: AbortSignal) {
   const { query, ...rest } = params;
   const response = await apiClient.get<ApiResponse<SearchResult>>('/search', {
     params: {
       q: query,
       ...rest,
     },
+    signal,
   });
   return response.data.data;
 }

@@ -7,9 +7,11 @@ type SafeImageProps = {
   className?: string;
   fallbackClassName?: string;
   fallbackSrc?: string | null;
+  loading?: 'eager' | 'lazy';
+  fetchPriority?: 'high' | 'low' | 'auto';
 };
 
-export function SafeImage({ src, alt, className, fallbackClassName, fallbackSrc }: SafeImageProps) {
+export function SafeImage({ src, alt, className, fallbackClassName, fallbackSrc, loading = 'lazy', fetchPriority }: SafeImageProps) {
   const [currentSrc, setCurrentSrc] = useState<string | null>(null);
   const [errorCount, setErrorCount] = useState(0);
 
@@ -43,6 +45,9 @@ export function SafeImage({ src, alt, className, fallbackClassName, fallbackSrc 
     <img
       src={currentSrc}
       alt={alt}
+      loading={loading}
+      decoding="async"
+      fetchPriority={fetchPriority}
       className={['block object-cover object-center', className].filter(Boolean).join(' ')}
       onError={() => {
         if (errorCount > 0) return;

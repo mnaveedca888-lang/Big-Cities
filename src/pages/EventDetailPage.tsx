@@ -66,7 +66,6 @@ export default function EventDetailPage() {
     queryKey: ['event', slug],
     queryFn: () => getEvent(slug),
     enabled: Boolean(slug),
-    refetchOnMount: 'always',
   });
 
   const event = eventQuery.data;
@@ -84,7 +83,7 @@ export default function EventDetailPage() {
           <div className="space-y-8">
             <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white/80 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
               <div className="h-72 w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
-                <SafeImage src={heroImage} alt={event.title || 'Event'} className="h-full w-full object-cover" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
+                <SafeImage src={heroImage} alt={event.title || 'Event'} loading="eager" fetchPriority="high" className="h-full w-full object-cover" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
               </div>
               <div className="space-y-6 p-8">
                 <div className="flex flex-wrap items-center justify-between gap-4">
@@ -147,4 +146,3 @@ export default function EventDetailPage() {
     </>
   );
 }
-

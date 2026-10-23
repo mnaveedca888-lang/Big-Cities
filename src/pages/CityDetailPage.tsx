@@ -1,9 +1,10 @@
 ﻿import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
+import { prefetchEventPage } from '@/services/routePrefetch';
 import { SafeImage } from '@/components/ui/safe-image';
 import { getBigCityDisplayName } from '@/data/bigCitiesAirportDisplayNames';
 import { getCity } from '@/services/catalog';
@@ -43,10 +44,11 @@ function formatHistoricalDateLabel(event: { description?: string | null; date?: 
 }
 
 export default function CityDetailPage() {
+  const queryClient = useQueryClient();
   const { slug = '' } = useParams();
   const normalizedSlug = slug.trim();
-  const city = useQuery({ queryKey: ['city', normalizedSlug], queryFn: () => getCity(normalizedSlug), enabled: Boolean(normalizedSlug), refetchOnMount: 'always' });
-  const events = useQuery({ queryKey: ['events', normalizedSlug], queryFn: () => getEvents({ city: normalizedSlug }), enabled: Boolean(normalizedSlug), refetchOnMount: 'always' });
+  const city = useQuery({ queryKey: ['city', normalizedSlug], queryFn: () => getCity(normalizedSlug), enabled: Boolean(normalizedSlug) });
+  const events = useQuery({ queryKey: ['events', normalizedSlug], queryFn: () => getEvents({ city: normalizedSlug }), enabled: Boolean(normalizedSlug) });
   const profile = buildCanonicalCityProfile((city.data?.profile as Record<string, unknown> | null | undefined) ?? null);
   const localPakistanCityImage = getPakistanCityImage(normalizedSlug);
   const heroImage = getCityImage(city.data) ?? localPakistanCityImage;
@@ -92,7 +94,7 @@ export default function CityDetailPage() {
       <div className="space-y-8">
         <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white/80 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
           <div className="h-72 w-full overflow-hidden bg-slate-100 sm:h-80 lg:h-96 dark:bg-slate-950">
-            <SafeImage src={heroImage} alt={cityName} className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
+            <SafeImage src={heroImage} alt={cityName} loading="eager" fetchPriority="high" className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
           </div>
           <div className="p-8">
             <h1 className="text-3xl font-semibold text-slate-950 dark:text-white">{cityName}</h1>
@@ -237,7 +239,13 @@ export default function CityDetailPage() {
                   const eventDate = new Date(event.startAt ?? event.date ?? '').getTime();
                   const isUpcoming = Number.isFinite(eventDate) && eventDate >= Date.now();
                   return (
-                    <Link key={event.id} to={`/event/${event.slug}`} className="rounded-2xl border border-slate-200 p-3 text-sm text-slate-600 transition hover:border-cyan-500 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-950">
+                    <Link
+                      key={event.id}
+                      to={`/event/${event.slug}`}
+                      onMouseEnter={() => void prefetchEventPage(queryClient, event.slug)}
+                      onFocus={() => void prefetchEventPage(queryClient, event.slug)}
+                      className="rounded-2xl border border-slate-200 p-3 text-sm text-slate-600 transition hover:border-cyan-500 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-950"
+                    >
                       <div className="font-semibold text-slate-950 dark:text-white">{event.title}</div>
                       <div className="mt-2">{formatHistoricalDateLabel(event)}</div>
                       <div className="mt-2 text-xs uppercase tracking-[0.24em] text-cyan-600">{isUpcoming ? 'Upcoming' : 'Scheduled'}</div>
@@ -256,4 +264,3 @@ export default function CityDetailPage() {
     </>
   );
 }
-

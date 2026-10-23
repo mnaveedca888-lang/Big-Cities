@@ -6,12 +6,13 @@ import ContinentsPage from '../ContinentsPage';
 import CountriesPage from '../CountriesPage';
 
 const mockGetContinents = vi.fn();
-const mockGetCountries = vi.fn();
+const mockGetCountryDirectory = vi.fn();
 
 vi.mock('@/services/catalog', () => ({
   getContinents: (...args: unknown[]) => mockGetContinents(...args),
-  getCountries: (...args: unknown[]) => mockGetCountries(...args),
+  getCountryDirectory: (...args: unknown[]) => mockGetCountryDirectory(...args),
 }));
+vi.mock('@/services/routePrefetch', () => ({ prefetchCountryPage: vi.fn() }));
 
 describe('ContinentsPage', () => {
   it('filters continent names case-insensitively and opens the existing country filter flow', async () => {
@@ -19,7 +20,10 @@ describe('ContinentsPage', () => {
       { id: 'asia', name: 'Asia', countries: 49 },
       { id: 'europe', name: 'Europe', countries: 43 },
     ]);
-    mockGetCountries.mockResolvedValue({ items: [], pagination: { page: 1, perPage: 12, total: 0, totalPages: 0 } });
+    mockGetCountryDirectory.mockResolvedValue({
+      items: [],
+      pagination: { page: 1, perPage: 12, total: 0, totalPages: 0 },
+    });
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
     render(
@@ -41,6 +45,11 @@ describe('ContinentsPage', () => {
 
     expect(await screen.findByRole('heading', { name: 'Discover Countries & Their Cities' })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: 'Filter countries by continent' })).toHaveValue('Asia');
-    expect(mockGetCountries).toHaveBeenCalledWith(expect.objectContaining({ continent: 'Asia' }));
+    expect(mockGetCountryDirectory).toHaveBeenCalledWith({
+      q: undefined,
+      continent: 'Asia',
+      page: 1,
+      perPage: 12,
+    });
   });
 });

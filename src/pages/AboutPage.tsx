@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, BookOpenText, Building2, Compass, Globe2, MapPinned } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
-import { getCities, getCountries } from '@/services/catalog';
+import { getCity, getCountryDirectory, getVerifiedCityCount } from '@/services/catalog';
 import { getEvents } from '@/services/events';
+import { prefetchCityPage, prefetchCountryPage, prefetchEventPage } from '@/services/routePrefetch';
 import type { CityItem, CountryItem, EventItem } from '@/types';
 
 const highlightCountryCodes = ['JP', 'IT', 'BR'];
@@ -20,14 +21,20 @@ function Metric({ value, label, isLoading }: { value?: number; label: string; is
 }
 
 export default function AboutPage() {
+  const queryClient = useQueryClient();
   const countries = useQuery({
     queryKey: ['about-countries'],
-    queryFn: () => getCountries({ page: 1, perPage: 500, sort: 'name' }),
+    queryFn: () => getCountryDirectory({ page: 1, perPage: 500 }),
     staleTime: 5 * 60_000,
   });
   const cities = useQuery({
     queryKey: ['about-cities'],
-    queryFn: getCities,
+    queryFn: () => Promise.all(highlightCitySlugs.map((slug) => getCity(slug))),
+    staleTime: 5 * 60_000,
+  });
+  const cityCount = useQuery({
+    queryKey: ['about-city-count'],
+    queryFn: getVerifiedCityCount,
     staleTime: 5 * 60_000,
   });
   const events = useQuery({
@@ -46,7 +53,7 @@ export default function AboutPage() {
     .map((slug) => cityItems.find((city) => city.slug === slug))
     .filter((city): city is CityItem => Boolean(city));
   const sampleEvent = eventItems.find((event) => event.title && event.countryCode === 'JP' && /Historical\/cultural significance:/i.test(event.description || ''));
-  const dataError = countries.error || cities.error || events.error;
+  const dataError = countries.error || cities.error || cityCount.error || events.error;
 
   return (
     <>
@@ -71,7 +78,7 @@ export default function AboutPage() {
             </div>
             <div className="grid grid-cols-2 gap-3 sm:max-w-sm lg:w-72">
               <Metric value={countries.data?.pagination.total} label="Countries" isLoading={countries.isLoading} />
-              <Metric value={cityItems.length} label="Listed cities" isLoading={cities.isLoading} />
+              <Metric value={cityCount.data} label="Listed cities" isLoading={cityCount.isLoading} />
             </div>
           </div>
         </section>
@@ -118,7 +125,7 @@ export default function AboutPage() {
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300"><BookOpenText className="h-5 w-5" /></span>
               <h3 className="mt-5 text-lg font-semibold text-slate-950 dark:text-white">Historical events</h3>
               <p className="mt-2 flex-1 text-sm leading-6 text-slate-600 dark:text-slate-400">Country and city pages show event entries linked to those places. Source and verification details vary by record, so check the entry itself for context.</p>
-              {sampleEvent ? <Link to={`/event/${sampleEvent.slug}`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-800 hover:text-cyan-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-cyan-300">View a catalog event <ArrowRight className="h-4 w-4" /></Link> : <Link to="/countries" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-800 hover:text-cyan-600 dark:text-cyan-300">Browse country pages <ArrowRight className="h-4 w-4" /></Link>}
+              {sampleEvent ? <Link to={`/event/${sampleEvent.slug}`} onMouseEnter={() => void prefetchEventPage(queryClient, sampleEvent.slug)} onFocus={() => void prefetchEventPage(queryClient, sampleEvent.slug)} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-800 hover:text-cyan-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-cyan-300">View a catalog event <ArrowRight className="h-4 w-4" /></Link> : <Link to="/countries" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-800 hover:text-cyan-600 dark:text-cyan-300">Browse country pages <ArrowRight className="h-4 w-4" /></Link>}
             </Card>
           </div>
         </section>
@@ -136,7 +143,7 @@ export default function AboutPage() {
               <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100"><MapPinned className="h-4 w-4 text-cyan-700 dark:text-cyan-300" /> Countries in the live catalog</h3>
               {countries.isLoading ? <p className="mt-3 text-sm text-slate-500" role="status">Loading country links…</p> : countries.error ? <p className="mt-3 text-sm text-slate-500">Country examples are unavailable right now. The directory remains available.</p> : featuredCountries.length ? (
                 <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                  {featuredCountries.map((country) => <Link key={country.code} to={`/country/${country.code}`} className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-cyan-400 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950"><span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{country.continent ?? 'Country'}</span><span className="mt-1 block font-semibold text-slate-950 dark:text-white">{country.name}</span></Link>)}
+                  {featuredCountries.map((country) => <Link key={country.code} to={`/country/${country.code}`} onMouseEnter={() => void prefetchCountryPage(queryClient, country.code)} onFocus={() => void prefetchCountryPage(queryClient, country.code)} className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-cyan-400 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950"><span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{country.continent ?? 'Country'}</span><span className="mt-1 block font-semibold text-slate-950 dark:text-white">{country.name}</span></Link>)}
                 </div>
               ) : <p className="mt-3 text-sm text-slate-500">No country examples are available.</p>}
             </div>
@@ -144,7 +151,7 @@ export default function AboutPage() {
               <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100"><Building2 className="h-4 w-4 text-indigo-700 dark:text-indigo-300" /> Cities in the listed catalog</h3>
               {cities.isLoading ? <p className="mt-3 text-sm text-slate-500" role="status">Loading city links…</p> : cities.error ? <p className="mt-3 text-sm text-slate-500">City examples are unavailable right now. The directory remains available.</p> : featuredCities.length ? (
                 <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                  {featuredCities.map((city) => <Link key={city.slug} to={`/city/${city.slug}`} className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-cyan-400 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950"><span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{city.countryCode ?? 'City'}</span><span className="mt-1 block font-semibold text-slate-950 dark:text-white">{city.name}</span></Link>)}
+                  {featuredCities.map((city) => <Link key={city.slug} to={`/city/${city.slug}`} onMouseEnter={() => void prefetchCityPage(queryClient, city.slug)} onFocus={() => void prefetchCityPage(queryClient, city.slug)} className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-cyan-400 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950"><span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{city.countryCode ?? 'City'}</span><span className="mt-1 block font-semibold text-slate-950 dark:text-white">{city.name}</span></Link>)}
                 </div>
               ) : <p className="mt-3 text-sm text-slate-500">No city examples are available.</p>}
             </div>

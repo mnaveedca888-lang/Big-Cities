@@ -1,23 +1,30 @@
 ﻿import { Helmet } from 'react-helmet-async';
 import { Search } from 'lucide-react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { searchEvents } from '@/services/search';
 import { DataState } from '@/components/ui/data-state';
 import { EventCard } from '@/components/features/EventCard';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export default function SearchPage() {
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get('q') ?? '');
+  const debouncedQuery = useDebounce(query.trim(), 250);
   const page = Number(params.get('page') ?? '1');
   const category = params.get('category') ?? '';
   const [savedSearches, setSavedSearches] = useState<string[]>(() => JSON.parse(window.localStorage.getItem('saved-searches') ?? '[]') as string[]);
   useEffect(() => { setQuery(params.get('q') ?? ''); }, [params]);
-  const results = useQuery({ queryKey: ['search', query, category, page], queryFn: () => searchEvents({ query, page, pageSize: 12, category: category || undefined }), enabled: query.trim().length > 1 });
+  const results = useQuery({
+    queryKey: ['search', debouncedQuery, category, page],
+    queryFn: ({ signal }) => searchEvents({ query: debouncedQuery, page, pageSize: 12, category: category || undefined }, signal),
+    enabled: debouncedQuery.length > 1,
+    placeholderData: keepPreviousData,
+  });
   const submitSearch = (event: React.FormEvent) => { event.preventDefault(); const next = new URLSearchParams(params); query.trim() ? next.set('q', query.trim()) : next.delete('q'); next.set('page', '1'); setParams(next); };
   return (
     <>
@@ -49,4 +56,3 @@ export default function SearchPage() {
     </>
   );
 }
-

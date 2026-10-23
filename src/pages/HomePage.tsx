@@ -9,7 +9,7 @@ import { DataState } from '@/components/ui/data-state';
 import { Card } from '@/components/ui/card';
 import { EventCard } from '@/components/features/EventCard';
 import { apiClient } from '@/api/client';
-import { getCategories, getCities, getContinents, getCountries, getCountryCities } from '@/services/catalog';
+import { getCategories, getContinents, getCountryCities, getCountryDirectory, getVerifiedCityCount } from '@/services/catalog';
 import { getEvents, getFeaturedEvents } from '@/services/events';
 import type { EventItem } from '@/types';
 import type { CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
@@ -20,35 +20,33 @@ export default function HomePage() {
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
 
-  const continentsQuery = useQuery({ queryKey: ['home-continents'], queryFn: getContinents, refetchOnMount: 'always' });
-  const countriesQuery = useQuery({ queryKey: ['home-countries', continent], queryFn: () => getCountries({ continent, perPage: 500, sort: 'name' }), enabled: Boolean(continent), refetchOnMount: 'always' });
-  const citiesQuery = useQuery({ queryKey: ['home-cities', country], queryFn: () => getCountryCities(country), enabled: Boolean(country), refetchOnMount: 'always' });
-  const featuredEventsQuery = useQuery({ queryKey: ['home-featured-events'], queryFn: getFeaturedEvents, refetchOnMount: 'always' });
+  const continentsQuery = useQuery({ queryKey: ['home-continents'], queryFn: getContinents });
+  const countriesQuery = useQuery({ queryKey: ['home-countries', continent], queryFn: () => getCountryDirectory({ continent, perPage: 500 }), enabled: Boolean(continent) });
+  const citiesQuery = useQuery({ queryKey: ['home-cities', country], queryFn: () => getCountryCities(country), enabled: Boolean(country) });
+  const featuredEventsQuery = useQuery({ queryKey: ['home-featured-events'], queryFn: getFeaturedEvents });
   const locationEventsQuery = useQuery({
     queryKey: ['home-location-events', continent, country, city],
     queryFn: () => getEvents({ country, city, exactCity: true, perPage: 100 }),
     enabled: Boolean(city),
-    refetchOnMount: 'always',
   });
 
   const statsQuery = useQuery({
     queryKey: ['home-platform-counts'],
     queryFn: async () => {
       const [countriesResponse, citiesResponse, eventsResponse, categoriesResponse] = await Promise.all([
-        apiClient.get('/countries', { params: { page: 1, perPage: 1 } }),
-        getCities(),
+        getCountryDirectory({ page: 1, perPage: 1 }),
+        getVerifiedCityCount(),
         apiClient.get('/events', { params: { page: 1, perPage: 1 } }),
-        getCategories({ page: 1, perPage: 1000 }),
+        getCategories({ page: 1, perPage: 1 }),
       ]);
 
-      const countries = Number(countriesResponse.data?.data?.pagination?.total ?? 0);
-      const cities = Array.isArray(citiesResponse) ? citiesResponse.length : 0;
+      const countries = Number(countriesResponse?.pagination?.total ?? 0);
+      const cities = Number(citiesResponse ?? 0);
       const events = Number(eventsResponse.data?.data?.pagination?.total ?? 0);
       const categories = Number(categoriesResponse?.pagination?.total ?? 0);
 
       return { countries, cities, events, categories };
     },
-    refetchOnMount: 'always',
   });
 
   const countries = countriesQuery.data?.items ?? [];

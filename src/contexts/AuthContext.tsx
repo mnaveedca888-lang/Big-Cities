@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import type { UserProfile } from '@/types';
 import type { AuthSession } from '@/types/auth';
 import { refreshSession, logout } from '@/services/auth';
@@ -36,36 +37,46 @@ function clearAllAuthStorage() {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = useQueryClient();
   const [session, setSession] = useState<AuthSession | null>(() => {
     const storedSession = window.localStorage.getItem('auth-session') ?? window.sessionStorage.getItem('auth-session');
     return storedSession ? (JSON.parse(storedSession) as AuthSession) : null;
   });
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const previousUserId = useRef(session?.user.id ?? null);
+  const updateSession = useCallback((nextSession: AuthSession | null) => {
+    const nextUserId = nextSession?.user.id ?? null;
+    if (previousUserId.current !== nextUserId) {
+      queryClient.clear();
+      previousUserId.current = nextUserId;
+    }
+    setSession(nextSession);
+  }, [queryClient]);
 
   useEffect(() => {
     if (!session?.expiresAt) return;
     const remaining = session.expiresAt - Date.now();
     if (remaining <= 0) {
-      setSession(null);
+      updateSession(null);
       clearAllAuthStorage();
       return;
     }
     const timer = window.setTimeout(() => {
-      setSession(null);
+      updateSession(null);
       clearAllAuthStorage();
     }, remaining);
     return () => window.clearTimeout(timer);
-  }, [session]);
+  }, [session, updateSession]);
 
   useEffect(() => {
     const handleSessionUpdate = (event: Event) => {
       const customEvent = event as CustomEvent<AuthSession>;
       if (customEvent?.detail) {
-        setSession(customEvent.detail);
+        updateSession(customEvent.detail);
       }
     };
     const handleSessionClear = () => {
-      setSession(null);
+      updateSession(null);
     };
     window.addEventListener('auth:session:update', handleSessionUpdate);
     window.addEventListener('auth:session:clear', handleSessionClear);
@@ -73,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener('auth:session:update', handleSessionUpdate);
       window.removeEventListener('auth:session:clear', handleSessionClear);
     };
-  }, []);
+  }, [updateSession]);
 
   const refresh = useCallback(async () => {
     const storage = getAuthStorage();
@@ -83,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsRefreshing(true);
     try {
       const nextSession = await refreshSession(currentSession.refreshToken);
-      setSession(nextSession);
+      updateSession(nextSession);
       const authStorage = getAuthStorage();
       authStorage.setItem('auth-session', JSON.stringify(nextSession));
       authStorage.setItem('auth-user', JSON.stringify(nextSession.user));
@@ -91,13 +102,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (nextSession.refreshToken) authStorage.setItem('refresh-token', nextSession.refreshToken);
       return true;
     } catch {
-      setSession(null);
+      updateSession(null);
       clearAllAuthStorage();
       return false;
     } finally {
       setIsRefreshing(false);
     }
-  }, [isRefreshing, session]);
+  }, [isRefreshing, session, updateSession]);
 
   const value = useMemo(
     () => ({
@@ -108,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       refresh,
       signIn: (nextUser: UserProfile, nextSession?: Partial<AuthSession>, rememberMe = true) => {
         const storedSession: AuthSession = { user: nextUser, accessToken: nextSession?.accessToken ?? '', refreshToken: nextSession?.refreshToken, expiresAt: nextSession?.expiresAt };
-        setSession(storedSession);
+        updateSession(storedSession);
         const storage = rememberMe ? window.localStorage : window.sessionStorage;
         const otherStorage = rememberMe ? window.sessionStorage : window.localStorage;
         clearAuthStorage(otherStorage);
@@ -119,14 +130,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
       signOut: () => {
         const refreshToken = window.localStorage.getItem('refresh-token') ?? window.sessionStorage.getItem('refresh-token');
-        setSession(null);
+        updateSession(null);
         clearAllAuthStorage();
         if (refreshToken) {
           void logout(refreshToken).catch((err) => console.error('Logout request failed', err));
         }
       },
     }),
-    [isRefreshing, refresh, session],
+    [isRefreshing, refresh, session, updateSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

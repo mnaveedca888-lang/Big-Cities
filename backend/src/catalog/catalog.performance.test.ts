@@ -9,13 +9,23 @@ describe('catalog directory read endpoints', () => {
   ]);
   const cityCount = vi.fn().mockResolvedValue(42);
   const countryFindMany = vi.fn().mockResolvedValue([
-    { code: 'JP', name: 'Japan', continent: { name: 'Asia' }, profile: { mustNotReturn: true } },
+    {
+      code: 'JP',
+      name: 'Japan',
+      continent: { name: 'Asia' },
+      _count: { events: 17 },
+      profile: { mustNotReturn: true },
+    },
   ]);
   const countryCount = vi.fn().mockResolvedValue(550);
+  const eventGroupBy = vi.fn().mockResolvedValue([
+    { countryCode: 'JP', _count: { _all: 17 } },
+  ]);
   const prisma = new Proxy({}, {
     get: (_client, model) => {
       if (model === 'city') return { findMany: cityFindMany, count: cityCount };
       if (model === 'country') return { findMany: countryFindMany, count: countryCount };
+      if (model === 'event') return { groupBy: eventGroupBy };
       return {};
     },
   }) as any;
@@ -27,6 +37,7 @@ describe('catalog directory read endpoints', () => {
     cityCount.mockClear();
     countryFindMany.mockClear();
     countryCount.mockClear();
+    eventGroupBy.mockClear();
   });
 
   it('returns only the directory fields and avoids loading city profiles', async () => {
@@ -99,7 +110,7 @@ describe('catalog directory read endpoints', () => {
     expect(response.json()).toEqual({
       success: true,
       data: {
-        items: [{ code: 'JP', name: 'Japan', continent: 'Asia' }],
+        items: [{ code: 'JP', name: 'Japan', continent: 'Asia', events: 17 }],
         pagination: { page: 2, perPage: 500, total: 550, totalPages: 2 },
       },
     });
@@ -124,6 +135,11 @@ describe('catalog directory read endpoints', () => {
         ],
         continent: { name: 'Asia' },
       },
+    });
+    expect(eventGroupBy).toHaveBeenCalledWith({
+      by: ['countryCode'],
+      _count: { _all: true },
+      where: { countryCode: { in: ['JP'] } },
     });
     expect(response.json().data.items[0]).not.toHaveProperty('profile');
   });

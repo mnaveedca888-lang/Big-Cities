@@ -81,3 +81,33 @@ export function getBigCityDisplayName(slug: string, name: string) {
   const override = airportDisplayOverrides[slug];
   return override?.originalName === name ? override.displayName : name;
 }
+
+function normalizeDisplayNameQuery(query: string) {
+  return query.trim().toLocaleLowerCase();
+}
+
+export function getBigCityDisplayNameAliasSlugs(query: string) {
+  const normalizedQuery = normalizeDisplayNameQuery(query);
+  if (!normalizedQuery) return [];
+
+  return Object.entries(airportDisplayOverrides)
+    .filter(([, override]) => {
+      const displayName = override.displayName.toLocaleLowerCase();
+      const originalName = override.originalName.toLocaleLowerCase();
+      return displayName.includes(normalizedQuery) && !originalName.includes(normalizedQuery);
+    })
+    .map(([slug]) => slug);
+}
+
+export function getBigCityDisplayNameExcludedSlugs(query: string) {
+  const normalizedQuery = normalizeDisplayNameQuery(query);
+  if (!normalizedQuery) return [];
+
+  return Object.entries(airportDisplayOverrides)
+    .filter(([, override]) => {
+      const displayName = override.displayName.toLocaleLowerCase();
+      const originalName = override.originalName.toLocaleLowerCase();
+      return originalName.includes(normalizedQuery) && !displayName.includes(normalizedQuery);
+    })
+    .map(([slug]) => slug);
+}

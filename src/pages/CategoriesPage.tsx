@@ -1,18 +1,24 @@
 ﻿import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getCategories } from '@/services/catalog';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export default function CategoriesPage() {
   const [query, setQuery] = useState('');
+  const debouncedQuery = useDebounce(query.trim(), 250);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState('name');
-  const categories = useQuery({ queryKey: ['categories', query, page, sort], queryFn: () => getCategories({ q: query || undefined, page, perPage: 12, sort }), keepPreviousData: true });
+  const categories = useQuery({
+    queryKey: ['categories', debouncedQuery, page, sort],
+    queryFn: () => getCategories({ q: debouncedQuery || undefined, page, perPage: 12, sort }),
+    placeholderData: keepPreviousData,
+  });
   const items = categories.data?.items ?? [];
   const pagination = categories.data?.pagination;
   const canGoBack = page > 1;
@@ -55,4 +61,3 @@ export default function CategoriesPage() {
     </>
   );
 }
-
