@@ -2,16 +2,21 @@ import Fastify from 'fastify';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import registerCatalogRoutes from './catalog.controller';
 
-describe('city directory read endpoints', () => {
+describe('catalog directory read endpoints', () => {
   let app: ReturnType<typeof Fastify>;
   const cityFindMany = vi.fn().mockResolvedValue([
     { slug: 'pk-lahore', name: 'Lahore' },
   ]);
   const cityCount = vi.fn().mockResolvedValue(42);
+  const countryFindMany = vi.fn().mockResolvedValue([
+    { code: 'JP', name: 'Japan', continent: { name: 'Asia' }, profile: { mustNotReturn: true } },
+  ]);
+  const countryCount = vi.fn().mockResolvedValue(550);
   const prisma = new Proxy({}, {
     get: (_client, model) => {
-      if (model !== 'city') return {};
-      return { findMany: cityFindMany, count: cityCount };
+      if (model === 'city') return { findMany: cityFindMany, count: cityCount };
+      if (model === 'country') return { findMany: countryFindMany, count: countryCount };
+      return {};
     },
   }) as any;
 
@@ -20,6 +25,8 @@ describe('city directory read endpoints', () => {
     registerCatalogRoutes(app, prisma);
     cityFindMany.mockClear();
     cityCount.mockClear();
+    countryFindMany.mockClear();
+    countryCount.mockClear();
   });
 
   it('returns only the directory fields and avoids loading city profiles', async () => {
@@ -80,6 +87,45 @@ describe('city directory read endpoints', () => {
     expect(response.json()).toEqual({ success: true, data: 42 });
     expect(cityCount).toHaveBeenCalledWith({ where: { isVerifiedCity: true } });
     expect(cityFindMany).not.toHaveBeenCalled();
+  });
+
+  it('returns only country directory fields with pagination and no grouped profile counts', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries/directory?q=asia&continent=Asia&page=2&perPage=700',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({
+      success: true,
+      data: {
+        items: [{ code: 'JP', name: 'Japan', continent: 'Asia' }],
+        pagination: { page: 2, perPage: 500, total: 550, totalPages: 2 },
+      },
+    });
+    expect(countryFindMany).toHaveBeenCalledWith({
+      where: {
+        OR: [
+          { name: { contains: 'asia', mode: 'insensitive' } },
+          { code: { contains: 'asia', mode: 'insensitive' } },
+        ],
+        continent: { name: 'Asia' },
+      },
+      orderBy: { name: 'asc' },
+      skip: 500,
+      take: 500,
+      select: { code: true, name: true, continent: { select: { name: true } } },
+    });
+    expect(countryCount).toHaveBeenCalledWith({
+      where: {
+        OR: [
+          { name: { contains: 'asia', mode: 'insensitive' } },
+          { code: { contains: 'asia', mode: 'insensitive' } },
+        ],
+        continent: { name: 'Asia' },
+      },
+    });
+    expect(response.json().data.items[0]).not.toHaveProperty('profile');
   });
 
   afterEach(async () => {

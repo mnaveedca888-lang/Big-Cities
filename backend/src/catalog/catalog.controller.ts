@@ -127,6 +127,12 @@ const cityDirectoryQuerySchema = z.object({
   aliasSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
   excludeSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
 });
+const countryDirectoryQuerySchema = z.object({
+  q: z.string().trim().max(100).optional(),
+  continent: z.string().trim().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  perPage: z.coerce.number().int().min(1).default(12),
+});
 
 function getPakistanImageUrl(filename: string, request: FastifyRequest) {
   return localImageUrl(PAKISTAN_IMAGE_FOLDER, filename);
@@ -713,6 +719,45 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
     } catch (error: any) {
       reply.code(400).send({ success: false, error: { message: error.message } });
     }
+  });
+
+  app.get('/countries/directory', async (request, reply) => {
+    const query = countryDirectoryQuerySchema.parse(request.query || {});
+    const page = query.page;
+    const perPage = Math.min(500, query.perPage);
+    const search = query.q?.trim();
+    const where = {
+      ...(search
+        ? {
+            OR: [
+              { name: { contains: search, mode: 'insensitive' as const } },
+              { code: { contains: search, mode: 'insensitive' as const } },
+            ],
+          }
+        : {}),
+      ...(query.continent ? { continent: { name: query.continent } } : {}),
+    };
+    const [countries, total] = await Promise.all([
+      prisma.country.findMany({
+        where,
+        orderBy: { name: 'asc' },
+        skip: (page - 1) * perPage,
+        take: perPage,
+        select: { code: true, name: true, continent: { select: { name: true } } },
+      }),
+      prisma.country.count({ where }),
+    ]);
+    reply.send({
+      success: true,
+      data: {
+        items: countries.map((country) => ({
+          code: country.code,
+          name: country.name,
+          continent: country.continent?.name ?? null,
+        })),
+        pagination: buildPagination(page, perPage, total, 500),
+      },
+    });
   });
 
   app.get('/countries/:code', async (request, reply) => {
