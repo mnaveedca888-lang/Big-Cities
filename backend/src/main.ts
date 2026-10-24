@@ -12,6 +12,7 @@ import registerDashboardRoutes from './dashboard/dashboard.controller';
 import registerCatalogRoutes from './catalog/catalog.controller';
 import registerNotificationsRoutes from './notifications/notifications.controller';
 import registerUploadRoutes from './uploads/uploads.controller';
+import { createUploadStorage, registerUploadImageRoutes } from './uploads/upload-storage';
 import registerAdminRoutes from './admin/admin.controller';
 import registerEventRoutes, { EVENT_SLUG_MAX_LENGTH } from './events/event.controller';
 import registerSearchRoutes from './search/search.controller';
@@ -23,6 +24,7 @@ import { getCorsOptions } from './cors';
 import { registerHealthRoutes } from './health';
 
 const prisma = new PrismaClient();
+const uploadStorage = createUploadStorage();
 installLocalImageWriteGuard(prisma);
 
 async function start() {
@@ -71,6 +73,7 @@ async function start() {
 
   await app.register(fastifyMultipart, { limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
 
+  registerUploadImageRoutes(app, uploadStorage);
   await app.register(fastifyStatic, {
     root: path.join(__dirname, '..', 'public', 'Images'),
     prefix: '/images/',
@@ -84,7 +87,7 @@ async function start() {
     registerDashboardRoutes(app, prisma as any);
     registerCatalogRoutes(app, prisma as any);
     registerNotificationsRoutes(app, prisma as any);
-    registerUploadRoutes(app, prisma as any);
+    registerUploadRoutes(app, prisma as any, uploadStorage);
     registerAdminRoutes(app, prisma as any);
     registerEventRoutes(app, prisma as any);
     registerSearchRoutes(app, prisma as any);

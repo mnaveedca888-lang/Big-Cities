@@ -29,6 +29,19 @@ export function normalizeLocalImageUrl(value: unknown): string | null {
   }
 }
 
+function isSafePersistentUploadUrl(value: unknown) {
+  if (process.env.UPLOAD_STORAGE_DRIVER !== 's3' || typeof value !== 'string') return false;
+  const match = /^\/images\/uploads\/([^/]+)\/([^/]+)$/.exec(value);
+  if (!match) return false;
+  try {
+    const segments = match.slice(1).map(decodeURIComponent);
+    return segments.every((segment) => segment.length > 0 && segment !== '.' && segment !== '..'
+      && !segment.includes('/') && !segment.includes('\\'));
+  } catch {
+    return false;
+  }
+}
+
 export function localImageUrl(...segments: string[]): string | null {
   if (!segments.length) return null;
   return normalizeLocalImageUrl(`/images/${segments.map(encodeURIComponent).join('/')}`);
@@ -41,7 +54,7 @@ function rejectInvalidImageFields(value: unknown, model: string, fieldPath: stri
     const currentPath = [...fieldPath, key];
     const isImageField = /(image|thumbnail|avatar|flag|logo)/i.test(key) || (model === 'Upload' && key === 'url');
     if (isImageField) {
-      if (entry != null && (typeof entry !== 'string' || !normalizeLocalImageUrl(entry))) {
+      if (entry != null && (typeof entry !== 'string' || (!normalizeLocalImageUrl(entry) && !isSafePersistentUploadUrl(entry)))) {
         throw new Error(`Database image writes require an existing local /images/ file: ${currentPath.join('.')}`);
       }
     } else if (entry && typeof entry === 'object') {

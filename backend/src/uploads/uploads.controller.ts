@@ -1,11 +1,10 @@
-import fs from 'fs';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
+import { createUploadStorage, type UploadStorage } from './upload-storage';
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']);
@@ -29,12 +28,7 @@ function getBearerToken(request: any) {
   return authHeader.startsWith('Bearer ') ? authHeader.slice('Bearer '.length) : null;
 }
 
-const presignSchema = z.object({
-  filename: z.string().min(1),
-  contentType: z.string().min(1),
-});
-
-export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient) {
+export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient, storage: UploadStorage = createUploadStorage()) {
   const auth = new AuthService(prisma as any);
 
   const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true';
@@ -55,19 +49,13 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient)
       if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
       const userId = await verifyAdmin(token);
       if (!userId) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
-      const body = presignSchema.parse(request.body || {});
-      const safeName = body.filename.replace(/[^a-zA-Z0-9._-]+/g, '-');
-      if (!ALLOWED_IMAGE_TYPES.has(body.contentType)) {
-        return reply.code(400).send({ success: false, error: { message: 'Unsupported image type.' } });
-      }
-      const fileKey = `${userId}/${Date.now()}-${safeName}`;
-      const url = `/images/uploads/${fileKey}`;
-      const upload = await prisma.upload.create({ data: { userId, fileKey, url, type: body.contentType, size: 0 } });
-      reply.send({ success: true, data: { url: upload.url, fields: { fileKey, contentType: body.contentType } } });
-    } catch (err: any) {
-      if (err && err.name === 'ZodError') return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Invalid input' } });
-      app.log.warn('Upload presign failed', err);
-      reply.code(400).send({ success: false, error: { message: err.message || 'Could not create upload presign' } });
+      return reply.code(501).send({
+        success: false,
+        error: { message: 'Direct-to-storage uploads are not supported. Upload the file through /uploads/files.' },
+      });
+    } catch (error) {
+      app.log.error({ err: error }, 'Upload presign endpoint failed');
+      return reply.code(500).send({ success: false, error: { message: 'Could not process upload request.' } });
     }
   });
 
@@ -113,34 +101,39 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient)
         }
       }
       if (files.length > 1) return reply.code(400).send({ success: false, error: { message: 'Upload one image at a time.' } });
-      const uploadDir = path.join(__dirname, '..', '..', 'public', 'Images', 'uploads', userId);
-      await fs.promises.mkdir(uploadDir, { recursive: true });
       const savedFiles = [] as Array<{ url: string; fileKey: string }>
       for (const file of files) {
         const extension = path.extname(file.filename ?? '').toLowerCase();
         const fileName = `${randomUUID()}${extension}`;
         const fileKey = `${userId}/${fileName}`;
-        const targetPath = path.join(uploadDir, fileName);
-        await fs.promises.writeFile(targetPath, file.data);
         const url = `/images/uploads/${userId}/${fileName}`;
+        await storage.put(fileKey, file.data, file.mimetype || 'application/octet-stream');
         try {
           await prisma.upload.create({ data: { userId, fileKey, url, type: file.mimetype || null, size: file.data.length } });
         } catch (error) {
-          await fs.promises.unlink(targetPath);
+          try {
+            await storage.remove(fileKey);
+          } catch (cleanupError) {
+            app.log.error({ err: cleanupError, fileKey }, 'Failed to clean up an unassociated uploaded image');
+          }
           throw error;
         }
         savedFiles.push({ url, fileKey });
       }
       reply.send({ success: true, data: savedFiles });
-    } catch (err: any) {
-      app.log.warn('Upload file failed', err);
-      if (err?.code === 'FST_REQ_FILE_TOO_LARGE') {
+    } catch (error: any) {
+      app.log.error({ err: error }, 'Upload file failed');
+      if (error?.code === 'FST_REQ_FILE_TOO_LARGE') {
         return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
       }
-      if (err?.code === 'FST_FILES_LIMIT') {
+      if (error?.code === 'FST_FILES_LIMIT') {
         return reply.code(400).send({ success: false, error: { message: 'Upload one image at a time.' } });
       }
-      reply.code(400).send({ success: false, error: { message: err.message || 'Could not upload file' } });
+      const storageMode = process.env.UPLOAD_STORAGE_DRIVER;
+      if (storageMode === 's3' || storageMode === 'disabled' || (!storageMode && process.env.NODE_ENV === 'production')) {
+        return reply.code(503).send({ success: false, error: { message: 'Image storage is not configured or is temporarily unavailable.' } });
+      }
+      return reply.code(500).send({ success: false, error: { message: 'Could not upload image.' } });
     }
   });
 }
