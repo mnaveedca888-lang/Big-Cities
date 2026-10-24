@@ -69,7 +69,7 @@ async function start() {
     app.log.error('Prisma connection failed', err as any);
   }
 
-  await app.register(fastifyMultipart, { limits: { fileSize: 20 * 1024 * 1024 } });
+  await app.register(fastifyMultipart, { limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
 
   await app.register(fastifyStatic, {
     root: path.join(__dirname, '..', 'public', 'Images'),

@@ -75,13 +75,22 @@ export async function updateCountry(code: string, payload: { name?: string; cont
   return response.data.data;
 }
 
+export async function createCountry(payload: { code: string; name: string; continentId?: string | null; profile?: Record<string, unknown> | null }) {
+  const response = await apiClient.post<ApiResponse<CountryItem>>('/countries', payload);
+  return response.data.data;
+}
+
+export async function deleteCountry(code: string) {
+  await apiClient.delete(`/countries/${code}`);
+}
+
 export async function getCountryCities(code: string) {
   const response = await apiClient.get<ApiResponse<CityItem[]>>(`/countries/${code}/cities`);
   return response.data.data;
 }
 
-export async function getCountryCityDirectory(code: string, params?: { page?: number; perPage?: number }) {
-  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CityItem, 'slug' | 'name'>>>>(
+export async function getCountryCityDirectory(code: string, params?: { q?: string; page?: number; perPage?: number }) {
+  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CityItem, 'slug' | 'name' | 'countryCode'>>>>(
     `/countries/${code}/cities/directory`,
     { params },
   );
@@ -96,6 +105,15 @@ export async function getCity(slug: string) {
 export async function updateCity(slug: string, payload: { name?: string; countryCode?: string; profile?: Record<string, unknown> | null }) {
   const response = await apiClient.patch<ApiResponse<CityItem>>(`/cities/${slug}`, payload);
   return response.data.data;
+}
+
+export async function createCity(countryCode: string, payload: { slug: string; name: string; countryCode?: string; profile?: Record<string, unknown> | null }) {
+  const response = await apiClient.post<ApiResponse<CityItem>>(`/countries/${countryCode}/cities`, payload);
+  return response.data.data;
+}
+
+export async function deleteCity(slug: string) {
+  await apiClient.delete(`/cities/${slug}`);
 }
 
 export async function getCities() {

@@ -22,9 +22,9 @@ export interface EventItem {
   notes?: string;
   price?: string;
   image?: string;
-  sourceName?: string;
-  sourceUrl?: string;
-  sourceType?: string;
+  sourceName?: string | null;
+  sourceUrl?: string | null;
+  sourceType?: string | null;
   primarySourceUrl?: string | null;
   primarySourceName?: string | null;
   primarySourceType?: string | null;
@@ -36,12 +36,12 @@ export interface EventItem {
   verifiedAt?: string | null;
   lastCheckedAt?: string | null;
   externalEventId?: string;
-  venue?: string;
+  venue?: string | null;
   featured?: boolean;
   trending?: boolean;
   enabled?: boolean;
-  organizer?: string;
-  venue?: string;
+  organizer?: string | null;
+  province?: string | null;
   language?: string;
   tags?: string | string[] | null;
   attendees?: number;
@@ -61,6 +61,7 @@ export interface CountryItem {
   name: string;
   continent?: string | null;
   region?: string | null;
+  cities?: number;
   events?: number;
   image?: string;
   flagImage?: string | null;

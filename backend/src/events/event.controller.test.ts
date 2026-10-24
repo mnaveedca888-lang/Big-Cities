@@ -5,19 +5,35 @@ import { EVENT_SLUG_MAX_LENGTH, registerEventRoutes, resolveCategoryId } from '.
 
 const apps: FastifyInstance[] = [];
 
-async function createEventApi(events: Map<string, Record<string, unknown>>) {
+async function createEventApi(
+  events: Map<string, Record<string, unknown>>,
+  overrides: {
+    categoryFindUnique?: ReturnType<typeof vi.fn>;
+    countryFindUnique?: ReturnType<typeof vi.fn>;
+    cityFindUnique?: ReturnType<typeof vi.fn>;
+    savedEventCount?: ReturnType<typeof vi.fn>;
+  } = {},
+) {
   const eventFindUnique = vi.fn(async ({ where }: { where: { slug: string } }) => events.get(where.slug) ?? null);
   const eventCreate = vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({ id: 'created-event', ...data }));
+  const eventDelete = vi.fn();
+  const categoryFindUnique = overrides.categoryFindUnique ?? vi.fn().mockResolvedValue({ id: 'category-1' });
+  const countryFindUnique = overrides.countryFindUnique ?? vi.fn().mockResolvedValue({ code: 'PK' });
+  const cityFindUnique = overrides.cityFindUnique ?? vi.fn().mockResolvedValue({ slug: 'pk-lahore', countryCode: 'PK' });
+  const savedEventCount = overrides.savedEventCount ?? vi.fn().mockResolvedValue(0);
   const prisma = {
-    event: { findUnique: eventFindUnique, create: eventCreate },
-    category: { findFirst: vi.fn() },
+    event: { findUnique: eventFindUnique, create: eventCreate, delete: eventDelete },
+    category: { findFirst: vi.fn(), findUnique: categoryFindUnique },
+    country: { findUnique: countryFindUnique },
+    city: { findUnique: cityFindUnique },
+    savedEvent: { count: savedEventCount },
     user: { findUnique: vi.fn().mockResolvedValue({ id: 'admin-user', role: { name: 'admin' } }) },
   } as any;
   const app = Fastify({ maxParamLength: EVENT_SLUG_MAX_LENGTH });
   apps.push(app);
   registerEventRoutes(app, prisma);
   await app.ready();
-  return { app, eventFindUnique, eventCreate };
+  return { app, eventFindUnique, eventCreate, eventDelete, categoryFindUnique, countryFindUnique, cityFindUnique, savedEventCount };
 }
 
 afterEach(async () => {
@@ -108,6 +124,60 @@ describe('event image writes', () => {
     else process.env.JWT_ACCESS_TOKEN_SECRET = originalSecret;
   });
 
+  describe('event relationship and deletion safeguards', () => {
+    const originalSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
+
+    afterEach(() => {
+      if (originalSecret === undefined) delete process.env.JWT_ACCESS_TOKEN_SECRET;
+      else process.env.JWT_ACCESS_TOKEN_SECRET = originalSecret;
+    });
+
+    it('rejects an event whose city does not belong to its selected country', async () => {
+      process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
+      const cityFindUnique = vi.fn().mockResolvedValue({ slug: 'us-city', countryCode: 'US' });
+      const { app, eventCreate } = await createEventApi(new Map(), { cityFindUnique });
+      const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
+
+      const response = await app.inject({
+        method: 'POST',
+        url: '/events',
+        headers: { authorization: `Bearer ${token}` },
+        payload: {
+          title: 'Relationship Validation Event',
+          countryCode: 'PK',
+          citySlug: 'us-city',
+          startAt: '2026-11-01T10:00:00.000Z',
+          endAt: '2026-11-01T11:00:00.000Z',
+        },
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.json()).toMatchObject({ error: { message: 'Event city must belong to the selected country' } });
+      expect(eventCreate).not.toHaveBeenCalled();
+    });
+
+    it('prevents deletion while an event is saved by a user', async () => {
+      process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
+      const savedEventCount = vi.fn().mockResolvedValue(1);
+      const { app, eventDelete } = await createEventApi(
+        new Map([['saved-event', { id: 'event-1', slug: 'saved-event', title: 'Saved Event' }]]),
+        { savedEventCount },
+      );
+      const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
+
+      const response = await app.inject({
+        method: 'DELETE',
+        url: '/events/saved-event',
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      expect(response.statusCode).toBe(409);
+      expect(response.json()).toMatchObject({ error: { message: 'Event cannot be deleted while users have saved it.' } });
+      expect(savedEventCount).toHaveBeenCalledWith({ where: { eventId: 'event-1' } });
+      expect(eventDelete).not.toHaveBeenCalled();
+    });
+  });
+
   it.each([
     'https://images.unsplash.com/photo.jpg',
     '/images/not-downloaded/event.webp',
@@ -147,10 +217,41 @@ describe('event image writes', () => {
         startAt: '2026-11-01T10:00:00.000Z',
         endAt: '2026-11-01T11:00:00.000Z',
         image,
+        dateOnly: true,
+        venue: 'Community Hall',
+        sourceUrl: 'https://events.example.test/official',
       },
     });
 
     expect(response.statusCode).toBe(201);
-    expect(eventCreate).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ image }) }));
+    expect(eventCreate).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({
+        image,
+        dateOnly: true,
+        venue: 'Community Hall',
+        sourceUrl: 'https://events.example.test/official',
+      }),
+    }));
+  });
+
+  it('rejects malformed source URLs before creating an event', async () => {
+    process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
+    const { app, eventCreate } = await createEventApi(new Map());
+    const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/events',
+      headers: { authorization: `Bearer ${token}` },
+      payload: {
+        title: 'Invalid Source URL Event',
+        startAt: '2026-11-01T10:00:00.000Z',
+        endAt: '2026-11-01T11:00:00.000Z',
+        sourceUrl: 'javascript:alert(1)',
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(eventCreate).not.toHaveBeenCalled();
   });
 });

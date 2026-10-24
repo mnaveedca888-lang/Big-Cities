@@ -43,6 +43,18 @@ export class EventService {
     trending?: boolean | null;
     enabled?: boolean | null;
     image?: string | null;
+    dateOnly?: boolean;
+    venue?: string | null;
+    organizer?: string | null;
+    province?: string | null;
+    sourceName?: string | null;
+    sourceUrl?: string | null;
+    sourceType?: string | null;
+    primarySourceUrl?: string | null;
+    primarySourceName?: string | null;
+    primarySourceType?: string | null;
+    discoverySourceUrl?: string | null;
+    discoverySourceName?: string | null;
   }) {
     const baseSlug = this.slugify(data.title || 'event');
     let slug = baseSlug;
@@ -64,11 +76,24 @@ export class EventService {
             trending: data.trending || false,
             enabled: data.enabled ?? true,
             image: normalizeLocalImageUrl(data.image),
+            dateOnly: data.dateOnly ?? false,
+            venue: data.venue ?? null,
+            organizer: data.organizer ?? null,
+            province: data.province ?? null,
+            sourceName: data.sourceName ?? null,
+            sourceUrl: data.sourceUrl ?? null,
+            sourceType: data.sourceType ?? null,
+            primarySourceUrl: data.primarySourceUrl ?? null,
+            primarySourceName: data.primarySourceName ?? null,
+            primarySourceType: data.primarySourceType ?? null,
+            discoverySourceUrl: data.discoverySourceUrl ?? null,
+            discoverySourceName: data.discoverySourceName ?? null,
           },
         });
         return created;
       } catch (err: any) {
         // unique constraint on slug -> append random suffix and retry
+        if (err?.code !== 'P2002') throw err;
         slug = `${baseSlug}-${randomUUID().slice(0, 8)}`;
       }
     }
@@ -88,6 +113,18 @@ export class EventService {
         trending: data.trending || false,
         enabled: data.enabled ?? true,
         image: normalizeLocalImageUrl(data.image),
+        dateOnly: data.dateOnly ?? false,
+        venue: data.venue ?? null,
+        organizer: data.organizer ?? null,
+        province: data.province ?? null,
+        sourceName: data.sourceName ?? null,
+        sourceUrl: data.sourceUrl ?? null,
+        sourceType: data.sourceType ?? null,
+        primarySourceUrl: data.primarySourceUrl ?? null,
+        primarySourceName: data.primarySourceName ?? null,
+        primarySourceType: data.primarySourceType ?? null,
+        discoverySourceUrl: data.discoverySourceUrl ?? null,
+        discoverySourceName: data.discoverySourceName ?? null,
       },
     });
   }
@@ -170,7 +207,32 @@ export class EventService {
     return { action: 'inserted' as const, event };
   }
 
-  async updateBySlug(slug: string, patch: Partial<{ title: string; description: string | null; startAt: Date; endAt: Date; categoryId: string | null; countryCode: string | null; citySlug: string | null; tags: string[] | string | null; featured: boolean; trending: boolean; enabled: boolean; image: string | null }>) {
+  async updateBySlug(slug: string, patch: Partial<{
+    title: string;
+    description: string | null;
+    startAt: Date;
+    endAt: Date;
+    categoryId: string | null;
+    countryCode: string | null;
+    citySlug: string | null;
+    tags: string[] | string | null;
+    featured: boolean;
+    trending: boolean;
+    enabled: boolean;
+    image: string | null;
+    dateOnly: boolean;
+    venue: string | null;
+    organizer: string | null;
+    province: string | null;
+    sourceName: string | null;
+    sourceUrl: string | null;
+    sourceType: string | null;
+    primarySourceUrl: string | null;
+    primarySourceName: string | null;
+    primarySourceType: string | null;
+    discoverySourceUrl: string | null;
+    discoverySourceName: string | null;
+  }>) {
     const data: any = {};
     if (patch.title) data.title = patch.title;
     if (patch.description !== undefined) data.description = patch.description;
@@ -184,6 +246,18 @@ export class EventService {
     if (patch.trending !== undefined) data.trending = patch.trending;
     if (patch.enabled !== undefined) data.enabled = patch.enabled;
     if (patch.image !== undefined) data.image = normalizeLocalImageUrl(patch.image);
+    if (patch.dateOnly !== undefined) data.dateOnly = patch.dateOnly;
+    if (patch.venue !== undefined) data.venue = patch.venue;
+    if (patch.organizer !== undefined) data.organizer = patch.organizer;
+    if (patch.province !== undefined) data.province = patch.province;
+    if (patch.sourceName !== undefined) data.sourceName = patch.sourceName;
+    if (patch.sourceUrl !== undefined) data.sourceUrl = patch.sourceUrl;
+    if (patch.sourceType !== undefined) data.sourceType = patch.sourceType;
+    if (patch.primarySourceUrl !== undefined) data.primarySourceUrl = patch.primarySourceUrl;
+    if (patch.primarySourceName !== undefined) data.primarySourceName = patch.primarySourceName;
+    if (patch.primarySourceType !== undefined) data.primarySourceType = patch.primarySourceType;
+    if (patch.discoverySourceUrl !== undefined) data.discoverySourceUrl = patch.discoverySourceUrl;
+    if (patch.discoverySourceName !== undefined) data.discoverySourceName = patch.discoverySourceName;
 
     return this.prisma.event.update({ where: { slug }, data });
   }

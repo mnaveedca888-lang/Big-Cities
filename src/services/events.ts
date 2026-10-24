@@ -26,6 +26,7 @@ export interface EventsQueryParams {
   category?: string;
   featured?: boolean;
   verificationStatus?: string;
+  includeDisabled?: boolean;
   perPage?: number;
   page?: number;
   dailyOnly?: boolean;
@@ -78,9 +79,55 @@ export async function updateEvent(slug: string, payload: Partial<{
   trending: boolean;
   enabled: boolean;
   categoryId: string | null;
+  dateOnly: boolean;
+  venue: string | null;
+  organizer: string | null;
+  province: string | null;
+  sourceName: string | null;
+  sourceUrl: string | null;
+  sourceType: string | null;
+  primarySourceUrl: string | null;
+  primarySourceName: string | null;
+  primarySourceType: string | null;
+  discoverySourceUrl: string | null;
+  discoverySourceName: string | null;
 }>) {
   const response = await apiClient.patch<ApiResponse<EventItem>>(`/events/${slug}`, payload);
   return response.data.data;
+}
+
+export async function createEvent(payload: {
+  title: string;
+  description?: string | null;
+  categoryId?: string | null;
+  countryCode?: string | null;
+  citySlug?: string | null;
+  startAt: string;
+  endAt: string;
+  tags?: string[];
+  image?: string | null;
+  enabled?: boolean;
+  featured?: boolean;
+  trending?: boolean;
+  dateOnly?: boolean;
+  venue?: string | null;
+  organizer?: string | null;
+  province?: string | null;
+  sourceName?: string | null;
+  sourceUrl?: string | null;
+  sourceType?: string | null;
+  primarySourceUrl?: string | null;
+  primarySourceName?: string | null;
+  primarySourceType?: string | null;
+  discoverySourceUrl?: string | null;
+  discoverySourceName?: string | null;
+}) {
+  const response = await apiClient.post<ApiResponse<EventItem>>('/events', payload);
+  return response.data.data;
+}
+
+export async function deleteEvent(slug: string) {
+  await apiClient.delete(`/events/${slug}`);
 }
 
 export async function getEvent(slug: string) {

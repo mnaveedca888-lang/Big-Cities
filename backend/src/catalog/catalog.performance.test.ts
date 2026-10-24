@@ -160,6 +160,7 @@ describe('catalog directory read endpoints', () => {
   });
 
   it('returns a lightweight paginated country city directory with the existing city eligibility rules', async () => {
+    cityFindMany.mockResolvedValueOnce([{ slug: 'pk-lahore', name: 'Lahore', countryCode: 'PK' }]);
     const response = await app.inject({
       method: 'GET',
       url: '/countries/PK/cities/directory?page=2&perPage=10',
@@ -167,7 +168,7 @@ describe('catalog directory read endpoints', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.json().data).toEqual({
-      items: [{ slug: 'pk-lahore', name: 'Lahore' }],
+      items: [{ slug: 'pk-lahore', name: 'Lahore', countryCode: 'PK' }],
       pagination: { page: 2, perPage: 10, total: 42, totalPages: 5 },
     });
     expect(countryFindUnique).toHaveBeenCalledWith({
@@ -179,7 +180,7 @@ describe('catalog directory read endpoints', () => {
       orderBy: { name: 'asc' },
       skip: 10,
       take: 10,
-      select: { slug: true, name: true },
+      select: { slug: true, name: true, countryCode: true },
     });
     expect(cityCount).toHaveBeenCalledWith({ where: { countryCode: 'PK' } });
   });
@@ -195,10 +196,39 @@ describe('catalog directory read endpoints', () => {
     expect(response.statusCode).toBe(200);
     expect(cityFindMany).toHaveBeenCalledWith(expect.objectContaining({
       where: { countryCode: 'AR', isVerifiedCity: true },
-      select: { slug: true, name: true },
+      select: { slug: true, name: true, countryCode: true },
     }));
     expect(cityCount).toHaveBeenCalledWith({
       where: { countryCode: 'AR', isVerifiedCity: true },
+    });
+  });
+
+  it('searches country cities on the server without loading profiles', async () => {
+    cityFindMany.mockResolvedValueOnce([{ slug: 'pk-lahore', name: 'Lahore', countryCode: 'PK' }]);
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries/PK/cities/directory?q=lahore&page=1&perPage=12',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(cityFindMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: {
+        countryCode: 'PK',
+        OR: [
+          { name: { contains: 'lahore', mode: 'insensitive' } },
+          { slug: { contains: 'lahore', mode: 'insensitive' } },
+        ],
+      },
+      select: { slug: true, name: true, countryCode: true },
+    }));
+    expect(cityCount).toHaveBeenCalledWith({
+      where: {
+        countryCode: 'PK',
+        OR: [
+          { name: { contains: 'lahore', mode: 'insensitive' } },
+          { slug: { contains: 'lahore', mode: 'insensitive' } },
+        ],
+      },
     });
   });
 

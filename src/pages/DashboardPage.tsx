@@ -6,21 +6,36 @@ import { SEO } from '@/components/seo/SEO';
 import { apiClient } from '@/api/client';
 import { normalizeImageUrl } from '@/utils/imageValidation';
 import { apiBaseUrl } from '@/config/runtime';
-import { getCategories, getCountries, getCountryCities, updateCountry, updateCity } from '@/services/catalog';
-import { getEvents, updateEvent } from '@/services/events';
+import {
+  createCity,
+  createCountry,
+  deleteCity,
+  deleteCountry,
+  getCategories,
+  getCity,
+  getContinents,
+  getCountry,
+  getCountries,
+  getCountryCityDirectory,
+  updateCountry,
+  updateCity,
+} from '@/services/catalog';
+import { createEvent, deleteEvent, getEvent, getEventsPage, updateEvent } from '@/services/events';
 import { getDashboardOverview } from '@/services/dashboard';
-import type { CountryItem, CityItem, EventItem } from '@/types';
+import type { CategoryItem, CountryItem, CityItem, ContinentItem, EventItem } from '@/types';
 import { isApiError } from '@/types/errors';
 import { formatAreaValue, parseAreaInput } from '@/utils/format';
 
 type CountryFormState = {
   name: string;
   code: string;
+  continentId: string;
   heroImageUrl: string;
   flagImageUrl: string;
 };
 
 type CityFormState = {
+  slug: string;
   name: string;
   countryCode: string;
   heroImageUrl: string;
@@ -36,6 +51,18 @@ type EventFormState = {
   endAt: string;
   tags: string;
   image: string;
+  venue: string;
+  organizer: string;
+  province: string;
+  sourceName: string;
+  sourceUrl: string;
+  sourceType: string;
+  primarySourceUrl: string;
+  primarySourceName: string;
+  primarySourceType: string;
+  discoverySourceUrl: string;
+  discoverySourceName: string;
+  dateOnly: boolean;
   enabled: boolean;
   featured: boolean;
   trending: boolean;
@@ -52,9 +79,27 @@ function formatLabel(value: string) {
     .replace(/\b\w/g, (match) => match.toUpperCase());
 }
 
+function emptyEventForm(countryCode = ''): EventFormState {
+  return {
+    title: '', description: '', categoryId: '', countryCode, citySlug: '',
+    startAt: '', endAt: '', tags: '', image: '', venue: '', organizer: '',
+    province: '', sourceName: '', sourceUrl: '', sourceType: '',
+    primarySourceUrl: '', primarySourceName: '', primarySourceType: '',
+    discoverySourceUrl: '', discoverySourceName: '', dateOnly: false,
+    enabled: true, featured: false, trending: false,
+  };
+}
+
 function getErrorMessage(error: unknown, fallback: string) {
   if (isApiError(error) || error instanceof Error) return error.message;
   return fallback;
+}
+
+function toDateTimeLocal(value?: string | null) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
 }
 
 function cloneValue(value: unknown): unknown {
@@ -66,11 +111,12 @@ function cloneValue(value: unknown): unknown {
   return value;
 }
 
-function readCountryForm(country: CountryItem | null): CountryFormState {
+function readCountryForm(country: CountryItem | null, continents: Array<{ id: string; name: string }> = []): CountryFormState {
   const profile = country?.profile && typeof country.profile === 'object' ? (country.profile as Record<string, unknown>) : {};
   return {
     name: country?.name ?? '',
     code: country?.code ?? '',
+    continentId: continents.find((continent) => continent.name === country?.continent)?.id ?? '',
     heroImageUrl: typeof profile.heroImageUrl === 'string' ? profile.heroImageUrl : country?.image ?? '',
     flagImageUrl: typeof profile.flagImageUrl === 'string' ? profile.flagImageUrl : country?.flagImage ?? '',
   };
@@ -79,6 +125,7 @@ function readCountryForm(country: CountryItem | null): CountryFormState {
 function readCityForm(city: CityItem | null, fallbackCountryCode: string): CityFormState {
   const profile = city?.profile && typeof city.profile === 'object' ? (city.profile as Record<string, unknown>) : {};
   return {
+    slug: city?.slug ?? '',
     name: city?.name ?? '',
     countryCode: city?.countryCode ?? fallbackCountryCode,
     heroImageUrl: typeof profile.heroImageUrl === 'string' ? profile.heroImageUrl : city?.image ?? '',
@@ -86,16 +133,29 @@ function readCityForm(city: CityItem | null, fallbackCountryCode: string): CityF
 }
 
 function readEventForm(event: EventItem | null): EventFormState {
+  const tags = event?.tags;
   return {
     title: event?.title ?? '',
     description: event?.description ?? '',
-    categoryId: event && typeof event === 'object' && 'categoryId' in event ? String((event as any).categoryId ?? '') : '',
+    categoryId: event?.categoryId ?? '',
     countryCode: event?.countryCode ?? '',
     citySlug: event?.citySlug ?? '',
-    startAt: event?.startAt ? new Date(event.startAt).toISOString().slice(0, 16) : '',
-    endAt: event?.endAt ? new Date(event.endAt).toISOString().slice(0, 16) : '',
-    tags: Array.isArray(event?.tags) ? event.tags.join(', ') : typeof event?.tags === 'string' ? event.tags : '',
+    startAt: toDateTimeLocal(event?.startAt),
+    endAt: toDateTimeLocal(event?.endAt),
+    tags: Array.isArray(tags) ? tags.join(', ') : typeof tags === 'string' ? tags : '',
     image: event?.image ?? '',
+    venue: event?.venue ?? '',
+    organizer: event?.organizer ?? '',
+    province: event?.province ?? '',
+    sourceName: event?.sourceName ?? '',
+    sourceUrl: event?.sourceUrl ?? '',
+    sourceType: event?.sourceType ?? '',
+    primarySourceUrl: event?.primarySourceUrl ?? '',
+    primarySourceName: event?.primarySourceName ?? '',
+    primarySourceType: event?.primarySourceType ?? '',
+    discoverySourceUrl: event?.discoverySourceUrl ?? '',
+    discoverySourceName: event?.discoverySourceName ?? '',
+    dateOnly: event?.dateOnly ?? false,
     enabled: event?.enabled ?? true,
     featured: Boolean(event?.featured),
     trending: Boolean(event?.trending),
@@ -290,12 +350,18 @@ function DynamicProfileEditor({ value, onChange }: { value: Record<string, unkno
   );
 }
 
-async function uploadImageFile(file: File) {
+async function uploadImageFile(file: File, onProgress: (progress: number) => void) {
+  const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']);
+  if (!allowedTypes.has(file.type)) throw new Error('Choose a JPG, PNG, WebP, GIF, or AVIF image.');
+  if (file.size > 5 * 1024 * 1024) throw new Error('Image must be 5 MB or smaller.');
   const formData = new FormData();
   formData.append('file', file);
   const response = await apiClient.post<{ success: boolean; data?: Array<{ url: string }> }>('/uploads/files', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress: (event) => {
+      if (event.total) onProgress(Math.round((event.loaded / event.total) * 100));
     },
   });
   const uploadedUrl = response.data?.data?.[0]?.url;
@@ -303,6 +369,28 @@ async function uploadImageFile(file: File) {
   const localImageUrl = normalizeImageUrl(uploadedUrl);
   if (!localImageUrl) throw new Error('Upload returned a non-local image path');
   return localImageUrl;
+}
+
+function ImagePreview({ value, label }: { value: string; label: string }) {
+  const [failed, setFailed] = useState(false);
+  const src = normalizeImageUrl(value);
+
+  useEffect(() => setFailed(false), [src]);
+
+  if (!src) return null;
+  if (failed) return <p className="text-xs text-amber-700 dark:text-amber-300">Image preview unavailable.</p>;
+  return <img src={src} alt={label} loading="lazy" className="mt-2 h-24 w-full rounded-xl border border-slate-200 object-cover dark:border-slate-700" onError={() => setFailed(true)} />;
+}
+
+function PageControls({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (page: number) => void }) {
+  if (totalPages <= 1) return null;
+  return (
+    <nav className="mt-3 flex items-center justify-between gap-2 text-sm" aria-label="Manager pagination">
+      <button type="button" disabled={page <= 1} onClick={() => onChange(page - 1)} className="rounded-lg border border-slate-200 px-3 py-2 disabled:opacity-50 dark:border-slate-700">Previous</button>
+      <span aria-live="polite">Page {page} of {totalPages}</span>
+      <button type="button" disabled={page >= totalPages} onClick={() => onChange(page + 1)} className="rounded-lg border border-slate-200 px-3 py-2 disabled:opacity-50 dark:border-slate-700">Next</button>
+    </nav>
+  );
 }
 
 function buildCountryProfileState(country: CountryItem | null): Record<string, unknown> {
@@ -317,198 +405,325 @@ function buildCityProfileState(city: CityItem | null): Record<string, unknown> {
 
 export default function DashboardPage() {
   const queryClient = useQueryClient();
-  const overview = useQuery({ queryKey: ['dashboard-overview'], queryFn: getDashboardOverview });
-  const countriesQuery = useQuery({
-    queryKey: ['dashboard-countries'],
-    queryFn: () => getCountries({ perPage: 500, sort: 'name' }),
-  });
-  const categoriesQuery = useQuery({
-    queryKey: ['dashboard-categories'],
-    queryFn: () => getCategories({ perPage: 200, sort: 'name' }),
-  });
-
+  const overview = useQuery({ queryKey: ['dashboard-overview'], queryFn: getDashboardOverview, staleTime: 30_000 });
   const [countrySearch, setCountrySearch] = useState('');
+  const [countryQuery, setCountryQuery] = useState('');
+  const [countryPage, setCountryPage] = useState(1);
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
-  const [countryForm, setCountryForm] = useState<CountryFormState>({ name: '', code: '', heroImageUrl: '', flagImageUrl: '' });
+  const [isCreatingCountry, setIsCreatingCountry] = useState(false);
+  const [isCreatingCity, setIsCreatingCity] = useState(false);
+  const [selectedCitySlug, setSelectedCitySlug] = useState('');
+  const [cityPage, setCityPage] = useState(1);
+  const [citySearch, setCitySearch] = useState('');
+  const [cityQuery, setCityQuery] = useState('');
+  const [eventSearch, setEventSearch] = useState('');
+  const [eventQuery, setEventQuery] = useState('');
+  const [eventPage, setEventPage] = useState(1);
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [selectedEventSlug, setSelectedEventSlug] = useState('');
+  const [countryForm, setCountryForm] = useState<CountryFormState>({ name: '', code: '', continentId: '', heroImageUrl: '', flagImageUrl: '' });
   const [countryProfileData, setCountryProfileData] = useState<Record<string, unknown>>({});
+  const [cityForm, setCityForm] = useState<CityFormState>({ slug: '', name: '', countryCode: '', heroImageUrl: '' });
+  const [cityProfileData, setCityProfileData] = useState<Record<string, unknown>>({});
+  const [eventForm, setEventForm] = useState<EventFormState>(emptyEventForm());
   const [saveCountryState, setSaveCountryState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveCountryMessage, setSaveCountryMessage] = useState('');
+  const [saveCityState, setSaveCityState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveCityMessage, setSaveCityMessage] = useState('');
+  const [saveEventState, setSaveEventState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveEventMessage, setSaveEventMessage] = useState('');
+  const [countryDeleteMessage, setCountryDeleteMessage] = useState('');
+  const [cityDeleteMessage, setCityDeleteMessage] = useState('');
+  const [eventDeleteMessage, setEventDeleteMessage] = useState('');
 
-  const countries = countriesQuery.data?.items ?? [];
-  const filteredCountries = useMemo(() => {
-    if (!countrySearch.trim()) return countries;
-    const query = countrySearch.toLowerCase();
-    return countries.filter((country) => country.name.toLowerCase().includes(query) || country.code.toLowerCase().includes(query));
-  }, [countries, countrySearch]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setCountryPage(1);
+      setCountryQuery(countrySearch.trim());
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [countrySearch]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setEventPage(1);
+      setEventQuery(eventSearch.trim());
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [eventSearch]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setCityPage(1);
+      setCityQuery(citySearch.trim());
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [citySearch]);
+
+  const countriesQuery = useQuery({
+    queryKey: ['dashboard-countries', countryQuery, countryPage],
+    queryFn: () => getCountries({ q: countryQuery || undefined, page: countryPage, perPage: 12, sort: 'name' }),
+    staleTime: 30_000,
+  });
+  const continentsQuery = useQuery({ queryKey: ['dashboard-continents'], queryFn: getContinents, staleTime: 60_000 });
+  const categoriesQuery = useQuery({
+    queryKey: ['dashboard-categories'],
+    queryFn: () => getCategories({ perPage: 100, sort: 'name' }),
+    staleTime: 60_000,
+  });
+
+  const countries: CountryItem[] = countriesQuery.data?.items ?? [];
+  const filteredCountries = countries;
+  const countryPagination = countriesQuery.data?.pagination;
+  const continents: ContinentItem[] = continentsQuery.data ?? [];
+  const selectedCountryFromList = countries.find((country) => country.code === selectedCountryCode) ?? null;
+  const selectedCountryQuery = useQuery({
+    queryKey: ['dashboard-country-detail', selectedCountryCode],
+    queryFn: () => getCountry(selectedCountryCode),
+    enabled: Boolean(selectedCountryCode && !selectedCountryFromList && !isCreatingCountry),
+    staleTime: 30_000,
+  });
 
   const selectedCountry = useMemo(
-    () => countries.find((country) => country.code === selectedCountryCode) ?? null,
-    [countries, selectedCountryCode],
+    () => selectedCountryFromList ?? selectedCountryQuery.data ?? null,
+    [selectedCountryFromList, selectedCountryQuery.data],
   );
 
   const countryCitiesQuery = useQuery({
-    queryKey: ['dashboard-country-cities', selectedCountryCode],
-    queryFn: () => (selectedCountryCode ? getCountryCities(selectedCountryCode) : Promise.resolve([])),
+    queryKey: ['dashboard-country-cities', selectedCountryCode, cityQuery, cityPage],
+    queryFn: () => getCountryCityDirectory(selectedCountryCode, { q: cityQuery || undefined, page: cityPage, perPage: 12 }),
     enabled: Boolean(selectedCountryCode),
+    staleTime: 30_000,
   });
+  const cityList: Array<Pick<CityItem, 'slug' | 'name' | 'countryCode'>> = countryCitiesQuery.data?.items ?? [];
+  const cityPagination = countryCitiesQuery.data?.pagination;
+  const filteredCities = cityList;
+  const selectedCityQuery = useQuery({
+    queryKey: ['dashboard-city-detail', selectedCitySlug],
+    queryFn: () => getCity(selectedCitySlug),
+    enabled: Boolean(selectedCitySlug && !isCreatingCity),
+    staleTime: 30_000,
+  });
+  const selectedCity = selectedCityQuery.data ?? null;
 
   const countryEventsQuery = useQuery({
-    queryKey: ['dashboard-country-events', selectedCountryCode],
-    queryFn: () => (selectedCountryCode ? getEvents({ country: selectedCountryCode, perPage: 200 }) : Promise.resolve([])),
+    queryKey: ['dashboard-country-events', selectedCountryCode, eventQuery, eventPage],
+    queryFn: () => getEventsPage({
+      country: selectedCountryCode,
+      q: eventQuery || undefined,
+      includeDisabled: true,
+      perPage: 12,
+      page: eventPage,
+    }),
     enabled: Boolean(selectedCountryCode),
+    staleTime: 30_000,
   });
 
-  const cityList = countryCitiesQuery.data ?? [];
-  const eventList = countryEventsQuery.data ?? [];
-
-  const [citySearch, setCitySearch] = useState('');
-  const [selectedCitySlug, setSelectedCitySlug] = useState('');
-  const [cityForm, setCityForm] = useState<CityFormState>({ name: '', countryCode: '', heroImageUrl: '' });
-  const [cityProfileData, setCityProfileData] = useState<Record<string, unknown>>({});
-  const [saveCityState, setSaveCityState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
-  const [saveCityMessage, setSaveCityMessage] = useState('');
-
-  const filteredCities = useMemo(() => {
-    if (!citySearch.trim()) return cityList;
-    const query = citySearch.toLowerCase();
-    return cityList.filter((city) => city.name.toLowerCase().includes(query) || city.slug.toLowerCase().includes(query));
-  }, [cityList, citySearch]);
-
-  const selectedCity = useMemo(
-    () => cityList.find((city) => city.slug === selectedCitySlug) ?? null,
-    [cityList, selectedCitySlug],
-  );
-
-  const [eventSearch, setEventSearch] = useState('');
-  const [selectedEventSlug, setSelectedEventSlug] = useState('');
-  const [eventForm, setEventForm] = useState<EventFormState>({
-    title: '',
-    description: '',
-    categoryId: '',
-    countryCode: '',
-    citySlug: '',
-    startAt: '',
-    endAt: '',
-    tags: '',
-    image: '',
-    enabled: true,
-    featured: false,
-    trending: false,
+  const eventList: EventItem[] = countryEventsQuery.data?.items ?? [];
+  const categories: CategoryItem[] = categoriesQuery.data?.items ?? [];
+  const filteredEvents = eventList;
+  const eventPagination = countryEventsQuery.data?.pagination;
+  const selectedEventFromList = eventList.find((event) => event.slug === selectedEventSlug) ?? null;
+  const selectedEventQuery = useQuery({
+    queryKey: ['dashboard-event-detail', selectedEventSlug],
+    queryFn: () => getEvent(selectedEventSlug),
+    enabled: Boolean(selectedEventSlug && !selectedEventFromList && !isCreatingEvent),
+    staleTime: 30_000,
   });
-  const [saveEventState, setSaveEventState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
-  const [saveEventMessage, setSaveEventMessage] = useState('');
+  const selectedEvent = selectedEventFromList ?? selectedEventQuery.data ?? null;
   const [imageUploadState, setImageUploadState] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
   const [imageUploadMessage, setImageUploadMessage] = useState('');
-
-  const filteredEvents = useMemo(() => {
-    if (!eventSearch.trim()) return eventList;
-    const query = eventSearch.toLowerCase();
-    return eventList.filter((event) => event.title.toLowerCase().includes(query) || (event.city || '').toLowerCase().includes(query));
-  }, [eventList, eventSearch]);
-
-  const selectedEvent = useMemo(
-    () => eventList.find((event) => event.slug === selectedEventSlug) ?? null,
-    [eventList, selectedEventSlug],
-  );
+  const [imageUploadProgress, setImageUploadProgress] = useState(0);
 
   useEffect(() => {
-    if (!selectedCountryCode && countries.length > 0) {
+    if (!isCreatingCountry && countries.length > 0 && !countries.some((country) => country.code === selectedCountryCode)) {
       setSelectedCountryCode(countries[0].code);
     }
-  }, [countries, selectedCountryCode]);
+  }, [countries, selectedCountryCode, isCreatingCountry]);
 
   useEffect(() => {
-    if (selectedCountry) {
-      const nextCountryForm = readCountryForm(selectedCountry);
+    if (selectedCountry && !isCreatingCountry) {
+      const nextCountryForm = readCountryForm(selectedCountry, continents);
       setCountryForm(nextCountryForm);
       setCountryProfileData(buildCountryProfileState(selectedCountry));
-      if (!selectedCitySlug && cityList[0]) {
+      if (!cityList.some((city) => city.slug === selectedCitySlug) && cityList[0]) {
         setSelectedCitySlug(cityList[0].slug);
       }
     }
-  }, [selectedCountry, cityList, selectedCitySlug]);
+  }, [selectedCountry, continents, cityList, selectedCitySlug, isCreatingCountry]);
 
   useEffect(() => {
-    if (selectedCity) {
-      const nextCityForm = readCityForm(selectedCity, selectedCountry?.code ?? '');
+    if (selectedCityQuery.data && !isCreatingCity) {
+      const nextCityForm = readCityForm(selectedCityQuery.data, selectedCountry?.code ?? '');
       setCityForm(nextCityForm);
-      setCityProfileData(buildCityProfileState(selectedCity));
+      setCityProfileData(buildCityProfileState(selectedCityQuery.data));
     }
-  }, [selectedCity, selectedCountry]);
+  }, [selectedCityQuery.data, selectedCountry, isCreatingCity]);
 
   useEffect(() => {
-    if (selectedEvent) {
+    if (selectedEvent && !isCreatingEvent) {
       setEventForm(readEventForm(selectedEvent));
     }
-  }, [selectedEvent]);
+  }, [selectedEvent, isCreatingEvent]);
 
   const saveCountry = async () => {
-    if (!selectedCountry) return;
+    const code = countryForm.code.trim().toUpperCase();
+    if (!countryForm.name.trim() || !/^[A-Z]{2}$/.test(code)) {
+      setSaveCountryState('error');
+      setSaveCountryMessage('Enter a country name and a valid two-letter country code.');
+      return;
+    }
     try {
       setSaveCountryState('saving');
       setSaveCountryMessage('');
       const mergedProfile = { ...countryProfileData } as Record<string, unknown>;
-      if (countryForm.heroImageUrl.trim()) mergedProfile.heroImageUrl = countryForm.heroImageUrl.trim();
-      if (countryForm.flagImageUrl.trim()) mergedProfile.flagImageUrl = countryForm.flagImageUrl.trim();
-      await updateCountry(selectedCountry.code, { name: countryForm.name, profile: mergedProfile });
+      mergedProfile.heroImageUrl = countryForm.heroImageUrl.trim() || null;
+      mergedProfile.flagImageUrl = countryForm.flagImageUrl.trim() || null;
+      if (isCreatingCountry) {
+        const created = await createCountry({
+          code,
+          name: countryForm.name.trim(),
+          continentId: countryForm.continentId || null,
+          profile: mergedProfile,
+        });
+        setSelectedCountryCode(created.code);
+        setCountrySearch(created.name);
+        setCountryQuery(created.name);
+        setCountryPage(1);
+        setIsCreatingCountry(false);
+      } else if (selectedCountry) {
+        await updateCountry(selectedCountry.code, {
+          name: countryForm.name.trim(),
+          continentId: countryForm.continentId || null,
+          profile: mergedProfile,
+        });
+      } else {
+        return;
+      }
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['country', selectedCountry.code] }),
+        queryClient.invalidateQueries({ queryKey: ['country'] }),
         queryClient.invalidateQueries({ queryKey: ['countries'] }),
         queryClient.invalidateQueries({ queryKey: ['countries-list'] }),
         queryClient.invalidateQueries({ queryKey: ['header-country-search'] }),
         queryClient.invalidateQueries({ queryKey: ['search'] }),
         queryClient.invalidateQueries({ queryKey: ['home-countries'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard-country-detail', code] }),
       ]);
       setSaveCountryState('saved');
-      setSaveCountryMessage('Country updated successfully.');
+      setSaveCountryMessage(isCreatingCountry ? 'Country created successfully.' : 'Country updated successfully.');
     } catch (error) {
-      console.error(error);
       setSaveCountryState('error');
       setSaveCountryMessage(error instanceof Error ? error.message : 'Unable to save country. Please try again.');
     }
   };
 
+  const removeCountry = async () => {
+    if (!selectedCountry || (selectedCountry.cities ?? 0) > 0 || (selectedCountry.events ?? 0) > 0) return;
+    if (!window.confirm(`Delete ${selectedCountry.name}? This cannot be undone.`)) return;
+    try {
+      setSaveCountryState('saving');
+      setCountryDeleteMessage('');
+      await deleteCountry(selectedCountry.code);
+      setSelectedCountryCode('');
+      setIsCreatingCountry(false);
+      setCountrySearch('');
+      setCountryQuery('');
+      setCountryPage(1);
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] });
+      setSaveCountryState('saved');
+      setCountryDeleteMessage('Country deleted successfully.');
+    } catch (error) {
+      setSaveCountryState('error');
+      setCountryDeleteMessage(getErrorMessage(error, 'Unable to delete country.'));
+    }
+  };
+
   const saveCity = async () => {
-    if (!selectedCity) return;
+    const slug = cityForm.slug.trim().toLowerCase();
+    const countryCode = cityForm.countryCode.trim().toUpperCase();
+    if (!cityForm.name.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || !/^[A-Z]{2}$/.test(countryCode) || countryCode !== selectedCountryCode || (!isCreatingCity && selectedCity && countryCode !== selectedCity.countryCode)) {
+      setSaveCityState('error');
+      setSaveCityMessage('Enter a city name and valid slug; the city must remain associated with the selected country.');
+      return;
+    }
     try {
       setSaveCityState('saving');
       setSaveCityMessage('');
       const mergedProfile = { ...cityProfileData } as Record<string, unknown>;
-      if (cityForm.heroImageUrl.trim()) mergedProfile.heroImageUrl = cityForm.heroImageUrl.trim();
-      await updateCity(selectedCity.slug, {
-        name: cityForm.name,
-        countryCode: cityForm.countryCode || selectedCountry?.code || selectedCity.countryCode,
-        profile: mergedProfile,
-      });
+      mergedProfile.heroImageUrl = cityForm.heroImageUrl.trim() || null;
+      if (isCreatingCity) {
+        const created = await createCity(countryCode, {
+          slug,
+          name: cityForm.name.trim(),
+          countryCode,
+          profile: mergedProfile,
+        });
+        setSelectedCitySlug(created.slug);
+        setIsCreatingCity(false);
+      } else if (selectedCity) {
+        await updateCity(selectedCity.slug, {
+          name: cityForm.name.trim(),
+          countryCode,
+          profile: mergedProfile,
+        });
+      } else {
+        return;
+      }
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['city', selectedCity.slug] }),
+        queryClient.invalidateQueries({ queryKey: ['city'] }),
         queryClient.invalidateQueries({ queryKey: ['cities'] }),
         queryClient.invalidateQueries({ queryKey: ['country-cities'] }),
         queryClient.invalidateQueries({ queryKey: ['home-cities'] }),
         queryClient.invalidateQueries({ queryKey: ['about-cities'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-cities'] }),
+        ...(selectedCity ? [queryClient.invalidateQueries({ queryKey: ['dashboard-city-detail', selectedCity.slug] })] : []),
         queryClient.invalidateQueries({ queryKey: ['search'] }),
       ]);
       setSaveCityState('saved');
-      setSaveCityMessage('City updated successfully.');
+      setSaveCityMessage(isCreatingCity ? 'City created successfully.' : 'City updated successfully.');
     } catch (error) {
-      console.error(error);
       setSaveCityState('error');
       setSaveCityMessage(getErrorMessage(error, 'Unable to save city. Please try again.'));
     }
   };
 
-  const saveEvent = async () => {
-    if (!selectedEvent) return;
+  const removeCity = async () => {
+    if (!selectedCity) return;
+    if (!window.confirm(`Delete ${selectedCity.name}? The server will protect cities linked to events.`)) return;
     try {
+      setSaveCityState('saving');
+      setCityDeleteMessage('');
+      await deleteCity(selectedCity.slug);
+      setSelectedCitySlug('');
+      setIsCreatingCity(false);
+      setCityPage(1);
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-country-cities', selectedCountryCode] });
+      setSaveCityState('saved');
+      setCityDeleteMessage('City deleted successfully.');
+    } catch (error) {
+      setSaveCityState('error');
+      setCityDeleteMessage(getErrorMessage(error, 'Unable to delete city.'));
+    }
+  };
+
+  const saveEvent = async () => {
+    const startAt = new Date(eventForm.startAt);
+    const endAt = new Date(eventForm.endAt);
+    if (!eventForm.title.trim() || !eventForm.startAt || !eventForm.endAt || Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime()) || startAt > endAt) {
+      setSaveEventState('error');
+      setSaveEventMessage('Enter an event title and valid dates; the end must be after the start.');
+      return;
+    }
+    try {
+      const creating = isCreatingEvent;
       setSaveEventState('saving');
       setSaveEventMessage('');
       const tags = eventForm.tags
         .split(',')
         .map((tag) => tag.trim())
         .filter(Boolean);
-      await updateEvent(selectedEvent.slug, {
+      const payload = {
         title: eventForm.title,
         description: eventForm.description || null,
         categoryId: eventForm.categoryId || null,
@@ -518,12 +733,42 @@ export default function DashboardPage() {
         endAt: eventForm.endAt ? new Date(eventForm.endAt).toISOString() : undefined,
         tags: tags.length ? tags : [],
         image: eventForm.image || null,
+        dateOnly: eventForm.dateOnly,
+        venue: eventForm.venue.trim() || null,
+        organizer: eventForm.organizer.trim() || null,
+        province: eventForm.province.trim() || null,
+        sourceName: eventForm.sourceName.trim() || null,
+        sourceUrl: eventForm.sourceUrl.trim() || null,
+        sourceType: eventForm.sourceType.trim() || null,
+        primarySourceUrl: eventForm.primarySourceUrl.trim() || null,
+        primarySourceName: eventForm.primarySourceName.trim() || null,
+        primarySourceType: eventForm.primarySourceType.trim() || null,
+        discoverySourceUrl: eventForm.discoverySourceUrl.trim() || null,
+        discoverySourceName: eventForm.discoverySourceName.trim() || null,
         enabled: eventForm.enabled,
         featured: eventForm.featured,
         trending: eventForm.trending,
-      });
+      };
+      if (creating) {
+        const created = await createEvent({
+          ...payload,
+          startAt: startAt.toISOString(),
+          endAt: endAt.toISOString(),
+        });
+        setSelectedEventSlug(created.slug);
+        setIsCreatingEvent(false);
+      } else if (selectedEvent) {
+        await updateEvent(selectedEvent.slug, {
+          ...payload,
+          startAt: startAt.toISOString(),
+          endAt: endAt.toISOString(),
+        });
+      } else {
+        return;
+      }
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['event', selectedEvent.slug] }),
+        ...(selectedEvent ? [queryClient.invalidateQueries({ queryKey: ['event', selectedEvent.slug] })] : []),
+        ...(selectedEvent ? [queryClient.invalidateQueries({ queryKey: ['dashboard-event-detail', selectedEvent.slug] })] : []),
         queryClient.invalidateQueries({ queryKey: ['events'] }),
         queryClient.invalidateQueries({ queryKey: ['events-list'] }),
         queryClient.invalidateQueries({ queryKey: ['country-events'] }),
@@ -538,17 +783,39 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-events'] }),
       ]);
       setSaveEventState('saved');
-      setSaveEventMessage('Event updated successfully.');
+      setSaveEventMessage(creating ? 'Event created successfully.' : 'Event updated successfully.');
     } catch (error) {
-      console.error(error);
       setSaveEventState('error');
       setSaveEventMessage(getErrorMessage(error, 'Unable to save event. Please try again.'));
     }
   };
 
+  const removeEvent = async () => {
+    if (!selectedEvent) return;
+    if (!window.confirm(`Delete "${selectedEvent.title}"? The server will prevent deletion if users have saved it.`)) return;
+    try {
+      setSaveEventState('saving');
+      setEventDeleteMessage('');
+      await deleteEvent(selectedEvent.slug);
+      setSelectedEventSlug('');
+      setIsCreatingEvent(false);
+      setEventPage(1);
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-country-events', selectedCountryCode] });
+      setSaveEventState('saved');
+      setEventDeleteMessage('Event deleted successfully.');
+    } catch (error) {
+      setSaveEventState('error');
+      setEventDeleteMessage(getErrorMessage(error, 'Unable to delete event.'));
+    }
+  };
   const resetCountryForm = () => {
-    if (selectedCountry) {
-      const nextCountryForm = readCountryForm(selectedCountry);
+    if (isCreatingCountry) {
+      setCountryForm({ name: '', code: '', continentId: '', heroImageUrl: '', flagImageUrl: '' });
+      setCountryProfileData({});
+      setSaveCountryState('idle');
+      setSaveCountryMessage('');
+    } else if (selectedCountry) {
+      const nextCountryForm = readCountryForm(selectedCountry, continents);
       setCountryForm(nextCountryForm);
       setCountryProfileData(buildCountryProfileState(selectedCountry));
       setSaveCountryState('idle');
@@ -568,7 +835,12 @@ export default function DashboardPage() {
   }, [saveCountryState]);
 
   const resetCityForm = () => {
-    if (selectedCity) {
+    if (isCreatingCity) {
+      setCityForm({ slug: '', name: '', countryCode: selectedCountryCode, heroImageUrl: '' });
+      setCityProfileData({});
+      setSaveCityState('idle');
+      setSaveCityMessage('');
+    } else if (selectedCity) {
       const nextCityForm = readCityForm(selectedCity, selectedCountry?.code ?? '');
       setCityForm(nextCityForm);
       setCityProfileData(buildCityProfileState(selectedCity));
@@ -578,7 +850,11 @@ export default function DashboardPage() {
   };
 
   const resetEventForm = () => {
-    if (selectedEvent) {
+    if (isCreatingEvent) {
+      setEventForm(emptyEventForm(selectedCountryCode));
+      setSaveEventState('idle');
+      setSaveEventMessage('');
+    } else if (selectedEvent) {
       setEventForm(readEventForm(selectedEvent));
       setSaveEventState('idle');
       setSaveEventMessage('');
@@ -590,13 +866,13 @@ export default function DashboardPage() {
     if (!file) return;
     try {
       setImageUploadState('uploading');
+      setImageUploadProgress(0);
       setImageUploadMessage('Uploading image…');
-      const url = await uploadImageFile(file);
+      const url = await uploadImageFile(file, setImageUploadProgress);
       onApply(url);
       setImageUploadState('success');
       setImageUploadMessage('Image uploaded. Save the record to apply it.');
     } catch (error) {
-      console.error(error);
       setImageUploadState('error');
       setImageUploadMessage(getErrorMessage(error, 'Unable to upload image. Please try again.'));
     } finally {
@@ -610,11 +886,11 @@ export default function DashboardPage() {
       <div className="space-y-8">
         <div className="rounded-4xl border border-slate-200 bg-white/80 p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
           <h1 className="text-3xl font-semibold text-slate-950 dark:text-white">Dashboard management</h1>
-          <p className="mt-3 text-slate-600 dark:text-slate-400">Edit the live country, city, and event data using field-by-field forms rather than raw JSON.</p>
+          <p className="mt-3 text-slate-600 dark:text-slate-400">Manage country, city, and event records with validated API-backed forms.</p>
         </div>
         {imageUploadMessage ? (
           <p className={`text-sm ${imageUploadState === 'error' ? 'text-rose-600' : imageUploadState === 'success' ? 'text-emerald-600' : 'text-slate-500'}`} role="status" aria-live="polite">
-            {imageUploadMessage}
+            {imageUploadState === 'uploading' ? `${imageUploadMessage} ${imageUploadProgress}%` : imageUploadMessage}
           </p>
         ) : null}
 
@@ -642,7 +918,17 @@ export default function DashboardPage() {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Country data manager</h2>
-            <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{filteredCountries.length}</span>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{countryPagination?.total ?? 0}</span>
+              <button type="button" onClick={() => {
+                setIsCreatingCountry(true);
+                setSelectedCountryCode('');
+                setCountryForm({ name: '', code: '', continentId: '', heroImageUrl: '', flagImageUrl: '' });
+                setCountryProfileData({});
+                setSaveCountryState('idle');
+                setSaveCountryMessage('');
+              }} className="rounded-xl bg-cyan-600 px-3 py-2 text-sm font-medium text-white hover:bg-cyan-700">Create country</button>
+            </div>
           </div>
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
@@ -652,7 +938,16 @@ export default function DashboardPage() {
                   <button
                     key={country.code}
                     type="button"
-                    onClick={() => setSelectedCountryCode(country.code)}
+                    onClick={() => {
+                      setIsCreatingCountry(false);
+                      setSelectedCountryCode(country.code);
+                      setSelectedCitySlug('');
+                      setSelectedEventSlug('');
+                      setCityPage(1);
+                      setEventPage(1);
+                      setSaveCountryState('idle');
+                      setCountryDeleteMessage('');
+                    }}
                     className={`flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left text-sm transition ${selectedCountryCode === country.code ? 'border-cyan-500 bg-cyan-50 text-cyan-700 dark:border-cyan-500 dark:bg-cyan-500/10 dark:text-cyan-200' : 'border-slate-200 text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:text-slate-300'}`}
                   >
                     <span>{country.name}</span>
@@ -660,10 +955,15 @@ export default function DashboardPage() {
                   </button>
                 ))}
               </div>
+              {countriesQuery.isFetching ? <p className="mt-3 text-xs text-slate-500" role="status">Loading countries…</p> : null}
+              {!countriesQuery.isLoading && countriesQuery.isError ? <div className="mt-3 text-sm text-rose-600"><p>Countries could not be loaded.</p><button type="button" onClick={() => void countriesQuery.refetch()} className="mt-1 underline">Retry</button></div> : null}
+              {!countriesQuery.isLoading && !countriesQuery.isError && filteredCountries.length === 0 ? <p className="mt-3 text-sm text-slate-500">No countries found.</p> : null}
+              <PageControls page={countryPagination?.page ?? countryPage} totalPages={countryPagination?.totalPages ?? 1} onChange={setCountryPage} />
             </div>
 
             <div className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-              {selectedCountry ? (
+              {countryDeleteMessage ? <p role="status" aria-live="polite" className={`text-sm ${saveCountryState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`}>{countryDeleteMessage}</p> : null}
+              {selectedCountry || isCreatingCountry ? (
                 <>
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
@@ -672,20 +972,30 @@ export default function DashboardPage() {
                     </label>
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Country code</span>
-                      <input value={countryForm.code} readOnly className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-900/60" />
+                      <input value={countryForm.code} onChange={(event) => setCountryForm((current) => ({ ...current, code: event.target.value.toUpperCase() }))} readOnly={!isCreatingCountry} maxLength={2} autoComplete="off" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
                     </label>
                   </div>
+
+                  <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                    <span>Continent</span>
+                    <select value={countryForm.continentId} onChange={(event) => setCountryForm((current) => ({ ...current, continentId: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                      <option value="">No continent</option>
+                      {continents.map((continent) => <option key={continent.id} value={continent.id}>{continent.name}</option>)}
+                    </select>
+                    {continentsQuery.isError ? <span className="block text-rose-600" role="status">Continent choices failed to load. <button type="button" onClick={() => void continentsQuery.refetch()} className="underline">Retry</button></span> : null}
+                  </label>
 
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Hero image</span>
                       <input value={countryForm.heroImageUrl} onChange={(event) => setCountryForm((current) => ({ ...current, heroImageUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <ImagePreview value={countryForm.heroImageUrl} label={`${countryForm.name} country`} />
                     </label>
                     <div className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className="block">Upload new hero image</span>
-                      <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
+                      <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                         <span>Choose file</span>
-                        <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
+                        <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
                       </label>
                     </div>
                   </div>
@@ -694,12 +1004,13 @@ export default function DashboardPage() {
                     <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Flag image</span>
                       <input value={countryForm.flagImageUrl} onChange={(event) => setCountryForm((current) => ({ ...current, flagImageUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <ImagePreview value={countryForm.flagImageUrl} label={`${countryForm.name} flag`} />
                     </label>
                     <div className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className="block">Upload new flag image</span>
-                      <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
+                      <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                         <span>Choose file</span>
-                        <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, flagImageUrl: nextUrl })))} />
+                        <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, flagImageUrl: nextUrl })))} />
                       </label>
                     </div>
                   </div>
@@ -711,9 +1022,11 @@ export default function DashboardPage() {
 
                   <div className="flex gap-3">
                     <button type="button" onClick={saveCountry} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveCountryState === 'saving'}>
-                      {saveCountryState === 'saving' ? 'Saving...' : 'Save country'}
+                      {saveCountryState === 'saving' ? 'Saving...' : isCreatingCountry ? 'Create country' : 'Save country'}
                     </button>
                     <button type="button" onClick={resetCountryForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
+                    {selectedCountry && !isCreatingCountry ? <button type="button" onClick={() => void removeCountry()} disabled={saveCountryState === 'saving' || (selectedCountry.cities ?? 0) > 0 || (selectedCountry.events ?? 0) > 0} className="rounded-xl border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 disabled:opacity-50 dark:border-rose-900 dark:text-rose-300">Delete country</button> : null}
+                    {isCreatingCountry ? <button type="button" onClick={() => setIsCreatingCountry(false)} className="rounded-xl border border-slate-200 px-4 py-2 text-sm dark:border-slate-700">Cancel</button> : null}
                   </div>
                   {saveCountryMessage ? (
                     <p className={`mt-2 text-sm ${saveCountryState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`} role="status" aria-live="polite">
@@ -722,7 +1035,9 @@ export default function DashboardPage() {
                   ) : null}
                 </>
               ) : (
-                <p className="text-sm text-slate-500">Select a country to edit its data.</p>
+                <div className="text-sm text-slate-500">
+                  {selectedCountryQuery.isLoading ? 'Loading country details…' : selectedCountryQuery.isError ? <><p>Country details could not be loaded.</p><button type="button" onClick={() => void selectedCountryQuery.refetch()} className="mt-1 underline">Retry</button></> : 'Select a country to edit its data, or create a country.'}
+                </div>
               )}
             </div>
           </div>
@@ -731,7 +1046,17 @@ export default function DashboardPage() {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-xl font-semibold text-slate-950 dark:text-white">City data manager</h2>
-            <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{filteredCities.length}</span>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{cityPagination?.total ?? 0}</span>
+              <button type="button" disabled={!selectedCountryCode || isCreatingCountry} onClick={() => {
+                setIsCreatingCity(true);
+                setSelectedCitySlug('');
+                setCityForm({ slug: '', name: '', countryCode: selectedCountryCode, heroImageUrl: '' });
+                setCityProfileData({});
+                setSaveCityState('idle');
+                setSaveCityMessage('');
+              }} className="rounded-xl bg-cyan-600 px-3 py-2 text-sm font-medium text-white hover:bg-cyan-700 disabled:opacity-50">Create city</button>
+            </div>
           </div>
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
@@ -742,6 +1067,7 @@ export default function DashboardPage() {
                     key={city.slug}
                     type="button"
                     onClick={() => {
+                      setIsCreatingCity(false);
                       setSelectedCitySlug(city.slug);
                       setSaveCityState('idle');
                       setSaveCityMessage('');
@@ -753,19 +1079,25 @@ export default function DashboardPage() {
                   </button>
                 ))}
               </div>
+              {countryCitiesQuery.isFetching ? <p className="mt-3 text-xs text-slate-500" role="status">Loading cities…</p> : null}
+              {!countryCitiesQuery.isLoading && countryCitiesQuery.isError ? <div className="mt-3 text-sm text-rose-600"><p>Cities could not be loaded.</p><button type="button" onClick={() => void countryCitiesQuery.refetch()} className="mt-1 underline">Retry</button></div> : null}
+              {!countryCitiesQuery.isLoading && !countryCitiesQuery.isError && filteredCities.length === 0 ? <p className="mt-3 text-sm text-slate-500">No cities found.</p> : null}
+              <PageControls page={cityPagination?.page ?? cityPage} totalPages={cityPagination?.totalPages ?? 1} onChange={setCityPage} />
             </div>
 
             <div className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-              {selectedCity ? (
+              {cityDeleteMessage ? <p role="status" aria-live="polite" className={`text-sm ${saveCityState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`}>{cityDeleteMessage}</p> : null}
+              {selectedCity || isCreatingCity ? (
                 <>
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>City name</span>
                       <input value={cityForm.name} onChange={(event) => setCityForm((current) => ({ ...current, name: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
                     </label>
+                    {isCreatingCity ? <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300"><span>City slug</span><input value={cityForm.slug} onChange={(event) => setCityForm((current) => ({ ...current, slug: event.target.value.toLowerCase() }))} placeholder="country-city" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" /></label> : null}
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Country code</span>
-                      <input value={cityForm.countryCode} onChange={(event) => setCityForm((current) => ({ ...current, countryCode: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <input value={cityForm.countryCode} readOnly className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-900/60" />
                     </label>
                   </div>
 
@@ -773,10 +1105,11 @@ export default function DashboardPage() {
                     <label className="block text-sm text-slate-700 dark:text-slate-300">
                       <span>Hero image</span>
                       <input value={cityForm.heroImageUrl} onChange={(event) => setCityForm((current) => ({ ...current, heroImageUrl: event.target.value }))} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <ImagePreview value={cityForm.heroImageUrl} label={`${cityForm.name} city`} />
                     </label>
-                    <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
+                    <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                       <span>Upload new image</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
+                      <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
                     </label>
                   </div>
 
@@ -787,9 +1120,11 @@ export default function DashboardPage() {
 
                   <div className="flex gap-3">
                     <button type="button" onClick={saveCity} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveCityState === 'saving'}>
-                      {saveCityState === 'saving' ? 'Saving...' : 'Save city'}
+                      {saveCityState === 'saving' ? 'Saving...' : isCreatingCity ? 'Create city' : 'Save city'}
                     </button>
                     <button type="button" onClick={resetCityForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
+                    {selectedCity && !isCreatingCity ? <button type="button" onClick={() => void removeCity()} disabled={saveCityState === 'saving'} className="rounded-xl border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 dark:border-rose-900 dark:text-rose-300">Delete city</button> : null}
+                    {isCreatingCity ? <button type="button" onClick={() => setIsCreatingCity(false)} className="rounded-xl border border-slate-200 px-4 py-2 text-sm dark:border-slate-700">Cancel</button> : null}
                   </div>
                   {saveCityMessage ? (
                     <p className={`mt-2 text-sm ${saveCityState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`} role="status" aria-live="polite">
@@ -798,7 +1133,9 @@ export default function DashboardPage() {
                   ) : null}
                 </>
               ) : (
-                <p className="text-sm text-slate-500">Select a city to edit its profile.</p>
+                <div className="text-sm text-slate-500">
+                  {selectedCityQuery.isLoading ? 'Loading city details…' : selectedCityQuery.isError ? <><p>City details could not be loaded.</p><button type="button" onClick={() => void selectedCityQuery.refetch()} className="mt-1 underline">Retry</button></> : 'Select a city to edit its profile, or create a city.'}
+                </div>
               )}
             </div>
           </div>
@@ -807,7 +1144,16 @@ export default function DashboardPage() {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Event data manager</h2>
-            <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{filteredEvents.length}</span>
+            <div className="flex items-center gap-3">
+              <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{eventPagination?.total ?? 0}</span>
+              <button type="button" disabled={!selectedCountryCode || isCreatingCountry} onClick={() => {
+                setIsCreatingEvent(true);
+                setSelectedEventSlug('');
+                setEventForm(emptyEventForm(selectedCountryCode));
+                setSaveEventState('idle');
+                setSaveEventMessage('');
+              }} className="rounded-xl bg-cyan-600 px-3 py-2 text-sm font-medium text-white hover:bg-cyan-700 disabled:opacity-50">Create event</button>
+            </div>
           </div>
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
@@ -818,6 +1164,7 @@ export default function DashboardPage() {
                     key={event.slug}
                     type="button"
                     onClick={() => {
+                      setIsCreatingEvent(false);
                       setSelectedEventSlug(event.slug);
                       setSaveEventState('idle');
                       setSaveEventMessage('');
@@ -829,10 +1176,15 @@ export default function DashboardPage() {
                   </button>
                 ))}
               </div>
+              {countryEventsQuery.isFetching ? <p className="mt-3 text-xs text-slate-500" role="status">Loading events…</p> : null}
+              {!countryEventsQuery.isLoading && countryEventsQuery.isError ? <div className="mt-3 text-sm text-rose-600"><p>Events could not be loaded.</p><button type="button" onClick={() => void countryEventsQuery.refetch()} className="mt-1 underline">Retry</button></div> : null}
+              {!countryEventsQuery.isLoading && !countryEventsQuery.isError && filteredEvents.length === 0 ? <p className="mt-3 text-sm text-slate-500">No events found.</p> : null}
+              <PageControls page={eventPagination?.page ?? eventPage} totalPages={eventPagination?.totalPages ?? 1} onChange={setEventPage} />
             </div>
 
             <div className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950/60">
-              {selectedEvent ? (
+              {eventDeleteMessage ? <p role="status" aria-live="polite" className={`text-sm ${saveEventState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`}>{eventDeleteMessage}</p> : null}
+              {selectedEvent || isCreatingEvent ? (
                 <>
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
@@ -842,14 +1194,15 @@ export default function DashboardPage() {
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Image URL</span>
                       <input value={eventForm.image} onChange={(event) => setEventForm((current) => ({ ...current, image: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <ImagePreview value={eventForm.image} label={`${eventForm.title} event`} />
                     </label>
                   </div>
 
                   <div className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                     <span className="block">Upload new event image</span>
-                    <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
+                    <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                       <span>Choose file</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setEventForm((current) => ({ ...current, image: nextUrl })))} />
+                      <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setEventForm((current) => ({ ...current, image: nextUrl })))} />
                     </label>
                   </div>
 
@@ -863,19 +1216,81 @@ export default function DashboardPage() {
                       <span>Category</span>
                       <select value={eventForm.categoryId} onChange={(event) => setEventForm((current) => ({ ...current, categoryId: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
                         <option value="">Select category</option>
-                        {(categoriesQuery.data?.items ?? []).map((category) => (
+                        {categories.map((category) => (
                           <option key={category.slug} value={category.id}>{category.name}</option>
                         ))}
                       </select>
+                      {categoriesQuery.isError ? <span className="block text-rose-600" role="status">Category choices failed to load. <button type="button" onClick={() => void categoriesQuery.refetch()} className="underline">Retry</button></span> : null}
                     </label>
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Country code</span>
-                      <input value={eventForm.countryCode} onChange={(event) => setEventForm((current) => ({ ...current, countryCode: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <input value={eventForm.countryCode} readOnly className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 dark:border-slate-700 dark:bg-slate-900/60" />
                     </label>
                     <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>City slug</span>
-                      <input value={eventForm.citySlug} onChange={(event) => setEventForm((current) => ({ ...current, citySlug: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <select value={eventForm.citySlug} onChange={(event) => setEventForm((current) => ({ ...current, citySlug: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900">
+                        <option value="">No city</option>
+                        {eventForm.citySlug && !cityList.some((city) => city.slug === eventForm.citySlug) ? <option value={eventForm.citySlug}>{eventForm.citySlug}</option> : null}
+                        {cityList.map((city) => <option key={city.slug} value={city.slug}>{city.name}</option>)}
+                      </select>
                     </label>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                      <span>Venue</span>
+                      <input value={eventForm.venue} onChange={(event) => setEventForm((current) => ({ ...current, venue: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                    </label>
+                    <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                      <span>Organizer</span>
+                      <input value={eventForm.organizer} onChange={(event) => setEventForm((current) => ({ ...current, organizer: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                    </label>
+                    <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                      <span>Province / region</span>
+                      <input value={eventForm.province} onChange={(event) => setEventForm((current) => ({ ...current, province: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                    </label>
+                  </div>
+
+                  <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Event source information</h3>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Source name</span>
+                        <input value={eventForm.sourceName} onChange={(event) => setEventForm((current) => ({ ...current, sourceName: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Source URL</span>
+                        <input type="url" value={eventForm.sourceUrl} onChange={(event) => setEventForm((current) => ({ ...current, sourceUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Source type</span>
+                        <input value={eventForm.sourceType} onChange={(event) => setEventForm((current) => ({ ...current, sourceType: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Primary source name</span>
+                        <input value={eventForm.primarySourceName} onChange={(event) => setEventForm((current) => ({ ...current, primarySourceName: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Primary source URL</span>
+                        <input type="url" value={eventForm.primarySourceUrl} onChange={(event) => setEventForm((current) => ({ ...current, primarySourceUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Primary source type</span>
+                        <input value={eventForm.primarySourceType} onChange={(event) => setEventForm((current) => ({ ...current, primarySourceType: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Discovery source name</span>
+                        <input value={eventForm.discoverySourceName} onChange={(event) => setEventForm((current) => ({ ...current, discoverySourceName: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                      <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                        <span>Discovery source URL</span>
+                        <input type="url" value={eventForm.discoverySourceUrl} onChange={(event) => setEventForm((current) => ({ ...current, discoverySourceUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-950" />
+                      </label>
+                    </div>
                   </div>
 
                   <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
@@ -895,6 +1310,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex flex-wrap gap-4 pt-2">
+                    <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" checked={eventForm.dateOnly} onChange={(event) => setEventForm((current) => ({ ...current, dateOnly: event.target.checked }))} /> Date only</label>
                     <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" checked={eventForm.enabled} onChange={(event) => setEventForm((current) => ({ ...current, enabled: event.target.checked }))} /> Enabled</label>
                     <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" checked={eventForm.featured} onChange={(event) => setEventForm((current) => ({ ...current, featured: event.target.checked }))} /> Featured</label>
                     <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" checked={eventForm.trending} onChange={(event) => setEventForm((current) => ({ ...current, trending: event.target.checked }))} /> Trending</label>
@@ -902,9 +1318,11 @@ export default function DashboardPage() {
 
                   <div className="flex gap-3">
                     <button type="button" onClick={saveEvent} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveEventState === 'saving'}>
-                      {saveEventState === 'saving' ? 'Saving...' : 'Save event'}
+                      {saveEventState === 'saving' ? 'Saving...' : isCreatingEvent ? 'Create event' : 'Save event'}
                     </button>
                     <button type="button" onClick={resetEventForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
+                    {selectedEvent && !isCreatingEvent ? <button type="button" onClick={() => void removeEvent()} disabled={saveEventState === 'saving'} className="rounded-xl border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 dark:border-rose-900 dark:text-rose-300">Delete event</button> : null}
+                    {isCreatingEvent ? <button type="button" onClick={() => setIsCreatingEvent(false)} className="rounded-xl border border-slate-200 px-4 py-2 text-sm dark:border-slate-700">Cancel</button> : null}
                   </div>
                   {saveEventMessage ? (
                     <p className={`mt-2 text-sm ${saveEventState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`} role="status" aria-live="polite">
@@ -913,7 +1331,9 @@ export default function DashboardPage() {
                   ) : null}
                 </>
               ) : (
-                <p className="text-sm text-slate-500">Select an event to edit it.</p>
+                <div className="text-sm text-slate-500">
+                  {selectedEventQuery.isLoading ? 'Loading event details…' : selectedEventQuery.isError ? <><p>Event details could not be loaded.</p><button type="button" onClick={() => void selectedEventQuery.refetch()} className="mt-1 underline">Retry</button></> : 'Select an event to edit it, or create an event.'}
+                </div>
               )}
             </div>
           </div>

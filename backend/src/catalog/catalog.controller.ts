@@ -128,6 +128,7 @@ const cityDirectoryQuerySchema = z.object({
   excludeSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
 });
 const countryCityDirectoryQuerySchema = z.object({
+  q: z.string().trim().max(100).optional(),
   page: z.coerce.number().int().min(1).default(1),
   perPage: z.coerce.number().int().min(1).max(100).default(100),
 });
@@ -324,7 +325,7 @@ const profileSchema = z.object({}).catchall(z.any()).superRefine((profile, conte
 });
 
 const countryCreateSchema = z.object({
-  code: z.string().trim().min(1),
+  code: z.string().trim().regex(/^[A-Za-z]{2}$/, 'Country code must be a two-letter ISO code'),
   name: z.string().trim().min(1),
   continentId: z.string().uuid().optional().nullable(),
   profile: profileSchema.optional().nullable(),
@@ -333,7 +334,7 @@ const countryCreateSchema = z.object({
 const countryUpdateSchema = countryCreateSchema.partial();
 
 const cityCreateSchema = z.object({
-  slug: z.string().trim().min(1),
+  slug: z.string().trim().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'City slug must contain lowercase letters, numbers, and hyphens'),
   name: z.string().trim().min(1),
   countryCode: z.string().trim().min(1),
   profile: profileSchema.optional().nullable(),
@@ -584,6 +585,9 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const normalizedCode = body.code.trim().toUpperCase();
       const exists = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (exists) return reply.code(409).send({ success: false, error: { message: 'Country code already exists' } });
+      if (body.continentId && !await prisma.continent.findUnique({ where: { id: body.continentId } })) {
+        return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
+      }
       const country = await prisma.country.create({ data: { code: normalizedCode, name: body.name, continentId: body.continentId || null, profile: body.profile === undefined ? undefined : body.profile } as any });
       reply.code(201).send({ success: true, data: normalizeCountry(country, 0, 0, request) });
     } catch (error: any) {
@@ -602,6 +606,9 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const body = countryUpdateSchema.parse(request.body || {});
       const existing = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+      if (body.continentId && !await prisma.continent.findUnique({ where: { id: body.continentId } })) {
+        return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
+      }
       const updated = await prisma.country.update({ where: { code: normalizedCode }, data: { name: body.name ?? existing.name, continentId: body.continentId !== undefined ? body.continentId : existing.continentId, profile: body.profile !== undefined ? body.profile : existing.profile } as any });
       const [cityCount, eventCount] = await Promise.all([
         prisma.city.count({ where: { countryCode: normalizedCode } }),
@@ -623,6 +630,13 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const normalizedCode = code.trim().toUpperCase();
       const existing = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+      const [cityCount, eventCount] = await Promise.all([
+        prisma.city.count({ where: { countryCode: normalizedCode } }),
+        prisma.event.count({ where: { countryCode: normalizedCode } }),
+      ]);
+      if (cityCount || eventCount) {
+        return reply.code(409).send({ success: false, error: { message: 'Country cannot be deleted while cities or events are associated with it.' } });
+      }
       await prisma.country.delete({ where: { code: normalizedCode } });
       reply.code(204).send();
     } catch (error: any) {
@@ -663,7 +677,17 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const body = cityUpdateSchema.parse(request.body || {});
       const existing = await prisma.city.findUnique({ where: { slug } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'City not found' } });
-      const updated = await prisma.city.update({ where: { slug }, data: { name: body.name ?? existing.name, countryCode: body.countryCode ?? existing.countryCode, profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (existing.profile as Record<string, unknown> | null)) } as any });
+      const nextCountryCode = body.countryCode?.trim().toUpperCase() ?? existing.countryCode;
+      if (!await prisma.country.findUnique({ where: { code: nextCountryCode } })) {
+        return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+      }
+      if (body.countryCode && nextCountryCode !== existing.countryCode) {
+        const linkedEvents = await prisma.event.count({ where: { citySlug: slug } });
+        if (linkedEvents) {
+          return reply.code(409).send({ success: false, error: { message: 'City country cannot be changed while events are associated with it.' } });
+        }
+      }
+      const updated = await prisma.city.update({ where: { slug }, data: { name: body.name ?? existing.name, countryCode: nextCountryCode, profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (existing.profile as Record<string, unknown> | null)) } as any });
       reply.send({ success: true, data: normalizeCity(updated, request) });
     } catch (error: any) {
       reply.code(400).send({ success: false, error: { message: error.message } });
@@ -679,6 +703,10 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const { slug } = categoryParamSchema.parse(request.params || {});
       const existing = await prisma.city.findUnique({ where: { slug } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'City not found' } });
+      const eventCount = await prisma.event.count({ where: { citySlug: slug } });
+      if (eventCount) {
+        return reply.code(409).send({ success: false, error: { message: 'City cannot be deleted while events are associated with it.' } });
+      }
       await prisma.city.delete({ where: { slug } });
       reply.code(204).send();
     } catch (error: any) {
@@ -880,6 +908,14 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const where = {
         countryCode: normalizedCode,
         ...(country.continent?.name === 'South America' ? { isVerifiedCity: true } : {}),
+        ...(query.q
+          ? {
+              OR: [
+                { name: { contains: query.q, mode: 'insensitive' as const } },
+                { slug: { contains: query.q, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
       };
       const [cities, total] = await Promise.all([
         prisma.city.findMany({
@@ -887,7 +923,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
           orderBy: { name: 'asc' },
           skip: (query.page - 1) * query.perPage,
           take: query.perPage,
-          select: { slug: true, name: true },
+          select: { slug: true, name: true, countryCode: true },
         }),
         prisma.city.count({ where }),
       ]);

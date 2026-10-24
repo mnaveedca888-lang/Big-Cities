@@ -9,9 +9,13 @@ const localImageSchema = z.string().trim().refine(
   (value) => normalizeLocalImageUrl(value) !== null,
   'Image URL must reference an existing local /images/ file',
 );
+const externalHttpUrlSchema = z.string().url().refine((value) => {
+  const protocol = new URL(value).protocol;
+  return protocol === 'http:' || protocol === 'https:';
+}, 'URL must use HTTP or HTTPS');
 
 const createSchema = z.object({
-  title: z.string().min(1),
+  title: z.string().trim().min(1),
   description: z.string().optional().nullable(),
   startAt: z.string().refine((v) => !Number.isNaN(Date.parse(v)), { message: 'Invalid date' }),
   endAt: z.string().refine((v) => !Number.isNaN(Date.parse(v)), { message: 'Invalid date' }),
@@ -23,6 +27,18 @@ const createSchema = z.object({
   trending: z.boolean().optional(),
   enabled: z.boolean().optional(),
   image: localImageSchema.optional().nullable(),
+  dateOnly: z.boolean().optional(),
+  venue: z.string().trim().optional().nullable(),
+  organizer: z.string().trim().optional().nullable(),
+  province: z.string().trim().optional().nullable(),
+  sourceName: z.string().trim().optional().nullable(),
+  sourceUrl: externalHttpUrlSchema.optional().nullable(),
+  sourceType: z.string().trim().optional().nullable(),
+  primarySourceUrl: externalHttpUrlSchema.optional().nullable(),
+  primarySourceName: z.string().trim().optional().nullable(),
+  primarySourceType: z.string().trim().optional().nullable(),
+  discoverySourceUrl: externalHttpUrlSchema.optional().nullable(),
+  discoverySourceName: z.string().trim().optional().nullable(),
 });
 
 const updateSchema = createSchema.partial();
@@ -78,6 +94,29 @@ export async function resolveCategoryId(prisma: PrismaClient, selector: string) 
   });
   if (!category) throw new Error('Invalid category');
   return category.id;
+}
+
+async function validateEventRelationships(
+  prisma: PrismaClient,
+  values: { categoryId?: string | null; countryCode?: string | null; citySlug?: string | null },
+) {
+  if (values.categoryId && !await prisma.category.findUnique({ where: { id: values.categoryId } })) {
+    return 'Category not found';
+  }
+
+  if (values.countryCode && !await prisma.country.findUnique({ where: { code: values.countryCode } })) {
+    return 'Country not found';
+  }
+
+  if (values.citySlug) {
+    const city = await prisma.city.findUnique({ where: { slug: values.citySlug } });
+    if (!city) return 'City not found';
+    if (!values.countryCode || city.countryCode !== values.countryCode) {
+      return 'Event city must belong to the selected country';
+    }
+  }
+
+  return null;
 }
 
 export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) {
@@ -152,6 +191,8 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
       const body = createSchema.parse(request.body);
       if (new Date(body.startAt) > new Date(body.endAt)) return reply.code(400).send({ success: false, error: { message: 'startAt must be before endAt' } });
+      const relationshipError = await validateEventRelationships(prisma, body);
+      if (relationshipError) return reply.code(400).send({ success: false, error: { message: relationshipError } });
       const created = await service.create({
         title: body.title,
         description: body.description || null,
@@ -165,6 +206,18 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
         trending: body.trending || false,
         enabled: body.enabled !== undefined ? body.enabled : true,
         image: body.image || null,
+        dateOnly: body.dateOnly,
+        venue: body.venue,
+        organizer: body.organizer,
+        province: body.province,
+        sourceName: body.sourceName,
+        sourceUrl: body.sourceUrl,
+        sourceType: body.sourceType,
+        primarySourceUrl: body.primarySourceUrl,
+        primarySourceName: body.primarySourceName,
+        primarySourceType: body.primarySourceType,
+        discoverySourceUrl: body.discoverySourceUrl,
+        discoverySourceName: body.discoverySourceName,
       });
       reply.code(201).send({ success: true, data: created });
     } catch (err: any) {
@@ -181,6 +234,17 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
       const body = updateSchema.parse(request.body || {});
       const slug = eventSlugSchema.parse((request.params as any).slug);
+      const existing = await service.getBySlug(slug);
+      if (!existing) return reply.code(404).send({ success: false, error: { message: 'Not found' } });
+      const nextStartAt = body.startAt ? new Date(body.startAt) : new Date(existing.startAt);
+      const nextEndAt = body.endAt ? new Date(body.endAt) : new Date(existing.endAt);
+      if (nextStartAt > nextEndAt) return reply.code(400).send({ success: false, error: { message: 'startAt must be before endAt' } });
+      const relationshipError = await validateEventRelationships(prisma, {
+        categoryId: body.categoryId !== undefined ? body.categoryId : existing.categoryId,
+        countryCode: body.countryCode !== undefined ? body.countryCode : existing.countryCode,
+        citySlug: body.citySlug !== undefined ? body.citySlug : existing.citySlug,
+      });
+      if (relationshipError) return reply.code(400).send({ success: false, error: { message: relationshipError } });
       const patch: any = {};
       if (body.title) patch.title = body.title;
       if (body.description !== undefined) patch.description = body.description;
@@ -194,6 +258,18 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (body.trending !== undefined) patch.trending = body.trending;
       if (body.enabled !== undefined) patch.enabled = body.enabled;
       if (body.image !== undefined) patch.image = body.image;
+      if (body.dateOnly !== undefined) patch.dateOnly = body.dateOnly;
+      if (body.venue !== undefined) patch.venue = body.venue;
+      if (body.organizer !== undefined) patch.organizer = body.organizer;
+      if (body.province !== undefined) patch.province = body.province;
+      if (body.sourceName !== undefined) patch.sourceName = body.sourceName;
+      if (body.sourceUrl !== undefined) patch.sourceUrl = body.sourceUrl;
+      if (body.sourceType !== undefined) patch.sourceType = body.sourceType;
+      if (body.primarySourceUrl !== undefined) patch.primarySourceUrl = body.primarySourceUrl;
+      if (body.primarySourceName !== undefined) patch.primarySourceName = body.primarySourceName;
+      if (body.primarySourceType !== undefined) patch.primarySourceType = body.primarySourceType;
+      if (body.discoverySourceUrl !== undefined) patch.discoverySourceUrl = body.discoverySourceUrl;
+      if (body.discoverySourceName !== undefined) patch.discoverySourceName = body.discoverySourceName;
       const updated = await service.updateBySlug(slug, patch);
       reply.send({ success: true, data: updated });
     } catch (err: any) {
@@ -209,6 +285,12 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       const ok = await hasRole(prisma, auth, token, allowed);
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
       const slug = eventSlugSchema.parse((request.params as any).slug);
+      const existing = await service.getBySlug(slug);
+      if (!existing) return reply.code(404).send({ success: false, error: { message: 'Not found' } });
+      const savedEventCount = await prisma.savedEvent.count({ where: { eventId: existing.id } });
+      if (savedEventCount) {
+        return reply.code(409).send({ success: false, error: { message: 'Event cannot be deleted while users have saved it.' } });
+      }
       await service.deleteBySlug(slug);
       reply.code(204).send();
     } catch (err: any) {
