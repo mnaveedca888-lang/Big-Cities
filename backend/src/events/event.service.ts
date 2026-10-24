@@ -258,16 +258,20 @@ export class EventService {
     }
 
     if (opts.citySlug) {
-      const city = await this.prisma.city.findUnique({ where: { slug: opts.citySlug }, select: { countryCode: true } });
-      if (city?.countryCode && !opts.exactCity) {
-        where.AND = (where.AND || []).concat({
-          OR: [
-            { citySlug: opts.citySlug },
-            { countryCode: city.countryCode, citySlug: null },
-          ],
-        });
-      } else {
+      if (opts.exactCity) {
         where.citySlug = opts.citySlug;
+      } else {
+        const city = await this.prisma.city.findUnique({ where: { slug: opts.citySlug }, select: { countryCode: true } });
+        if (city?.countryCode) {
+          where.AND = (where.AND || []).concat({
+            OR: [
+              { citySlug: opts.citySlug },
+              { countryCode: city.countryCode, citySlug: null },
+            ],
+          });
+        } else {
+          where.citySlug = opts.citySlug;
+        }
       }
     }
 

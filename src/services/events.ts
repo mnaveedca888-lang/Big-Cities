@@ -12,6 +12,25 @@ interface EventsPayload {
   };
 }
 
+export interface EventsPage {
+  items: EventItem[];
+  pagination: EventsPayload['pagination'];
+}
+
+export interface EventsQueryParams {
+  city?: string;
+  country?: string;
+  continent?: string;
+  exactCity?: boolean;
+  q?: string;
+  category?: string;
+  featured?: boolean;
+  verificationStatus?: string;
+  perPage?: number;
+  page?: number;
+  dailyOnly?: boolean;
+}
+
 export function normalizeEventsPayload(payload: ApiResponse<EventsPayload> | ApiResponse<EventItem[]> | EventsPayload | EventItem[] | undefined | null) {
   if (!payload) return [];
   if (Array.isArray(payload)) return payload;
@@ -31,11 +50,19 @@ export async function getFeaturedEvents() {
   return normalizeEventsPayload(response.data);
 }
 
-export async function getEvents(params?: { city?: string; country?: string; continent?: string; exactCity?: boolean; q?: string; category?: string; featured?: boolean; verificationStatus?: string; perPage?: number; page?: number; dailyOnly?: boolean }) {
+export async function getEvents(params?: EventsQueryParams) {
   const response = await apiClient.get<ApiResponse<EventsPayload>>('/events', {
     params: params && Object.keys(params).length ? params : undefined,
   });
   return normalizeEventsPayload(response.data);
+}
+
+export async function getEventsPage(params: EventsQueryParams): Promise<EventsPage> {
+  const response = await apiClient.get<ApiResponse<EventsPayload>>('/events', { params });
+  return {
+    items: normalizeEventsPayload(response.data),
+    pagination: response.data.data.pagination,
+  };
 }
 
 export async function updateEvent(slug: string, payload: Partial<{
@@ -60,4 +87,3 @@ export async function getEvent(slug: string) {
   const response = await apiClient.get<ApiResponse<EventItem>>(`/events/${slug}`);
   return response.data?.data ?? null;
 }
-

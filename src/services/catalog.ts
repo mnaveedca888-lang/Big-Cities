@@ -60,7 +60,7 @@ export async function getCountries(params?: { q?: string; continent?: string; pa
   return response.data.data;
 }
 
-export async function getCountryDirectory(params?: { q?: string; continent?: string; page?: number; perPage?: number }) {
+export async function getCountryDirectory(params?: { q?: string; continent?: string; page?: number; perPage?: number; includeEventCounts?: boolean }) {
   const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CountryItem, 'code' | 'name' | 'continent' | 'events'>>>>('/countries/directory', { params });
   return response.data.data;
 }
@@ -77,6 +77,14 @@ export async function updateCountry(code: string, payload: { name?: string; cont
 
 export async function getCountryCities(code: string) {
   const response = await apiClient.get<ApiResponse<CityItem[]>>(`/countries/${code}/cities`);
+  return response.data.data;
+}
+
+export async function getCountryCityDirectory(code: string, params?: { page?: number; perPage?: number }) {
+  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CityItem, 'slug' | 'name'>>>>(
+    `/countries/${code}/cities/directory`,
+    { params },
+  );
   return response.data.data;
 }
 
