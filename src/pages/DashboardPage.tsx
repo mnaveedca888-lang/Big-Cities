@@ -90,6 +90,11 @@ function emptyEventForm(countryCode = ''): EventFormState {
   };
 }
 
+const EMPTY_COUNTRIES: CountryItem[] = [];
+const EMPTY_CITIES: Array<Pick<CityItem, 'slug' | 'name' | 'countryCode'>> = [];
+const EMPTY_EVENTS: EventItem[] = [];
+const EMPTY_CATEGORIES: CategoryItem[] = [];
+
 function getErrorMessage(error: unknown, fallback: string) {
   if (isApiError(error) || error instanceof Error) return error.message;
   return fallback;
@@ -409,6 +414,8 @@ export default function DashboardPage() {
   const [countrySearch, setCountrySearch] = useState('');
   const [countryQuery, setCountryQuery] = useState('');
   const [countryPage, setCountryPage] = useState(1);
+  const [countryContinentFilter, setCountryContinentFilter] = useState('');
+  const [countrySort, setCountrySort] = useState('name');
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const [isCreatingCountry, setIsCreatingCountry] = useState(false);
   const [isCreatingCity, setIsCreatingCity] = useState(false);
@@ -416,9 +423,13 @@ export default function DashboardPage() {
   const [cityPage, setCityPage] = useState(1);
   const [citySearch, setCitySearch] = useState('');
   const [cityQuery, setCityQuery] = useState('');
+  const [citySort, setCitySort] = useState('name');
   const [eventSearch, setEventSearch] = useState('');
   const [eventQuery, setEventQuery] = useState('');
   const [eventPage, setEventPage] = useState(1);
+  const [eventCategoryFilter, setEventCategoryFilter] = useState('');
+  const [eventEnabledFilter, setEventEnabledFilter] = useState<'all' | 'true' | 'false'>('all');
+  const [eventSort, setEventSort] = useState('startAt:desc');
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const [selectedEventSlug, setSelectedEventSlug] = useState('');
   const [countryForm, setCountryForm] = useState<CountryFormState>({ name: '', code: '', continentId: '', heroImageUrl: '', flagImageUrl: '' });
@@ -461,8 +472,14 @@ export default function DashboardPage() {
   }, [citySearch]);
 
   const countriesQuery = useQuery({
-    queryKey: ['dashboard-countries', countryQuery, countryPage],
-    queryFn: () => getCountries({ q: countryQuery || undefined, page: countryPage, perPage: 12, sort: 'name' }),
+    queryKey: ['dashboard-countries', countryQuery, countryContinentFilter, countrySort, countryPage],
+    queryFn: () => getCountries({
+      q: countryQuery || undefined,
+      continent: countryContinentFilter || undefined,
+      page: countryPage,
+      perPage: 12,
+      sort: countrySort,
+    }),
     staleTime: 30_000,
   });
   const continentsQuery = useQuery({ queryKey: ['dashboard-continents'], queryFn: getContinents, staleTime: 60_000 });
@@ -472,7 +489,7 @@ export default function DashboardPage() {
     staleTime: 60_000,
   });
 
-  const countries: CountryItem[] = countriesQuery.data?.items ?? [];
+  const countries = countriesQuery.data?.items ?? EMPTY_COUNTRIES;
   const filteredCountries = countries;
   const countryPagination = countriesQuery.data?.pagination;
   const continents: ContinentItem[] = continentsQuery.data ?? [];
@@ -490,12 +507,17 @@ export default function DashboardPage() {
   );
 
   const countryCitiesQuery = useQuery({
-    queryKey: ['dashboard-country-cities', selectedCountryCode, cityQuery, cityPage],
-    queryFn: () => getCountryCityDirectory(selectedCountryCode, { q: cityQuery || undefined, page: cityPage, perPage: 12 }),
+    queryKey: ['dashboard-country-cities', selectedCountryCode, cityQuery, citySort, cityPage],
+    queryFn: () => getCountryCityDirectory(selectedCountryCode, {
+      q: cityQuery || undefined,
+      page: cityPage,
+      perPage: 12,
+      sort: citySort,
+    }),
     enabled: Boolean(selectedCountryCode),
     staleTime: 30_000,
   });
-  const cityList: Array<Pick<CityItem, 'slug' | 'name' | 'countryCode'>> = countryCitiesQuery.data?.items ?? [];
+  const cityList = countryCitiesQuery.data?.items ?? EMPTY_CITIES;
   const cityPagination = countryCitiesQuery.data?.pagination;
   const filteredCities = cityList;
   const selectedCityQuery = useQuery({
@@ -507,10 +529,13 @@ export default function DashboardPage() {
   const selectedCity = selectedCityQuery.data ?? null;
 
   const countryEventsQuery = useQuery({
-    queryKey: ['dashboard-country-events', selectedCountryCode, eventQuery, eventPage],
+    queryKey: ['dashboard-country-events', selectedCountryCode, eventQuery, eventCategoryFilter, eventEnabledFilter, eventSort, eventPage],
     queryFn: () => getEventsPage({
       country: selectedCountryCode,
       q: eventQuery || undefined,
+      category: eventCategoryFilter || undefined,
+      enabled: eventEnabledFilter === 'all' ? undefined : eventEnabledFilter === 'true',
+      sort: eventSort,
       includeDisabled: true,
       perPage: 12,
       page: eventPage,
@@ -519,8 +544,8 @@ export default function DashboardPage() {
     staleTime: 30_000,
   });
 
-  const eventList: EventItem[] = countryEventsQuery.data?.items ?? [];
-  const categories: CategoryItem[] = categoriesQuery.data?.items ?? [];
+  const eventList = countryEventsQuery.data?.items ?? EMPTY_EVENTS;
+  const categories = categoriesQuery.data?.items ?? EMPTY_CATEGORIES;
   const filteredEvents = eventList;
   const eventPagination = countryEventsQuery.data?.pagination;
   const selectedEventFromList = eventList.find((event) => event.slug === selectedEventSlug) ?? null;
@@ -933,6 +958,28 @@ export default function DashboardPage() {
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
               <input value={countrySearch} onChange={(event) => setCountrySearch(event.target.value)} placeholder="Search country" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+              <div className="mt-3 grid gap-2">
+                <label className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  <span>Filter by continent</span>
+                  <select aria-label="Filter countries by continent" value={countryContinentFilter} onChange={(event) => {
+                    setCountryContinentFilter(event.target.value);
+                    setCountryPage(1);
+                  }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                    <option value="">All continents</option>
+                    {continents.map((continent) => <option key={continent.id} value={continent.name}>{continent.name}</option>)}
+                  </select>
+                </label>
+                <label className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  <span>Sort countries</span>
+                  <select aria-label="Sort countries" value={countrySort} onChange={(event) => {
+                    setCountrySort(event.target.value);
+                    setCountryPage(1);
+                  }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                    <option value="name">Name A-Z</option>
+                    <option value="name:desc">Name Z-A</option>
+                  </select>
+                </label>
+              </div>
               <div className="mt-4 space-y-2">
                 {filteredCountries.slice(0, 12).map((country) => (
                   <button
@@ -1061,6 +1108,16 @@ export default function DashboardPage() {
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
               <input value={citySearch} onChange={(event) => setCitySearch(event.target.value)} placeholder="Search city" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+              <label className="mt-3 block space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                <span>Sort cities</span>
+                <select aria-label="Sort cities" value={citySort} onChange={(event) => {
+                  setCitySort(event.target.value);
+                  setCityPage(1);
+                }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                  <option value="name">Name A-Z</option>
+                  <option value="name:desc">Name Z-A</option>
+                </select>
+              </label>
               <div className="mt-4 space-y-2">
                 {filteredCities.slice(0, 12).map((city) => (
                   <button
@@ -1158,6 +1215,40 @@ export default function DashboardPage() {
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
               <input value={eventSearch} onChange={(event) => setEventSearch(event.target.value)} placeholder="Search event" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />
+              <div className="mt-3 grid gap-2">
+                <label className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  <span>Filter by category</span>
+                  <select aria-label="Filter events by category" value={eventCategoryFilter} onChange={(event) => {
+                    setEventCategoryFilter(event.target.value);
+                    setEventPage(1);
+                  }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                    <option value="">All categories</option>
+                    {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                  </select>
+                </label>
+                <label className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  <span>Filter by status</span>
+                  <select aria-label="Filter events by status" value={eventEnabledFilter} onChange={(event) => {
+                    setEventEnabledFilter(event.target.value as 'all' | 'true' | 'false');
+                    setEventPage(1);
+                  }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                    <option value="all">All statuses</option>
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                  </select>
+                </label>
+                <label className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                  <span>Sort events</span>
+                  <select aria-label="Sort events" value={eventSort} onChange={(event) => {
+                    setEventSort(event.target.value);
+                    setEventPage(1);
+                  }} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                    <option value="startAt:desc">Newest start date</option>
+                    <option value="startAt:asc">Oldest start date</option>
+                    <option value="title:asc">Title A-Z</option>
+                  </select>
+                </label>
+              </div>
               <div className="mt-4 space-y-2">
                 {filteredEvents.slice(0, 12).map((event) => (
                   <button

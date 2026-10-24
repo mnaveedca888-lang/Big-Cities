@@ -27,9 +27,11 @@ export interface EventsQueryParams {
   featured?: boolean;
   verificationStatus?: string;
   includeDisabled?: boolean;
+  enabled?: boolean;
   perPage?: number;
   page?: number;
   dailyOnly?: boolean;
+  sort?: string;
 }
 
 export function normalizeEventsPayload(payload: ApiResponse<EventsPayload> | ApiResponse<EventItem[]> | EventsPayload | EventItem[] | undefined | null) {

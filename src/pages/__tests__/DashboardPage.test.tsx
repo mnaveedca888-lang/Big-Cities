@@ -230,4 +230,50 @@ describe('DashboardPage data managers', () => {
     expect(mocks.deleteCity).not.toHaveBeenCalled();
     confirm.mockRestore();
   });
+
+  it('filters and sorts countries through the paginated API query', async () => {
+    renderDashboard();
+    await screen.findByRole('button', { name: /Afghanistan/ });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter countries by continent' }), { target: { value: 'Asia' } });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Sort countries' }), { target: { value: 'name:desc' } });
+    await waitFor(() => expect(mocks.getCountries).toHaveBeenLastCalledWith({
+      q: undefined,
+      continent: 'Asia',
+      page: 1,
+      perPage: 12,
+      sort: 'name:desc',
+    }));
+  });
+
+  it('sorts the selected country city directory through the API query', async () => {
+    renderDashboard();
+    await screen.findByRole('button', { name: /Afghanistan/ });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Sort cities' }), { target: { value: 'name:desc' } });
+
+    await waitFor(() => expect(mocks.getCountryCityDirectory).toHaveBeenLastCalledWith('AF', {
+      q: undefined,
+      page: 1,
+      perPage: 12,
+      sort: 'name:desc',
+    }));
+  });
+
+  it('filters and sorts events through the selected country API query', async () => {
+    renderDashboard();
+    await screen.findByRole('button', { name: /Afghanistan/ });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter events by category' }), { target: { value: 'category-1' } });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Filter events by status' }), { target: { value: 'false' } });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Sort events' }), { target: { value: 'title:asc' } });
+
+    await waitFor(() => expect(mocks.getEventsPage).toHaveBeenLastCalledWith({
+      country: 'AF',
+      q: undefined,
+      category: 'category-1',
+      enabled: false,
+      sort: 'title:asc',
+      includeDisabled: true,
+      perPage: 12,
+      page: 1,
+    }));
+  });
 });

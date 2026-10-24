@@ -8,6 +8,7 @@ describe('catalog directory read endpoints', () => {
     { slug: 'pk-lahore', name: 'Lahore' },
   ]);
   const cityCount = vi.fn().mockResolvedValue(42);
+  const cityGroupBy = vi.fn().mockResolvedValue([]);
   const countryFindMany = vi.fn().mockResolvedValue([
     {
       code: 'JP',
@@ -24,7 +25,7 @@ describe('catalog directory read endpoints', () => {
   ]);
   const prisma = new Proxy({}, {
     get: (_client, model) => {
-      if (model === 'city') return { findMany: cityFindMany, count: cityCount };
+      if (model === 'city') return { findMany: cityFindMany, count: cityCount, groupBy: cityGroupBy };
       if (model === 'country') return { findMany: countryFindMany, findUnique: countryFindUnique, count: countryCount };
       if (model === 'event') return { groupBy: eventGroupBy };
       return {};
@@ -36,6 +37,7 @@ describe('catalog directory read endpoints', () => {
     registerCatalogRoutes(app, prisma);
     cityFindMany.mockClear();
     cityCount.mockClear();
+    cityGroupBy.mockClear();
     countryFindMany.mockClear();
     countryCount.mockClear();
     countryFindUnique.mockClear();
@@ -229,6 +231,41 @@ describe('catalog directory read endpoints', () => {
           { slug: { contains: 'lahore', mode: 'insensitive' } },
         ],
       },
+    });
+  });
+
+  it('sorts country cities in descending name order when requested', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries/PK/cities/directory?sort=name%3Adesc',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(cityFindMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { countryCode: 'PK' },
+      orderBy: { name: 'desc' },
+    }));
+  });
+
+  it('filters the country list by continent and applies descending name order', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries?q=Jap&continent=Asia&sort=name%3Adesc&page=2&perPage=10',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(countryFindMany).toHaveBeenCalledWith({
+      where: {
+        OR: [
+          { name: { contains: 'Jap', mode: 'insensitive' } },
+          { code: { contains: 'Jap', mode: 'insensitive' } },
+        ],
+        continent: { name: 'Asia' },
+      },
+      orderBy: { name: 'desc' },
+      skip: 10,
+      take: 10,
+      include: { continent: true },
     });
   });
 

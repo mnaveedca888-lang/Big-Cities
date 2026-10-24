@@ -131,6 +131,7 @@ const countryCityDirectoryQuerySchema = z.object({
   q: z.string().trim().max(100).optional(),
   page: z.coerce.number().int().min(1).default(1),
   perPage: z.coerce.number().int().min(1).max(100).default(100),
+  sort: z.enum(['name', 'name:desc']).optional(),
 });
 const countryDirectoryQuerySchema = z.object({
   q: z.string().trim().max(100).optional(),
@@ -292,7 +293,7 @@ const countryListQuery = z.object({
   continent: z.string().optional(),
   page: z.string().transform((value) => Number.parseInt(value || '1', 10)).optional(),
   perPage: z.string().transform((value) => Number.parseInt(value || '12', 10)).optional(),
-  sort: z.enum(['name']).optional(),
+  sort: z.enum(['name', 'name:desc']).optional(),
 });
 
 const categoryCreateSchema = z.object({
@@ -734,7 +735,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const [items, total] = await Promise.all([
         prisma.country.findMany({
           where,
-          orderBy: query.sort === 'name' ? { name: 'asc' } : { name: 'asc' },
+          orderBy: { name: query.sort === 'name:desc' ? 'desc' : 'asc' },
           skip: (page - 1) * perPage,
           take: perPage,
           include: { continent: true },
@@ -920,7 +921,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const [cities, total] = await Promise.all([
         prisma.city.findMany({
           where,
-          orderBy: { name: 'asc' },
+          orderBy: { name: query.sort === 'name:desc' ? 'desc' : 'asc' },
           skip: (query.page - 1) * query.perPage,
           take: query.perPage,
           select: { slug: true, name: true, countryCode: true },

@@ -288,6 +288,7 @@ export class EventService {
     featured?: boolean | null;
     verificationStatus?: string | null;
     includeDisabled?: boolean | null;
+    enabled?: boolean | null;
     dailyOnly?: boolean | null;
     upcomingOnly?: boolean | null;
     page?: number;
@@ -297,7 +298,8 @@ export class EventService {
     const page = Math.max(1, opts.page || 1);
     const perPage = Math.min(100, Math.max(1, opts.perPage || 20));
     const where: any = {};
-    if (opts.includeDisabled !== true) where.enabled = true;
+    if (opts.enabled !== undefined && opts.enabled !== null) where.enabled = opts.enabled;
+    else if (opts.includeDisabled !== true) where.enabled = true;
 
     if (opts.upcomingOnly) {
       const now = new Date();

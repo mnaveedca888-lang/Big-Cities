@@ -89,7 +89,7 @@ export async function getCountryCities(code: string) {
   return response.data.data;
 }
 
-export async function getCountryCityDirectory(code: string, params?: { q?: string; page?: number; perPage?: number }) {
+export async function getCountryCityDirectory(code: string, params?: { q?: string; page?: number; perPage?: number; sort?: string }) {
   const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CityItem, 'slug' | 'name' | 'countryCode'>>>>(
     `/countries/${code}/cities/directory`,
     { params },

@@ -46,4 +46,26 @@ describe('event list performance behavior', () => {
     expect(result.items).toHaveLength(1);
     expect(result.pagination).toEqual({ page: 1, perPage: 12, total: 24, totalPages: 2 });
   });
+
+  it('filters disabled events and applies the requested sort order', async () => {
+    const eventFindMany = vi.fn().mockResolvedValue([]);
+    const eventCount = vi.fn().mockResolvedValue(0);
+    const service = new EventService({
+      event: { count: eventCount, findMany: eventFindMany },
+      city: { findMany: vi.fn() },
+      category: { findMany: vi.fn() },
+    } as any);
+
+    await service.list({
+      includeDisabled: true,
+      enabled: false,
+      sort: 'title:asc',
+    });
+
+    expect(eventCount).toHaveBeenCalledWith({ where: { enabled: false } });
+    expect(eventFindMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { enabled: false },
+      orderBy: { title: 'asc' },
+    }));
+  });
 });
