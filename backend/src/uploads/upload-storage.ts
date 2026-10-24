@@ -1,175 +1,191 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
 import path from 'path';
-import { Readable } from 'stream';
-import type { FastifyInstance } from 'fastify';
-import { normalizeLocalImageUrl } from '../images/local-image';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
-const IMAGE_ROOT = path.resolve(__dirname, '..', '..', 'public', 'Images');
+export type UploadStorageDriver = 'local' | 's3' | 'disabled';
 
-export interface StoredImage {
-  body: Readable;
+export type StoreFileInput = {
+  userId: string;
+  filename: string;
   contentType?: string;
+  buffer: Buffer;
+  prefix?: string;
+};
+
+export type StoredFileResult = {
+  fileKey: string;
+  url: string;
+  size: number;
+};
+
+const UPLOADS_ROOT = path.resolve(__dirname, '..', '..', 'public', 'Images', 'uploads');
+const ALLOWED_CONTENT_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'image/svg+xml',
+  'image/avif',
+  'image/bmp',
+]);
+
+function sanitizeKeySegment(value: string) {
+  return value.replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'upload';
 }
 
-export interface UploadStorage {
-  put(fileKey: string, data: Buffer, contentType: string): Promise<void>;
-  remove(fileKey: string): Promise<void>;
-  get(fileKey: string): Promise<StoredImage | null>;
+function buildSafeFileKey(userId: string, filename: string, prefix = 'uploads') {
+  const safeUserId = sanitizeKeySegment(userId);
+  const safeName = sanitizeKeySegment(filename);
+  const timestamp = Date.now();
+  return `${safeUserId}/${prefix}/${timestamp}-${safeName}`;
 }
 
-type UploadStorageDriver = 'local' | 's3' | 'disabled';
-
-interface S3Configuration {
-  endpoint: string;
-  region: string;
-  bucket: string;
-  accessKeyId: string;
-  secretAccessKey: string;
+function ensureWithinBase(basePath: string, targetPath: string) {
+  const relative = path.relative(basePath, targetPath);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error('Unsafe upload path');
+  }
 }
 
-function isSafeFileKey(fileKey: string) {
-  const segments = fileKey.split('/');
-  return segments.length === 2
-    && segments.every((segment) => segment.length > 0 && segment !== '.' && segment !== '..'
-      && !segment.includes('\\') && !segment.includes('%'));
+export function getUploadStorageDriver(): UploadStorageDriver {
+  const raw = (process.env.UPLOAD_STORAGE_DRIVER ?? 'local').trim().toLowerCase();
+  if (raw === 's3' || raw === 'r2' || raw === 'object-storage') return 's3';
+  if (raw === 'local') return 'local';
+  if (raw === 'disabled') return 'disabled';
+  return 'local';
 }
 
-function getDriver(): UploadStorageDriver {
-  const configured = process.env.UPLOAD_STORAGE_DRIVER;
-  if (configured === 'local' || configured === 's3' || configured === 'disabled') return configured;
-  if (configured) throw new Error('UPLOAD_STORAGE_DRIVER must be local, s3, or disabled.');
-  return process.env.NODE_ENV === 'production' ? 'disabled' : 'local';
+export function isAllowedUploadMimeType(contentType?: string | null) {
+  if (!contentType) return true;
+  return ALLOWED_CONTENT_TYPES.has(contentType.trim().toLowerCase());
 }
 
-function getS3Configuration(): S3Configuration {
-  const required = (name: string) => {
-    const value = process.env[name];
-    if (!value) throw new Error(`Missing required object storage configuration: ${name}.`);
-    return value;
-  };
-  return {
-    endpoint: required('OBJECT_STORAGE_ENDPOINT'),
-    region: required('OBJECT_STORAGE_REGION'),
-    bucket: required('OBJECT_STORAGE_BUCKET'),
-    accessKeyId: required('OBJECT_STORAGE_ACCESS_KEY_ID'),
-    secretAccessKey: required('OBJECT_STORAGE_SECRET_ACCESS_KEY'),
-  };
+export function getS3Configuration() {
+  if (getUploadStorageDriver() !== 's3') {
+    throw new Error('S3/R2 storage is not enabled. Set UPLOAD_STORAGE_DRIVER=s3 and provide OBJECT_STORAGE_* variables.');
+  }
+
+  const bucket = process.env.OBJECT_STORAGE_BUCKET?.trim();
+  const endpoint = process.env.OBJECT_STORAGE_ENDPOINT?.trim();
+  const region = process.env.OBJECT_STORAGE_REGION?.trim() || 'auto';
+  const accessKeyId = process.env.OBJECT_STORAGE_ACCESS_KEY_ID?.trim();
+  const secretAccessKey = process.env.OBJECT_STORAGE_SECRET_ACCESS_KEY?.trim();
+
+  if (!bucket || !endpoint || !accessKeyId || !secretAccessKey) {
+    throw new Error('Missing required object-store configuration: OBJECT_STORAGE_BUCKET, OBJECT_STORAGE_ENDPOINT, OBJECT_STORAGE_ACCESS_KEY_ID, OBJECT_STORAGE_SECRET_ACCESS_KEY');
+  }
+
+  return { bucket, endpoint, region, accessKeyId, secretAccessKey };
 }
 
-function localFilePath(fileKey: string) {
-  if (!isSafeFileKey(fileKey)) throw new Error('Invalid upload file key.');
-  return path.join(IMAGE_ROOT, 'uploads', ...fileKey.split('/'));
+function resolveLocalFilePath(fileKey: string) {
+  const relative = fileKey.replace(/^\/+/, '').replace(/\\/g, '/');
+  if (!relative || relative.includes('..') || relative.includes('\\')) {
+    throw new Error('Invalid storage key');
+  }
+
+  const targetPath = path.join(UPLOADS_ROOT, relative);
+  ensureWithinBase(UPLOADS_ROOT, targetPath);
+  return targetPath;
 }
 
-export function createUploadStorage(): UploadStorage {
-  let client: S3Client | undefined;
-  let clientConfiguration: S3Configuration | undefined;
+const fileContentTypeByExtension: Record<string, string> = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.avif': 'image/avif',
+  '.bmp': 'image/bmp',
+};
 
-  const getS3Client = () => {
-    const configuration = getS3Configuration();
-    if (!client || JSON.stringify(configuration) !== JSON.stringify(clientConfiguration)) {
-      client?.destroy();
-      clientConfiguration = configuration;
-      client = new S3Client({
-        endpoint: configuration.endpoint,
-        region: configuration.region,
-        forcePathStyle: true,
-        credentials: {
-          accessKeyId: configuration.accessKeyId,
-          secretAccessKey: configuration.secretAccessKey,
-        },
-      });
-    }
-    return { client, configuration };
-  };
+export function createUploadStorage() {
+  const driver = getUploadStorageDriver();
 
-  return {
-    async put(fileKey, data, contentType) {
-      if (!isSafeFileKey(fileKey)) throw new Error('Invalid upload file key.');
-      const driver = getDriver();
-      if (driver === 'disabled') throw new Error('Image upload storage is not configured.');
-      if (driver === 'local') {
-        const targetPath = localFilePath(fileKey);
-        await fs.promises.mkdir(path.dirname(targetPath), { recursive: true });
-        await fs.promises.writeFile(targetPath, data, { flag: 'wx' });
-        return;
-      }
-      const { client: s3, configuration } = getS3Client();
-      await s3.send(new PutObjectCommand({
-        Bucket: configuration.bucket,
-        Key: fileKey,
-        Body: data,
-        ContentLength: data.length,
-        ContentType: contentType,
-        IfNoneMatch: '*',
-      }));
-    },
-    async remove(fileKey) {
-      if (!isSafeFileKey(fileKey)) throw new Error('Invalid upload file key.');
-      const driver = getDriver();
-      if (driver === 'disabled') return;
-      if (driver === 'local') {
-        await fs.promises.unlink(localFilePath(fileKey));
-        return;
-      }
-      const { client: s3, configuration } = getS3Client();
-      await s3.send(new DeleteObjectCommand({ Bucket: configuration.bucket, Key: fileKey }));
-    },
-    async get(fileKey) {
-      if (!isSafeFileKey(fileKey) || getDriver() !== 's3') return null;
-      const { client: s3, configuration } = getS3Client();
-      try {
-        const response = await s3.send(new GetObjectCommand({ Bucket: configuration.bucket, Key: fileKey }));
-        if (!response.Body) throw new Error('Object storage returned an empty image body.');
+  if (driver === 'disabled') {
+    return {
+      driver,
+      async storeFile() {
+        throw new Error('Uploads are disabled. Set UPLOAD_STORAGE_DRIVER to local or s3 and enable uploads explicitly.');
+      },
+      async readFile() {
+        throw new Error('Uploads are disabled.');
+      },
+    };
+  }
+
+  if (driver === 's3') {
+    const config = getS3Configuration();
+    const client = new S3Client({
+      region: config.region,
+      endpoint: config.endpoint,
+      credentials: {
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+      },
+      forcePathStyle: true,
+    });
+
+    return {
+      driver,
+      async storeFile({ userId, filename, contentType, buffer, prefix = 'uploads' }: StoreFileInput): Promise<StoredFileResult> {
+        const fileKey = buildSafeFileKey(userId, filename, prefix);
+        const key = `${fileKey}`.replace(/^\/+/, '');
+        await client.send(new PutObjectCommand({
+          Bucket: config.bucket,
+          Key: key,
+          Body: buffer,
+          ContentType: contentType || fileContentTypeByExtension[path.extname(filename).toLowerCase()] || 'application/octet-stream',
+          CacheControl: 'no-store',
+        }));
+
         return {
-          body: Readable.from([await response.Body.transformToByteArray()]),
-          contentType: response.ContentType,
+          fileKey: key,
+          url: `/images/uploads/${key}`,
+          size: buffer.length,
         };
-      } catch (error) {
-        const name = (error as { name?: string }).name;
-        if (name === 'NoSuchKey' || name === 'NotFound' || name === 'NoSuchObject') return null;
-        throw error;
-      }
+      },
+      async readFile(fileKey: string) {
+        const key = fileKey.replace(/^\/+/, '');
+        const response = await client.send(new GetObjectCommand({
+          Bucket: config.bucket,
+          Key: key,
+        }));
+        const body = response.Body as NodeJS.ReadableStream | Blob | Uint8Array | undefined;
+        const bytes = body instanceof Uint8Array ? body : Buffer.from(await new Response(body as any).arrayBuffer());
+        return {
+          buffer: Buffer.from(bytes),
+          contentType: response.ContentType || fileContentTypeByExtension[path.extname(key).toLowerCase()] || 'application/octet-stream',
+        };
+      },
+    };
+  }
+
+  return {
+    driver,
+    async storeFile({ userId, filename, buffer, prefix = 'uploads' }: StoreFileInput): Promise<StoredFileResult> {
+      const fileKey = buildSafeFileKey(userId, filename, prefix);
+      const targetPath = resolveLocalFilePath(fileKey);
+      await fs.promises.mkdir(path.dirname(targetPath), { recursive: true });
+      await fs.promises.writeFile(targetPath, buffer);
+      return {
+        fileKey,
+        url: `/images/uploads/${fileKey}`,
+        size: buffer.length,
+      };
+    },
+    async readFile(fileKey: string) {
+      const targetPath = resolveLocalFilePath(fileKey);
+      const buffer = await fs.promises.readFile(targetPath);
+      return {
+        buffer,
+        contentType: fileContentTypeByExtension[path.extname(targetPath).toLowerCase()] || 'application/octet-stream',
+      };
     },
   };
 }
 
-function imageContentType(fileKey: string) {
-  const extension = path.extname(fileKey).toLowerCase();
-  const contentTypes: Record<string, string> = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.webp': 'image/webp',
-    '.gif': 'image/gif',
-    '.avif': 'image/avif',
-  };
-  return contentTypes[extension] ?? 'application/octet-stream';
-}
-
-export function registerUploadImageRoutes(app: FastifyInstance, storage: UploadStorage = createUploadStorage()) {
-  app.get<{ Params: { '*': string } }>('/images/uploads/*', async (request, reply) => {
-    const fileKey = request.params['*'];
-    if (!isSafeFileKey(fileKey)) return reply.code(404).send();
-
-    try {
-      const storedImage = await storage.get(fileKey);
-      if (storedImage) {
-        reply.type(storedImage.contentType || imageContentType(fileKey));
-        reply.header('Cache-Control', 'public, max-age=300');
-        return reply.send(storedImage.body);
-      }
-    } catch (error) {
-      app.log.error({ err: error }, 'Persistent image retrieval failed');
-      return reply.code(503).send({ success: false, error: { message: 'Image storage is temporarily unavailable.' } });
-    }
-
-    const localUrl = normalizeLocalImageUrl(`/images/uploads/${fileKey}`);
-    if (!localUrl) return reply.code(404).send();
-    const localPath = path.join(IMAGE_ROOT, 'uploads', ...fileKey.split('/'));
-    reply.type(imageContentType(fileKey));
-    reply.header('Cache-Control', 'public, max-age=300');
-    return reply.send(fs.createReadStream(localPath));
-  });
+export function getObjectStorageUrlForKey(fileKey: string) {
+  return `/images/uploads/${fileKey.replace(/^\/+/, '')}`;
 }
