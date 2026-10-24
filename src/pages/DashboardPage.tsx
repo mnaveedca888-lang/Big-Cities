@@ -10,6 +10,7 @@ import { getCategories, getCountries, getCountryCities, updateCountry, updateCit
 import { getEvents, updateEvent } from '@/services/events';
 import { getDashboardOverview } from '@/services/dashboard';
 import type { CountryItem, CityItem, EventItem } from '@/types';
+import { isApiError } from '@/types/errors';
 import { formatAreaValue, parseAreaInput } from '@/utils/format';
 
 type CountryFormState = {
@@ -49,6 +50,11 @@ function formatLabel(value: string) {
     .replace(/\s+/g, ' ')
     .trim()
     .replace(/\b\w/g, (match) => match.toUpperCase());
+}
+
+function getErrorMessage(error: unknown, fallback: string) {
+  if (isApiError(error) || error instanceof Error) return error.message;
+  return fallback;
 }
 
 function cloneValue(value: unknown): unknown {
@@ -360,6 +366,7 @@ export default function DashboardPage() {
   const [cityForm, setCityForm] = useState<CityFormState>({ name: '', countryCode: '', heroImageUrl: '' });
   const [cityProfileData, setCityProfileData] = useState<Record<string, unknown>>({});
   const [saveCityState, setSaveCityState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveCityMessage, setSaveCityMessage] = useState('');
 
   const filteredCities = useMemo(() => {
     if (!citySearch.trim()) return cityList;
@@ -389,6 +396,9 @@ export default function DashboardPage() {
     trending: false,
   });
   const [saveEventState, setSaveEventState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveEventMessage, setSaveEventMessage] = useState('');
+  const [imageUploadState, setImageUploadState] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
+  const [imageUploadMessage, setImageUploadMessage] = useState('');
 
   const filteredEvents = useMemo(() => {
     if (!eventSearch.trim()) return eventList;
@@ -463,6 +473,7 @@ export default function DashboardPage() {
     if (!selectedCity) return;
     try {
       setSaveCityState('saving');
+      setSaveCityMessage('');
       const mergedProfile = { ...cityProfileData } as Record<string, unknown>;
       if (cityForm.heroImageUrl.trim()) mergedProfile.heroImageUrl = cityForm.heroImageUrl.trim();
       await updateCity(selectedCity.slug, {
@@ -480,9 +491,11 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['search'] }),
       ]);
       setSaveCityState('saved');
+      setSaveCityMessage('City updated successfully.');
     } catch (error) {
       console.error(error);
       setSaveCityState('error');
+      setSaveCityMessage(getErrorMessage(error, 'Unable to save city. Please try again.'));
     }
   };
 
@@ -490,6 +503,7 @@ export default function DashboardPage() {
     if (!selectedEvent) return;
     try {
       setSaveEventState('saving');
+      setSaveEventMessage('');
       const tags = eventForm.tags
         .split(',')
         .map((tag) => tag.trim())
@@ -524,9 +538,11 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-events'] }),
       ]);
       setSaveEventState('saved');
+      setSaveEventMessage('Event updated successfully.');
     } catch (error) {
       console.error(error);
       setSaveEventState('error');
+      setSaveEventMessage(getErrorMessage(error, 'Unable to save event. Please try again.'));
     }
   };
 
@@ -556,12 +572,16 @@ export default function DashboardPage() {
       const nextCityForm = readCityForm(selectedCity, selectedCountry?.code ?? '');
       setCityForm(nextCityForm);
       setCityProfileData(buildCityProfileState(selectedCity));
+      setSaveCityState('idle');
+      setSaveCityMessage('');
     }
   };
 
   const resetEventForm = () => {
     if (selectedEvent) {
       setEventForm(readEventForm(selectedEvent));
+      setSaveEventState('idle');
+      setSaveEventMessage('');
     }
   };
 
@@ -569,10 +589,16 @@ export default function DashboardPage() {
     const file = event.target.files?.[0];
     if (!file) return;
     try {
+      setImageUploadState('uploading');
+      setImageUploadMessage('Uploading image…');
       const url = await uploadImageFile(file);
       onApply(url);
+      setImageUploadState('success');
+      setImageUploadMessage('Image uploaded. Save the record to apply it.');
     } catch (error) {
       console.error(error);
+      setImageUploadState('error');
+      setImageUploadMessage(getErrorMessage(error, 'Unable to upload image. Please try again.'));
     } finally {
       event.target.value = '';
     }
@@ -586,6 +612,11 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-semibold text-slate-950 dark:text-white">Dashboard management</h1>
           <p className="mt-3 text-slate-600 dark:text-slate-400">Edit the live country, city, and event data using field-by-field forms rather than raw JSON.</p>
         </div>
+        {imageUploadMessage ? (
+          <p className={`text-sm ${imageUploadState === 'error' ? 'text-rose-600' : imageUploadState === 'success' ? 'text-emerald-600' : 'text-slate-500'}`} role="status" aria-live="polite">
+            {imageUploadMessage}
+          </p>
+        ) : null}
 
         <DataState isLoading={overview.isLoading || countriesQuery.isLoading} error={overview.error || countriesQuery.error ? 'Dashboard data is unavailable.' : undefined} onRetry={() => { void overview.refetch(); void countriesQuery.refetch(); }}>
           <div className="grid gap-6 md:grid-cols-4">
@@ -710,7 +741,11 @@ export default function DashboardPage() {
                   <button
                     key={city.slug}
                     type="button"
-                    onClick={() => setSelectedCitySlug(city.slug)}
+                    onClick={() => {
+                      setSelectedCitySlug(city.slug);
+                      setSaveCityState('idle');
+                      setSaveCityMessage('');
+                    }}
                     className={`flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left text-sm transition ${selectedCitySlug === city.slug ? 'border-cyan-500 bg-cyan-50 text-cyan-700 dark:border-cyan-500 dark:bg-cyan-500/10 dark:text-cyan-200' : 'border-slate-200 text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:text-slate-300'}`}
                   >
                     <span>{city.name}</span>
@@ -756,6 +791,11 @@ export default function DashboardPage() {
                     </button>
                     <button type="button" onClick={resetCityForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
                   </div>
+                  {saveCityMessage ? (
+                    <p className={`mt-2 text-sm ${saveCityState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`} role="status" aria-live="polite">
+                      {saveCityMessage}
+                    </p>
+                  ) : null}
                 </>
               ) : (
                 <p className="text-sm text-slate-500">Select a city to edit its profile.</p>
@@ -777,7 +817,11 @@ export default function DashboardPage() {
                   <button
                     key={event.slug}
                     type="button"
-                    onClick={() => setSelectedEventSlug(event.slug)}
+                    onClick={() => {
+                      setSelectedEventSlug(event.slug);
+                      setSaveEventState('idle');
+                      setSaveEventMessage('');
+                    }}
                     className={`w-full rounded-xl border px-3 py-2 text-left text-sm transition ${selectedEventSlug === event.slug ? 'border-cyan-500 bg-cyan-50 text-cyan-700 dark:border-cyan-500 dark:bg-cyan-500/10 dark:text-cyan-200' : 'border-slate-200 text-slate-700 hover:border-slate-300 dark:border-slate-800 dark:text-slate-300'}`}
                   >
                     <div className="font-medium">{event.title}</div>
@@ -862,6 +906,11 @@ export default function DashboardPage() {
                     </button>
                     <button type="button" onClick={resetEventForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
                   </div>
+                  {saveEventMessage ? (
+                    <p className={`mt-2 text-sm ${saveEventState === 'saved' ? 'text-emerald-600' : 'text-rose-600'}`} role="status" aria-live="polite">
+                      {saveEventMessage}
+                    </p>
+                  ) : null}
                 </>
               ) : (
                 <p className="text-sm text-slate-500">Select an event to edit it.</p>
