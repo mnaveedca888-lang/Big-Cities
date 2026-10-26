@@ -1,0 +1,10 @@
+name = "rough-darkness-07cc"
+compatibility_date = "2026-10-20"
+workers_dev = true
+preview_urls = true
+
+[assets]
+directory = "../React router-performance-20261023-staging-build"
+html_handling = "auto-trailing-slash"
+not_found_handling = "single-page-application"
+run_worker_first = false

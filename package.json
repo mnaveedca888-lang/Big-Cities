@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:candidate": "node scripts/build-frontend.mjs candidate",
+    "build:production": "node scripts/build-frontend.mjs production",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "preview": "vite preview",

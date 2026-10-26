@@ -138,6 +138,14 @@ This project uses environment variables to control runtime behavior and staging 
 - Effect: missing or incorrect value causes the frontend to call the wrong backend or default to a local value in development
 - Scope: frontend build-time only
 
+### `VITE_DEPLOYMENT_TARGET`
+- Purpose: identify the frontend build boundary
+- Used by: frontend runtime guard and build scripts
+- Required: yes for candidate and production builds
+- Accepted values: `candidate`, `production`, or unset for local development
+- Effect: candidate builds are forced to the staging API; production builds fail unless they receive a dedicated non-staging API origin
+- Scope: frontend build-time only
+
 ## Local development variable notes
 
 - Local development may use a local database and local image files without the S3/R2 variables.
