@@ -24,7 +24,7 @@ describe('local image resolver', () => {
       model: 'Country',
       action: 'update',
       args: { data: { profile: { heroImageUrl: 'https://images.unsplash.com/photo.jpg' } } },
-    } as any, next)).rejects.toThrow('existing local /images/ file');
+    } as any, next)).rejects.toThrow('valid /images/ path');
 
     expect(next).not.toHaveBeenCalled();
   });
@@ -36,7 +36,7 @@ describe('local image resolver', () => {
       model: 'Country',
       action: 'upsert',
       args: { create: { profile: { flagImageUrl: 'https://flagcdn.com/w80/pk.png' } }, update: {} },
-    } as any, next)).rejects.toThrow('existing local /images/ file');
+    } as any, next)).rejects.toThrow('valid /images/ path');
 
     expect(next).not.toHaveBeenCalled();
   });
@@ -51,6 +51,25 @@ describe('local image resolver', () => {
     } as any, next)).resolves.toEqual({});
 
     expect(next).toHaveBeenCalledOnce();
+  });
+
+  it('allows safe uploaded-image URLs when R2 is configured', async () => {
+    const previousDriver = process.env.UPLOAD_STORAGE_DRIVER;
+    process.env.UPLOAD_STORAGE_DRIVER = 'r2';
+    const next = vi.fn().mockResolvedValue({});
+
+    try {
+      await expect(localImageWriteMiddleware({
+        model: 'Upload',
+        action: 'create',
+        args: { data: { url: '/images/uploads/admin-user/image.png' } },
+      } as any, next)).resolves.toEqual({});
+
+      expect(next).toHaveBeenCalledOnce();
+    } finally {
+      if (previousDriver === undefined) delete process.env.UPLOAD_STORAGE_DRIVER;
+      else process.env.UPLOAD_STORAGE_DRIVER = previousDriver;
+    }
   });
 
   it('prevents operator seed scripts from persisting external image URLs', async () => {

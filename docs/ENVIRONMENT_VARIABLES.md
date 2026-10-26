@@ -79,14 +79,14 @@ This project uses environment variables to control runtime behavior and staging 
 - Purpose: choose the upload backend driver
 - Used by: backend upload storage logic
 - Required: no
-- Accepted values: `local`, `s3`, `disabled`
-- Effect: `local` stores files under the backend filesystem; `s3` uses S3/R2-compatible storage; `disabled` rejects uploads
-- Scope: local and staging; production should be explicitly reviewed before enabling
+- Accepted values: `r2`, `s3` (S3-compatible alias), `object-storage` (alias), `disabled`
+- Effect: `r2` writes to the configured private R2 bucket; `disabled` rejects uploads. The default is `disabled`, and local filesystem storage is not supported.
+- Scope: staging or production only after provider permissions and database isolation are verified
 
 ### `OBJECT_STORAGE_BUCKET`
 - Purpose: object storage bucket name
 - Used by: backend upload storage abstraction
-- Required: yes when `UPLOAD_STORAGE_DRIVER=s3`
+- Required: yes when `UPLOAD_STORAGE_DRIVER=r2` or an alias is selected
 - Example: `big-cities-staging-images`
 - Accepted values: bucket name only
 - Effect: if missing, the S3/R2 configuration fails early and safely
@@ -148,9 +148,9 @@ This project uses environment variables to control runtime behavior and staging 
 
 ## Local development variable notes
 
-- Local development may use a local database and local image files without the S3/R2 variables.
-- The repo keeps the storage and write flags at safe defaults to avoid accidental writes.
-- Real secret values must be stored only in the host provider’s secure secret settings.
+- The upload driver defaults to `disabled`; there is no filesystem upload fallback.
+- Static legacy assets remain in the repository during migration, but they are not the durable upload store.
+- Real secret values must be stored only in the host provider's secure secret settings.
 
 ## Runtime route notes
 

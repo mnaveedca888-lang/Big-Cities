@@ -1,9 +1,8 @@
-import fs from 'fs';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
-export type UploadStorageDriver = 'local' | 's3' | 'disabled';
+export type UploadStorageDriver = 's3' | 'disabled';
 
 export type StoreFileInput = {
   userId: string;
@@ -26,7 +25,6 @@ export type UploadStorage = {
   deleteFile(fileKey: string): Promise<void>;
 };
 
-const UPLOADS_ROOT = path.resolve(__dirname, '..', '..', 'public', 'Images', 'uploads');
 const ALLOWED_CONTENT_TYPES = new Set([
   'image/jpeg',
   'image/png',
@@ -48,19 +46,11 @@ function buildSafeFileKey(userId: string, filename: string, prefix = 'uploads') 
   return `${safeUserId}/${safePrefix}${Date.now()}-${randomUUID()}-${safeName}`;
 }
 
-function ensureWithinBase(basePath: string, targetPath: string) {
-  const relative = path.relative(basePath, targetPath);
-  if (relative.startsWith('..') || path.isAbsolute(relative)) {
-    throw new Error('Unsafe upload path');
-  }
-}
-
 export function getUploadStorageDriver(): UploadStorageDriver {
-  const raw = (process.env.UPLOAD_STORAGE_DRIVER ?? 'local').trim().toLowerCase();
+  const raw = process.env.UPLOAD_STORAGE_DRIVER?.trim().toLowerCase() || 'disabled';
   if (raw === 's3' || raw === 'r2' || raw === 'object-storage') return 's3';
-  if (raw === 'local') return 'local';
   if (raw === 'disabled') return 'disabled';
-  return 'local';
+  throw new Error(`Unsupported image storage driver "${raw}". Configure R2 or set UPLOAD_STORAGE_DRIVER=disabled.`);
 }
 
 export function isAllowedUploadMimeType(contentType?: string | null) {
@@ -112,7 +102,7 @@ export function hasMatchingImageExtension(contentType: string | undefined, filen
 
 export function getS3Configuration() {
   if (getUploadStorageDriver() !== 's3') {
-    throw new Error('S3/R2 storage is not enabled. Set UPLOAD_STORAGE_DRIVER=s3 and provide OBJECT_STORAGE_* variables.');
+    throw new Error('R2 storage is not enabled. Set UPLOAD_STORAGE_DRIVER=r2 and provide OBJECT_STORAGE_* variables.');
   }
 
   const bucket = process.env.OBJECT_STORAGE_BUCKET?.trim();
@@ -126,17 +116,6 @@ export function getS3Configuration() {
   }
 
   return { bucket, endpoint, region, accessKeyId, secretAccessKey };
-}
-
-function resolveLocalFilePath(fileKey: string) {
-  const relative = fileKey.replace(/^\/+/, '').replace(/\\/g, '/');
-  if (!relative || relative.includes('..') || relative.includes('\\')) {
-    throw new Error('Invalid storage key');
-  }
-
-  const targetPath = path.join(UPLOADS_ROOT, relative);
-  ensureWithinBase(UPLOADS_ROOT, targetPath);
-  return targetPath;
 }
 
 const fileContentTypeByExtension: Record<string, string> = {
@@ -157,7 +136,7 @@ export function createUploadStorage(): UploadStorage {
     return {
       driver,
       async storeFile() {
-        throw new Error('Uploads are disabled. Set UPLOAD_STORAGE_DRIVER to local or s3 and enable uploads explicitly.');
+        throw new Error('Uploads are disabled. Configure R2 and enable uploads explicitly.');
       },
       async readFile() {
         throw new Error('Uploads are disabled.');
@@ -225,31 +204,7 @@ export function createUploadStorage(): UploadStorage {
     };
   }
 
-  return {
-    driver,
-    async storeFile({ userId, filename, buffer, prefix = 'uploads' }: StoreFileInput): Promise<StoredFileResult> {
-      const fileKey = buildSafeFileKey(userId, filename, prefix);
-      const targetPath = resolveLocalFilePath(fileKey);
-      await fs.promises.mkdir(path.dirname(targetPath), { recursive: true });
-      await fs.promises.writeFile(targetPath, buffer);
-      return {
-        fileKey,
-        url: `/images/uploads/${fileKey}`,
-        size: buffer.length,
-      };
-    },
-    async readFile(fileKey: string) {
-      const targetPath = resolveLocalFilePath(fileKey);
-      const buffer = await fs.promises.readFile(targetPath);
-      return {
-        buffer,
-        contentType: fileContentTypeByExtension[path.extname(targetPath).toLowerCase()] || 'application/octet-stream',
-      };
-    },
-    async deleteFile(fileKey: string) {
-      await fs.promises.rm(resolveLocalFilePath(fileKey), { force: true });
-    },
-  };
+  throw new Error(`Unsupported image storage driver "${driver}".`);
 }
 
 export function registerUploadImageRoutes(app: import('fastify').FastifyInstance, storage?: UploadStorage) {
@@ -273,7 +228,7 @@ export function registerUploadImageRoutes(app: import('fastify').FastifyInstance
         .header('X-Content-Type-Options', 'nosniff')
         .send(image.buffer);
     } catch (error: any) {
-      if (/Missing required object-store configuration|S3\/R2 storage is not enabled|Uploads are disabled/i.test(String(error?.message ?? ''))) {
+      if (/Missing required object-store configuration|R2 storage is not enabled|Uploads are disabled|Unsupported image storage driver/i.test(String(error?.message ?? ''))) {
         return reply.code(503).send({ success: false, error: { code: 'IMAGE_STORAGE_UNAVAILABLE', message: 'Image storage is not configured.' } });
       }
       app.log.warn({ fileKey, error: String(error?.message ?? 'unknown') }, 'Image read failed');

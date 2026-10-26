@@ -55,7 +55,7 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient,
       }
 
       const activeStorage = storage ?? createUploadStorage();
-      if (activeStorage.driver === 'disabled' || (process.env.NODE_ENV === 'production' && activeStorage.driver === 'local')) {
+      if (activeStorage.driver === 'disabled') {
         return reply.code(503).send({ success: false, error: { message: 'Image storage is not configured or is temporarily unavailable.' } });
       }
       const stored = await activeStorage.storeFile({ userId, filename: file.filename, contentType: file.mimetype, buffer });
@@ -71,6 +71,9 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient,
     } catch (err: any) {
       if (err?.code === 'FST_REQ_FILE_TOO_LARGE') {
         return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
+      }
+      if (/Missing required object-store configuration|R2 storage is not enabled|Uploads are disabled|Unsupported image storage driver/i.test(String(err?.message ?? ''))) {
+        return reply.code(503).send({ success: false, error: { message: 'Image storage is not configured or is temporarily unavailable.' } });
       }
       const statusCode = err?.statusCode === 401 || err?.statusCode === 403 ? err.statusCode : 400;
       if (statusCode === 400) app.log.warn({ error: String(err?.message ?? 'unknown') }, 'Upload file failed');

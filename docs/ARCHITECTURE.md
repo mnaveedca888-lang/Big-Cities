@@ -7,7 +7,7 @@ The project is split into a React frontend and a Fastify backend.
 - Frontend: Vite + React + React Router, built for Cloudflare Workers Static Assets.
 - Backend: Fastify + Prisma + PostgreSQL.
 - Static content: local image assets served from the backend under `/images/`.
-- Uploads: the code supports local filesystem storage and an S3-compatible object-store driver for private staging storage.
+- Uploads: the code uses an S3-compatible R2 bucket for private storage; uploads fail closed when R2 is not configured.
 
 ## Request flow
 
@@ -33,7 +33,7 @@ The backend boots in [backend/src/main.ts](../backend/src/main.ts). It:
 
 - registers CORS using [backend/src/cors.ts](../backend/src/cors.ts)
 - enforces the staging read-only guard from [backend/src/staging-write-guard.ts](../backend/src/staging-write-guard.ts)
-- mounts static `/images/` files from `backend/public/Images`
+- mounts legacy static `/images/` files from `backend/public/Images` while image migration is incomplete
 - mounts private uploaded-image reads at `/images/uploads/*` through the selected storage driver
 - registers auth, catalog, dashboard, upload, admin, event, and search routes
 
@@ -47,12 +47,12 @@ The staging guard ensures write routes remain blocked unless `DATABASE_WRITES_EN
 
 ## Storage model
 
-The project has two storage categories:
+The current transition has two image categories:
 
-1. Local static images and seeded content under `backend/public/Images`
-2. Upload metadata in Prisma, with the actual bytes stored either locally or in a private S3-compatible object store
+1. Legacy static images and seeded content under `backend/public/Images`, retained until migration and verification finish
+2. Upload metadata in Prisma, with new uploaded bytes stored only in the private S3-compatible R2 bucket (uploads fail closed when it is not configured)
 
-The preserved local storage is useful for development and static assets. The object-store path is implemented in [backend/src/uploads/upload-storage.ts](../backend/src/uploads/upload-storage.ts), but the live provider-side configuration must still be verified in the provider environment before enabling it in staging.
+Filesystem upload storage is removed. Legacy static assets remain in the repository until all required files have verified R2 copies and references can be safely migrated. The object-store path is implemented in [backend/src/uploads/upload-storage.ts](../backend/src/uploads/upload-storage.ts), but the live provider-side configuration must still be verified before enabling it in staging. Static assets are still served locally because their verified R2 copies and database migration are not yet available.
 
 ## Important safety constraints
 
@@ -69,8 +69,8 @@ Verified locally:
 - frontend TypeScript passes via `npm run typecheck`
 - backend TypeScript passes via `npm --prefix backend run typecheck`
 - frontend production build passes
-- targeted backend upload/storage/staging tests pass
-- the repo status and dashboard branch are preserved
+- all 23 backend source test files (148 tests) pass
+- the R2-compatible upload and private retrieval path passes in-memory adapter tests
 
 Not verified live:
 
@@ -78,3 +78,4 @@ Not verified live:
 - actual staging database identity
 - actual Cloudflare R2 connection and bucket permissions
 - real admin login against a confirmed staging database
+- static image delivery from R2 and migrated database references

@@ -18,26 +18,23 @@ describe('upload storage', () => {
     process.env = { ...originalEnv };
   });
 
-  it('defaults to local storage when no object-store config is provided', () => {
-    expect(getUploadStorageDriver()).toBe('local');
-  });
-
-  it('stores files locally and returns a private backend image URL', async () => {
-    const storage = createUploadStorage();
-    const result = await storage.storeFile({
+  it('disables uploads by default when R2 is not configured', async () => {
+    expect(getUploadStorageDriver()).toBe('disabled');
+    await expect(createUploadStorage().storeFile({
       userId: 'user-123',
       filename: 'sample.png',
       contentType: 'image/png',
       buffer: Buffer.from('png-bytes'),
-    });
-
-    expect(result.url).toMatch(/^\/images\/uploads\/user-123\//);
-    expect(result.fileKey).toContain('user-123');
-    expect(result.size).toBe(9);
+    })).rejects.toThrow(/Uploads are disabled/i);
   });
 
-  it('fails safely when the S3/R2 driver is selected without credentials', async () => {
-    process.env.UPLOAD_STORAGE_DRIVER = 's3';
+  it('does not allow local filesystem storage', () => {
+    process.env.UPLOAD_STORAGE_DRIVER = 'local';
+    expect(() => getUploadStorageDriver()).toThrow(/Unsupported image storage driver/i);
+  });
+
+  it('fails safely when R2 is selected without credentials', async () => {
+    process.env.UPLOAD_STORAGE_DRIVER = 'r2';
     process.env.OBJECT_STORAGE_BUCKET = 'big-cities-staging-images';
     process.env.OBJECT_STORAGE_REGION = 'auto';
     delete process.env.OBJECT_STORAGE_ENDPOINT;
@@ -45,5 +42,12 @@ describe('upload storage', () => {
     delete process.env.OBJECT_STORAGE_SECRET_ACCESS_KEY;
 
     expect(() => createUploadStorage()).toThrow(/OBJECT_STORAGE_/i);
+  });
+
+  it('recognizes the S3-compatible R2 driver aliases', () => {
+    process.env.UPLOAD_STORAGE_DRIVER = 'r2';
+    expect(getUploadStorageDriver()).toBe('s3');
+    process.env.UPLOAD_STORAGE_DRIVER = 's3';
+    expect(getUploadStorageDriver()).toBe('s3');
   });
 });

@@ -30,7 +30,8 @@ export function normalizeLocalImageUrl(value: unknown): string | null {
 }
 
 function isSafePersistentUploadUrl(value: unknown) {
-  if (process.env.UPLOAD_STORAGE_DRIVER !== 's3' || typeof value !== 'string') return false;
+  const driver = process.env.UPLOAD_STORAGE_DRIVER?.trim().toLowerCase();
+  if (!['r2', 's3', 'object-storage'].includes(driver ?? '') || typeof value !== 'string') return false;
   const match = /^\/images\/uploads\/([^/]+)\/([^/]+)$/.exec(value);
   if (!match) return false;
   try {
@@ -55,7 +56,7 @@ function rejectInvalidImageFields(value: unknown, model: string, fieldPath: stri
     const isImageField = /(image|thumbnail|avatar|flag|logo)/i.test(key) || (model === 'Upload' && key === 'url');
     if (isImageField) {
       if (entry != null && (typeof entry !== 'string' || (!normalizeLocalImageUrl(entry) && !isSafePersistentUploadUrl(entry)))) {
-        throw new Error(`Database image writes require an existing local /images/ file: ${currentPath.join('.')}`);
+        throw new Error(`Database image writes require a valid /images/ path or configured object-storage URL: ${currentPath.join('.')}`);
       }
     } else if (entry && typeof entry === 'object') {
       rejectInvalidImageFields(entry, model, currentPath);

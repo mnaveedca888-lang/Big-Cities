@@ -6,14 +6,14 @@
 2. Install dependencies for the frontend and backend if needed.
 3. Start the frontend with `npm run dev`.
 4. Start the backend from the `backend` folder with `npm run dev`.
-5. Set local env vars in `backend/.env` for a local Postgres and any Safe local storage configuration.
+5. Set local env vars in `backend/.env` for a local Postgres. Uploads remain disabled unless an authorized R2 test bucket is configured.
 
 ## Safe staging setup
 
 1. Confirm the staging database is isolated from production.
 2. Set `DATABASE_WRITES_ENABLED=false` until approval is granted.
 3. Set `UPLOADS_ENABLED=false` until the storage configuration is verified.
-4. Set `UPLOAD_STORAGE_DRIVER=local` or `s3` only after provider validation.
+4. Leave `UPLOAD_STORAGE_DRIVER=disabled` until the R2 endpoint, bucket, credentials, and staging DB isolation are verified; then use `r2` (or the compatible `s3` alias).
 5. Keep `ENABLE_STAGING_CANDIDATE_CORS=false` unless testing the isolated candidate origin.
 
 ## Build and test
@@ -44,7 +44,7 @@ If CORS fails, confirm the exact origin in [backend/src/cors.ts](../backend/src/
 
 1. confirm isolated staging DB
 2. confirm all S3/R2 env values in the provider secret manager
-3. set `UPLOAD_STORAGE_DRIVER=s3`
+3. set `UPLOAD_STORAGE_DRIVER=r2`
 4. set `UPLOADS_ENABLED=true`
 5. set `DATABASE_WRITES_ENABLED=true`
 6. log in with an authorized staging admin account
@@ -75,7 +75,7 @@ If CORS fails, confirm the exact origin in [backend/src/cors.ts](../backend/src/
 ### Storage
 - verify `UPLOAD_STORAGE_DRIVER` and `OBJECT_STORAGE_*` values
 - confirm bucket existence and permissions
-- check local fallback paths when the driver is `local`
+- uploads fail closed when R2 is not configured; there is no local filesystem fallback
 
 ### Database
 - verify `DATABASE_URL`
