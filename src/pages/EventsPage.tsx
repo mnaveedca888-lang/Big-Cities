@@ -55,7 +55,9 @@ const markerIcon = new L.DivIcon({
 });
 
 function EventsMapView({ events }: { events: EventItem[] }) {
-  const points = events.map((event) => ({ event, coordinates: getEventCoordinates(event) })).filter((item) => item.coordinates);
+  const points = events
+    .map((event) => ({ event, coordinates: getEventCoordinates(event) }))
+    .filter((item): item is { event: EventItem; coordinates: { lat: number; lng: number } } => item.coordinates !== null);
 
   if (points.length === 0) {
     return (
@@ -73,7 +75,7 @@ function EventsMapView({ events }: { events: EventItem[] }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {points.map(({ event, coordinates }) => (
-          <Marker key={event.id} position={[coordinates!.lat, coordinates!.lng]} icon={markerIcon}>
+          <Marker key={event.id} position={[coordinates.lat, coordinates.lng]} icon={markerIcon}>
             <Popup>
               <div className="space-y-2">
                 <p className="font-semibold text-slate-950 dark:text-slate-100">{event.title}</p>

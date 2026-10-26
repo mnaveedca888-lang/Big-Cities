@@ -76,7 +76,7 @@ describe('staging country update authorization', () => {
     previousEnv.clear();
   });
 
-  it('allows an authorized admin through the country validation and update path with candidate CORS', async () => {
+  it('blocks authorized admin country updates while writes are disabled', async () => {
     const response = await app.inject({
       method: 'PATCH',
       url: '/countries/PK',
@@ -87,19 +87,16 @@ describe('staging country update authorization', () => {
       payload: { name: 'Test Name' },
     });
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(503);
     expect(response.headers['access-control-allow-origin']).toBe(STAGING_CANDIDATE_FRONTEND_ORIGIN);
-    expect(response.json()).toMatchObject({ success: true, data: { code: 'PK', name: 'Test Name' } });
-    expect(countryUpdate).toHaveBeenCalledWith({
-      where: { code: 'PK' },
-      data: { name: 'Test Name', continentId: null, profile: null },
-    });
+    expect(response.json()).toMatchObject({ error: { code: 'STAGING_READ_ONLY' } });
+    expect(countryUpdate).not.toHaveBeenCalled();
   });
 
   it.each([
     ['unauthenticated', undefined, 401],
     ['non-admin', 'member', 403],
-  ])('rejects %s country updates with candidate CORS headers', async (_label, role, status) => {
+  ])('blocks %s country updates before controller authorization with candidate CORS headers', async (_label, role) => {
     const response = await app.inject({
       method: 'PATCH',
       url: '/countries/PK',
@@ -110,7 +107,8 @@ describe('staging country update authorization', () => {
       payload: { name: 'Must Not Persist' },
     });
 
-    expect(response.statusCode).toBe(status);
+    expect(response.statusCode).toBe(503);
+    expect(response.json()).toMatchObject({ error: { code: 'STAGING_READ_ONLY' } });
     expect(response.headers['access-control-allow-origin']).toBe(STAGING_CANDIDATE_FRONTEND_ORIGIN);
     expect(countryUpdate).not.toHaveBeenCalled();
   });

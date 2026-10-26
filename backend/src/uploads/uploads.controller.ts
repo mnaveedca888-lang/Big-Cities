@@ -1,46 +1,39 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
-import { createUploadStorage, getUploadStorageDriver, isAllowedUploadMimeType } from './upload-storage';
+import { createUploadStorage, hasMatchingImageExtension, isAllowedUploadMimeType, isValidImageContent, type UploadStorage } from './upload-storage';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
   return authHeader.startsWith('Bearer ') ? authHeader.slice('Bearer '.length) : null;
 }
 
-const presignSchema = z.object({
-  filename: z.string().min(1),
-  contentType: z.string().min(1),
-});
+const MAX_UPLOAD_SIZE = 5 * 1024 * 1024;
 
-const uploadStorage = createUploadStorage();
-
-export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient) {
+export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient, storage?: UploadStorage) {
   const auth = new AuthService(prisma as any);
 
-  const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true' && getUploadStorageDriver() !== 'disabled';
+  const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true';
+
+  const verifyAdmin = async (token: string | null) => {
+    if (!token) throw Object.assign(new Error('Missing token'), { statusCode: 401 });
+    let userId: string;
+    try {
+      userId = await auth.verifyAccessToken(token);
+    } catch {
+      throw Object.assign(new Error('Invalid token'), { statusCode: 403 });
+    }
+    const user = await prisma.user.findUnique({ where: { id: userId }, include: { role: true } });
+    if (!user || user.role?.name !== 'admin') throw Object.assign(new Error('Admin access required'), { statusCode: 403 });
+    return userId;
+  };
 
   app.post('/uploads/presign', async (request, reply) => {
     if (!uploadsEnabled()) {
       return reply.code(403).send({ success: false, error: { message: 'Uploads are disabled in staging.' } });
     }
-    try {
-      const token = getBearerToken(request);
-      if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
-      const userId = await auth.verifyAccessToken(token);
-      const body = presignSchema.parse(request.body || {});
-      const safeName = body.filename.replace(/[^a-zA-Z0-9._-]+/g, '-');
-      const fileKey = `${userId}/${Date.now()}-${safeName}`;
-      const url = `/images/uploads/${fileKey}`;
-      const upload = await prisma.upload.create({ data: { userId, fileKey, url, type: body.contentType, size: 0 } });
-      reply.send({ success: true, data: { url: upload.url, fields: { fileKey, contentType: body.contentType } } });
-    } catch (err: any) {
-      if (err && err.name === 'ZodError') return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Invalid input' } });
-      app.log.warn('Upload presign failed', err);
-      reply.code(400).send({ success: false, error: { message: err.message || 'Could not create upload presign' } });
-    }
+    return reply.code(501).send({ success: false, error: { message: 'Direct presigned uploads are not supported. Use /uploads/files.' } });
   });
 
   app.post('/uploads/files', async (request, reply) => {
@@ -48,48 +41,40 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient)
       return reply.code(403).send({ success: false, error: { message: 'Uploads are disabled in staging.' } });
     }
     try {
-      const token = getBearerToken(request);
-      if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
-      const userId = await auth.verifyAccessToken(token);
-      const parts = await (request as any).parts();
-      const files: Array<{ fieldname: string; filename: string | undefined; mimetype: string | undefined; data: Buffer }> = [];
-      for await (const part of parts as any[]) {
-        const currentPart = part as any;
-        if (!currentPart.file || !currentPart.filename) continue;
-        const chunks: Uint8Array[] = [];
-        for await (const chunk of currentPart.file) chunks.push(chunk);
-        const finalBuffer = Buffer.concat(chunks);
-        files.push({ fieldname: currentPart.fieldname, filename: currentPart.filename, mimetype: currentPart.mimetype, data: finalBuffer });
+      const userId = await verifyAdmin(getBearerToken(request));
+      const file = await (request as any).file();
+      if (!file) return reply.code(400).send({ success: false, error: { message: 'No file uploaded.' } });
+      const buffer = await file.toBuffer();
+      if (buffer.length === 0) return reply.code(400).send({ success: false, error: { message: 'Uploaded file is empty.' } });
+      if (buffer.length > MAX_UPLOAD_SIZE) return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
+      if (!isAllowedUploadMimeType(file.mimetype) || !hasMatchingImageExtension(file.mimetype, file.filename)) {
+        return reply.code(400).send({ success: false, error: { message: 'Image file extension does not match its content type.' } });
       }
-      if (files.length === 0) return reply.code(400).send({ success: false, error: { message: 'No file uploaded' } });
+      if (!isValidImageContent(file.mimetype, file.filename, buffer)) {
+        return reply.code(400).send({ success: false, error: { message: 'Image content does not match its content type.' } });
+      }
 
-      const savedFiles = [] as Array<{ url: string; fileKey: string; size: number }>
-      for (const file of files) {
-        if (file.data.length === 0) {
-          throw new Error('Uploaded file is empty.');
-        }
-        if (file.data.length > 20 * 1024 * 1024) {
-          throw new Error('Uploaded file exceeds the 20 MiB limit.');
-        }
-        if (!isAllowedUploadMimeType(file.mimetype)) {
-          throw new Error('Unsupported file type. Use JPG, PNG, WEBP, GIF, AVIF, SVG, or BMP.');
-        }
-        const safeName = (file.filename || 'upload').replace(/[^a-zA-Z0-9._-]+/g, '-');
-        const stored = await uploadStorage.storeFile({
-          userId,
-          filename: safeName,
-          contentType: file.mimetype || 'application/octet-stream',
-          buffer: file.data,
-        });
-        const fileKey = stored.fileKey;
-        const url = stored.url;
-        await prisma.upload.create({ data: { userId, fileKey, url, type: file.mimetype || null, size: stored.size } });
-        savedFiles.push({ url, fileKey, size: stored.size });
+      const activeStorage = storage ?? createUploadStorage();
+      if (activeStorage.driver === 'disabled' || (process.env.NODE_ENV === 'production' && activeStorage.driver === 'local')) {
+        return reply.code(503).send({ success: false, error: { message: 'Image storage is not configured or is temporarily unavailable.' } });
       }
-      reply.send({ success: true, data: savedFiles });
+      const stored = await activeStorage.storeFile({ userId, filename: file.filename, contentType: file.mimetype, buffer });
+      try {
+        await prisma.upload.create({
+          data: { userId, fileKey: stored.fileKey, url: stored.url, type: file.mimetype, size: stored.size },
+        });
+      } catch (error) {
+        await activeStorage.deleteFile(stored.fileKey).catch(() => undefined);
+        throw error;
+      }
+      return reply.send({ success: true, data: [{ url: stored.url, fileKey: stored.fileKey, size: stored.size }] });
     } catch (err: any) {
-      app.log.warn('Upload file failed', err);
-      reply.code(400).send({ success: false, error: { message: err.message || 'Could not upload file' } });
+      if (err?.code === 'FST_REQ_FILE_TOO_LARGE') {
+        return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
+      }
+      const statusCode = err?.statusCode === 401 || err?.statusCode === 403 ? err.statusCode : 400;
+      if (statusCode === 400) app.log.warn({ error: String(err?.message ?? 'unknown') }, 'Upload file failed');
+      return reply.code(statusCode).send({ success: false, error: { message: err?.message || 'Could not upload file.' } });
     }
   });
 }

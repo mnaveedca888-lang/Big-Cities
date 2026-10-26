@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormField } from '@/components/ui/form-field';
-import { loginSchema, type LoginFormValues } from '@/validation/auth';
+import { loginSchema, type LoginFormInput, type LoginFormValues } from '@/validation/auth';
 import { useAuth } from '@/contexts/AuthContext';
 import { login } from '@/services/auth';
 import { Alert } from '@/components/ui/alert';
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const form = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema), mode: 'onBlur' });
+  const form = useForm<LoginFormInput, any, LoginFormValues>({ resolver: zodResolver(loginSchema), mode: 'onBlur' });
   const onSubmit = async (values: LoginFormValues) => {
     try {
       const result = await login(values);

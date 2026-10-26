@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormField } from '@/components/ui/form-field';
-import { registerSchema, type RegisterFormValues } from '@/validation/auth';
+import { registerSchema, type RegisterFormInput, type RegisterFormValues } from '@/validation/auth';
 import { useAuth } from '@/contexts/AuthContext';
 import { register } from '@/services/auth';
 import { Alert } from '@/components/ui/alert';
@@ -15,7 +15,7 @@ import { isApiError } from '@/types/errors';
 export default function RegisterPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
-  const form = useForm<RegisterFormValues>({ resolver: zodResolver(registerSchema), mode: 'onBlur' });
+  const form = useForm<RegisterFormInput, any, RegisterFormValues>({ resolver: zodResolver(registerSchema), mode: 'onBlur' });
   const onSubmit = async (values: RegisterFormValues) => {
     try {
       const result = await register(values);

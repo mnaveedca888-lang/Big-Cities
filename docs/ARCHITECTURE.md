@@ -34,6 +34,7 @@ The backend boots in [backend/src/main.ts](../backend/src/main.ts). It:
 - registers CORS using [backend/src/cors.ts](../backend/src/cors.ts)
 - enforces the staging read-only guard from [backend/src/staging-write-guard.ts](../backend/src/staging-write-guard.ts)
 - mounts static `/images/` files from `backend/public/Images`
+- mounts private uploaded-image reads at `/images/uploads/*` through the selected storage driver
 - registers auth, catalog, dashboard, upload, admin, event, and search routes
 
 Route registration is intentionally separated by domain. Upload safety and storage selection are centralized in [backend/src/uploads/upload-storage.ts](../backend/src/uploads/upload-storage.ts) and [backend/src/uploads/uploads.controller.ts](../backend/src/uploads/uploads.controller.ts).
@@ -57,6 +58,7 @@ The preserved local storage is useful for development and static assets. The obj
 
 - Production remains untouched.
 - The staging write guard is intentionally strict and should stay enabled unless an isolated staging database is confirmed.
+- The upload route requires an authenticated admin, validates the filename, MIME type, and image signature, and rolls back stored bytes if metadata creation fails.
 - The candidate-only CORS gate remains off by default.
 - The R2 bucket must remain private; browser clients should not access object storage directly.
 
@@ -64,9 +66,10 @@ The preserved local storage is useful for development and static assets. The obj
 
 Verified locally:
 
-- frontend TypeScript passes
+- frontend TypeScript passes via `npm run typecheck`
+- backend TypeScript passes via `npm --prefix backend run typecheck`
 - frontend production build passes
-- targeted backend upload/staging tests pass
+- targeted backend upload/storage/staging tests pass
 - the repo status and dashboard branch are preserved
 
 Not verified live:

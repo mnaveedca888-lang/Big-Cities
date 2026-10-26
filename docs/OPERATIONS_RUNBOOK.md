@@ -21,6 +21,7 @@
 Run the following from the repo root:
 
 - `npm run typecheck`
+- `npm --prefix backend run typecheck`
 - `npm run build`
 - `npm test`
 
@@ -32,7 +33,9 @@ Targeted backend verification:
 
 - backend health endpoints: `/health/live` and `/health/ready`
 - login: `/auth/login`
-- upload routes: `/uploads/files`, `/uploads/presign`
+- upload route: `/uploads/files` (supported multipart route)
+- presign route: `/uploads/presign` (intentionally returns `501`)
+- private uploaded images: `/images/uploads/*`
 - static route: `/images/...`
 
 If CORS fails, confirm the exact origin in [backend/src/cors.ts](../backend/src/cors.ts) and verify `ENABLE_STAGING_CANDIDATE_CORS=true` only for the intended staging candidate.
@@ -44,9 +47,9 @@ If CORS fails, confirm the exact origin in [backend/src/cors.ts](../backend/src/
 3. set `UPLOAD_STORAGE_DRIVER=s3`
 4. set `UPLOADS_ENABLED=true`
 5. set `DATABASE_WRITES_ENABLED=true`
-6. log in with an authorized staging account
+6. log in with an authorized staging admin account
 7. upload a harmless test image
-8. verify the object exists in the bucket via the backend path and browser view
+8. verify the object exists in the bucket via the private backend path and browser view
 9. refresh and confirm persistence
 10. restore the staging safety flags after the test, if required
 

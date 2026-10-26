@@ -7,6 +7,10 @@ import CityDetailPage from '../CityDetailPage';
 const mockGetCity = vi.fn();
 const mockGetEvents = vi.fn();
 
+function exactAccessibleName(value: string) {
+  return new RegExp(`^${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`);
+}
+
 vi.mock('@/services/catalog', () => ({
   getCity: (...args: unknown[]) => mockGetCity(...args),
 }));
@@ -41,10 +45,10 @@ describe('CityDetailPage', () => {
       </QueryClientProvider>,
     );
 
-    expect(await screen.findByRole('heading', { name: city.displayName, exact: true })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: exactAccessibleName(city.displayName) })).toBeInTheDocument();
     expect(document.title).toBe(`${city.displayName} details | Big Cities Event Monitor`);
     if (city.apiName !== city.displayName) {
-      expect(screen.queryByRole('heading', { name: city.apiName, exact: true })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: exactAccessibleName(city.apiName) })).not.toBeInTheDocument();
     }
   });
 

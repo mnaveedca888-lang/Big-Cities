@@ -29,6 +29,7 @@ When the staging configuration is approved and isolated, the bucket should remai
 
 - browser should not fetch object storage directly
 - backend should read from the object store and return the object bytes with the correct MIME type
+- uploaded objects are read through `GET /images/uploads/*`; the route does not expose an R2 URL or credentials
 - object keys should be sanitized and collision-resistant
 - failed uploads should not leave misleading database records
 - missing objects should return clear no-file errors without exposing credentials or internal paths
@@ -40,7 +41,9 @@ The local implementation is verified to:
 - keep uploads blocked while staging safety remains off
 - reject empty and oversized files
 - reject unsupported MIME types
+- validate image signatures and filename extensions before storage
 - use sanitized object keys and prevent path traversal
+- remove stored bytes when database metadata creation fails
 
 The live provider-side object-store connection remains unverified until the Hostless and Cloudflare credentials are checked in the provider environment.
 
@@ -57,3 +60,5 @@ The safe workflow is:
 7. confirm the browser renders it with refresh persistence
 
 Never expose the bucket publicly or enable production traffic during this flow.
+
+The presign endpoint is intentionally unsupported until a complete direct-upload protocol is designed and tested. Use the authenticated multipart route instead.

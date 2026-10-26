@@ -46,7 +46,7 @@ This project uses environment variables to control runtime behavior and staging 
 - Used by: backend upload routes
 - Required: no
 - Accepted values: `true` or `false`
-- Effect: `true` allows uploads when the backend sees a valid user and configured storage driver; `false` blocks uploads
+- Effect: `true` allows uploads only when the backend sees an authenticated admin and a configured storage driver; `false` blocks uploads
 - Scope: staging primarily; keep false until safe verification
 
 ### `ENABLE_STAGING_CANDIDATE_CORS`
@@ -143,3 +143,9 @@ This project uses environment variables to control runtime behavior and staging 
 - Local development may use a local database and local image files without the S3/R2 variables.
 - The repo keeps the storage and write flags at safe defaults to avoid accidental writes.
 - Real secret values must be stored only in the host provider’s secure secret settings.
+
+## Runtime route notes
+
+- `POST /uploads/files` is the supported multipart upload route.
+- `POST /uploads/presign` intentionally returns `501`; it does not create placeholder upload metadata.
+- `GET /images/uploads/*` is served by the backend and keeps the bucket private.

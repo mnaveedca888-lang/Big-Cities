@@ -5,7 +5,6 @@ import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 import { randomUUID } from 'crypto';
-import { Readable } from 'stream';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import registerUploadRoutes from './uploads.controller';
 import { registerUploadImageRoutes, type UploadStorage } from './upload-storage';
@@ -231,15 +230,19 @@ describe('persistent image upload storage', () => {
     const imageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
     const storedObjects = new Map<string, { data: Buffer; contentType: string }>();
     const storage: UploadStorage = {
-      put: vi.fn(async (fileKey, data, contentType) => {
-        storedObjects.set(fileKey, { data, contentType });
+      driver: 's3',
+      storeFile: vi.fn(async ({ userId: storageUserId, filename, contentType, buffer }) => {
+        const fileKey = `${storageUserId}/${filename}`;
+        storedObjects.set(fileKey, { data: buffer, contentType: contentType ?? 'application/octet-stream' });
+        return { fileKey, url: `/images/uploads/${fileKey}`, size: buffer.length };
       }),
-      remove: vi.fn(async (fileKey) => {
-        storedObjects.delete(fileKey);
-      }),
-      get: vi.fn(async (fileKey) => {
+      readFile: vi.fn(async (fileKey) => {
         const image = storedObjects.get(fileKey);
-        return image ? { body: Readable.from([image.data]), contentType: image.contentType } : null;
+        if (!image) throw new Error('Image not found');
+        return { buffer: image.data, contentType: image.contentType };
+      }),
+      deleteFile: vi.fn(async (fileKey) => {
+        storedObjects.delete(fileKey);
       }),
     };
     const authorization = `Bearer ${jwt.sign({ sub: userId }, secret)}`;

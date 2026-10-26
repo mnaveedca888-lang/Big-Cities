@@ -6,7 +6,7 @@
 - Candidate frontend: `https://015a9521-rough-darkness-07cc.mnaveedca888.workers.dev`
 - Staging backend: `https://big-cities-backend-staging.hostless.app`
 - Git branches: `main`, `audit/dashboard-data-managers-20261024`
-- Dashboard branch commit verified locally: `27603d9e248922d5a74aa69d0f2b93a0dd4bb095`
+- Dashboard branch commit verified locally: see the current branch `HEAD`; it remains separate from `main`
 
 ## Service map
 
@@ -28,6 +28,7 @@ The following remain unverified because live provider access was not available i
 - deployed Hostless backend revision
 - actual staging database identity and isolation status
 - specific R2 bucket credentials and permissions
+- Hostless environment variable values, including the actual `DATABASE_URL` target
 - actual Cloudflare Worker deployment configuration for the candidate build
 
 These should be checked in the provider UI or secure environment settings before enabling staging writes or uploads.
@@ -40,6 +41,7 @@ These should be checked in the provider UI or secure environment settings before
 - do not push unrelated branches to production
 - do not enable public R2 access
 - do not change production traffic configuration
+- do not enable `DATABASE_WRITES_ENABLED` or `UPLOADS_ENABLED` until staging database isolation is confirmed
 
 ## Candidate-only testing boundary
 

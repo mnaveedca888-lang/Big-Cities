@@ -7,7 +7,7 @@ export function useSearch(events: EventItem[]) {
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return events;
-    return events.filter((event) => [event.title, event.description, event.category, event.city, event.country].some((value) => value.toLowerCase().includes(normalized)));
+    return events.filter((event) => [event.title, event.description, event.category, event.city, event.country].some((value) => typeof value === 'string' && value.toLowerCase().includes(normalized)));
   }, [events, query]);
 
   return { query, setQuery, results };

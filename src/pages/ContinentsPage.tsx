@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
@@ -9,7 +9,7 @@ import { getContinents } from '@/services/catalog';
 
 export default function ContinentsPage() {
   const [query, setQuery] = useState('');
-  const continents = useQuery({ queryKey: ['continents'], queryFn: getContinents, keepPreviousData: true });
+  const continents = useQuery({ queryKey: ['continents'], queryFn: getContinents, placeholderData: keepPreviousData });
   const items = continents.data ?? [];
   const filteredContinents = useMemo(() => {
     const search = query.trim().toLocaleLowerCase();
