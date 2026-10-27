@@ -163,11 +163,13 @@ describe('R2 migration workflow', () => {
       const firstRun = await runMigrationWorkflow(inventoryPath, dir, {
         dryRun: false,
         execute: true,
+        batchIndex: 0,
         store,
       });
       const resumedRun = await runMigrationWorkflow(inventoryPath, dir, {
         dryRun: false,
         execute: true,
+        batchIndex: 0,
         store,
       });
       expect(firstRun.migrated).toBe(1);
@@ -191,7 +193,70 @@ describe('R2 migration workflow', () => {
     await expect(runMigrationWorkflow(inventoryPath, dir, {
       dryRun: false,
       execute: true,
+      batchIndex: 0,
       store: { readObject: vi.fn(), putObjectIfAbsent: vi.fn() },
     })).rejects.toThrow(/ALLOW_R2_MIGRATION/);
+  });
+
+  it('executes only the explicitly selected batch', async () => {
+    const dir = makeTempDir();
+    const first = Buffer.from('first image');
+    const second = Buffer.from('second image');
+    fs.writeFileSync(path.join(dir, 'first.png'), first);
+    fs.writeFileSync(path.join(dir, 'second.png'), second);
+    const inventoryPath = writeInventory(dir, [
+      inventoryLine('first.png', first),
+      inventoryLine('second.png', second),
+    ]);
+    const stored = new Map<string, Buffer>();
+    const store: MigrationObjectStore = {
+      readObject: vi.fn(async (key) => stored.get(key) ?? null),
+      putObjectIfAbsent: vi.fn(async (key, buffer) => {
+        stored.set(key, Buffer.from(buffer));
+      }),
+    };
+    const previousGuard = process.env.ALLOW_R2_MIGRATION;
+    process.env.ALLOW_R2_MIGRATION = 'true';
+    try {
+      const report = await runMigrationWorkflow(inventoryPath, dir, {
+        dryRun: false,
+        execute: true,
+        batchSize: 1,
+        batchIndex: 1,
+        store,
+      });
+
+      expect(report.selectedBatchIndex).toBe(1);
+      expect(report.items[0].status).toBe('pending');
+      expect(report.items[1].status).toBe('migrated');
+      expect(store.putObjectIfAbsent).toHaveBeenCalledTimes(1);
+      expect(store.putObjectIfAbsent).toHaveBeenCalledWith(
+        report.items[1].objectKey,
+        second,
+        'image/png',
+      );
+    } finally {
+      if (previousGuard === undefined) delete process.env.ALLOW_R2_MIGRATION;
+      else process.env.ALLOW_R2_MIGRATION = previousGuard;
+    }
+  });
+
+  it('rejects write execution without an explicit batch index', async () => {
+    const dir = makeTempDir();
+    const image = Buffer.from('image');
+    fs.writeFileSync(path.join(dir, 'image.png'), image);
+    const inventoryPath = writeInventory(dir, [inventoryLine('image.png', image)]);
+    const previousGuard = process.env.ALLOW_R2_MIGRATION;
+    process.env.ALLOW_R2_MIGRATION = 'true';
+    try {
+      await expect(runMigrationWorkflow(inventoryPath, dir, {
+        dryRun: false,
+        execute: true,
+        store: { readObject: vi.fn(), putObjectIfAbsent: vi.fn() },
+      })).rejects.toThrow(/explicit batch index/);
+    } finally {
+      if (previousGuard === undefined) delete process.env.ALLOW_R2_MIGRATION;
+      else process.env.ALLOW_R2_MIGRATION = previousGuard;
+    }
   });
 });

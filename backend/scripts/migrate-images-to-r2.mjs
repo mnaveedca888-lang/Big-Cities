@@ -21,6 +21,16 @@ if (!Number.isSafeInteger(batchSize) || batchSize < 1) {
   console.error('Migration stopped: batch-size must be a positive integer.');
   process.exit(1);
 }
+const batchIndexArgument = readOption('batch-index', undefined);
+const batchIndex = batchIndexArgument === undefined ? undefined : Number(batchIndexArgument);
+if (execute && batchIndex === undefined) {
+  console.error('Migration stopped: --execute requires an explicit --batch-index.');
+  process.exit(1);
+}
+if (batchIndex !== undefined && (!Number.isSafeInteger(batchIndex) || batchIndex < 0)) {
+  console.error('Migration stopped: batch-index must be a non-negative integer.');
+  process.exit(1);
+}
 
 const inventoryPath = path.resolve(repoRoot, readOption('inventory', 'docs/R2_IMAGE_MIGRATION_INVENTORY.csv'));
 const { runMigrationWorkflow } = require(path.join(backendRoot, 'dist', 'images', 'r2-migration.js'));
@@ -28,6 +38,7 @@ const options = {
   dryRun: !execute,
   execute,
   batchSize,
+  batchIndex,
 };
 
 try {

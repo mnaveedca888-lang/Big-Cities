@@ -47,6 +47,7 @@ export type MigrationReport = {
   databaseReferencesVerified: boolean;
   unresolvedDatabaseReferences: number | null;
   batchCount: number;
+  selectedBatchIndex: number | null;
   batches: number[];
   items: MigrationItem[];
 };
@@ -183,6 +184,7 @@ function makeReport(items: MigrationItem[], batchSize: number, dryRun: boolean):
     databaseReferencesVerified: false,
     unresolvedDatabaseReferences: null,
     batchCount,
+    selectedBatchIndex: null,
     batches: Array.from({ length: batchCount }, (_, batchIndex) => batchIndex),
     items,
   };
@@ -284,6 +286,7 @@ export async function runMigrationWorkflow(
     dryRun?: boolean;
     batchSize?: number;
     execute?: boolean;
+    batchIndex?: number;
     store?: MigrationObjectStore;
     retries?: number;
   } = {},
@@ -297,9 +300,18 @@ export async function runMigrationWorkflow(
   const rows = parseInventoryCsv(fs.readFileSync(inventoryPath, 'utf8'));
   const report = await buildMigrationPlan(rows, repoRoot, batchSize);
   report.dryRun = dryRun;
+  const batchIndex = options.batchIndex;
+  if (execute && batchIndex === undefined) {
+    throw new Error('Migration writes require an explicit batch index.');
+  }
+  if (batchIndex !== undefined
+    && (!Number.isSafeInteger(batchIndex) || batchIndex < 0 || batchIndex >= report.batchCount)) {
+    throw new Error(`Migration batch index must be between 0 and ${report.batchCount - 1}.`);
+  }
+  report.selectedBatchIndex = batchIndex ?? null;
 
   for (const item of report.items) {
-    if (item.status !== 'pending') continue;
+    if (item.status !== 'pending' || (batchIndex !== undefined && item.batchIndex !== batchIndex)) continue;
 
     try {
       const existing = options.store
@@ -361,5 +373,6 @@ export async function runMigrationWorkflow(
   }
 
   const refreshed = makeReport(report.items, batchSize, dryRun);
+  refreshed.selectedBatchIndex = batchIndex ?? null;
   return refreshed;
 }
