@@ -185,6 +185,94 @@ body{
 }
 
 /* ---------------------------------------------------------
+   CITY INFORMATION
+--------------------------------------------------------- */
+
+.bci-drone-location{
+    position:absolute;
+
+    z-index:20;
+
+    top:35px;
+    right:40px;
+
+    min-width:225px;
+
+    padding:
+        16px 19px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.22);
+
+    border-radius:12px;
+
+    background:
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    color:#fff;
+
+    opacity:0;
+
+    transform:
+        translateY(-10px);
+
+    transition:
+        opacity .75s ease,
+        transform .75s cubic-bezier(.22,1,.36,1);
+
+    pointer-events:none;
+}
+
+.bci-drone-location.show{
+    opacity:1;
+
+    transform:
+        translateY(0);
+}
+
+.bci-location-small{
+    display:block;
+    min-height:10px;
+
+    margin-bottom:5px;
+
+    color:
+        rgba(255,255,255,.55);
+
+    font-size:9px;
+
+    font-weight:700;
+
+    letter-spacing:1.8px;
+
+    text-transform:uppercase;
+}
+
+.bci-location-city{
+    font-size:22px;
+
+    line-height:1.1;
+
+    font-weight:800;
+}
+
+.bci-location-country{
+    margin-top:4px;
+
+    color:
+        rgba(255,255,255,.72);
+
+    font-size:12px;
+}
+
+/* ---------------------------------------------------------
    CENTER CITY NAME
 --------------------------------------------------------- */
 
@@ -363,6 +451,24 @@ body{
         line-height:1.35;
     }
 
+    .bci-drone-location{
+        top:18px;
+        right:17px;
+
+        min-width:180px;
+
+        padding:
+            12px 14px;
+    }
+
+    .bci-location-city{
+        font-size:17px;
+    }
+
+    .bci-location-country{
+        font-size:11px;
+    }
+
     .bci-drone-center{
         bottom:12%;
     }
@@ -422,6 +528,28 @@ body{
                 <span>Big Cities.</span>
             </h1>
 
+        </div>
+
+    </div>
+
+
+    <!-- TOP LOCATION -->
+
+    <div
+        id="bci-drone-location"
+        class="bci-drone-location">
+
+        <span class="bci-location-small">
+        </span>
+
+        <div
+            id="bci-location-city"
+            class="bci-location-city">
+        </div>
+
+        <div
+            id="bci-location-country"
+            class="bci-location-country">
         </div>
 
     </div>
@@ -590,6 +718,21 @@ body{
            UI
         ================================================= */
 
+        const locationBox =
+            document.getElementById(
+                "bci-drone-location"
+            );
+
+        const locationCity =
+            document.getElementById(
+                "bci-location-city"
+            );
+
+        const locationCountry =
+            document.getElementById(
+                "bci-location-country"
+            );
+
         const centerBox =
             document.getElementById(
                 "bci-drone-center"
@@ -661,6 +804,11 @@ body{
         ================================================= */
 
         function hideLocation(){
+
+            locationBox.classList.remove(
+                "show"
+            );
+
             centerBox.classList.remove(
                 "show"
             );
@@ -672,12 +820,23 @@ body{
         ================================================= */
 
         function showLocation(place){
+
+            locationCity.textContent =
+                place.city;
+
+            locationCountry.textContent =
+                place.country;
+
             centerCity.textContent =
                 place.city;
 
             centerCountry.textContent =
                 place.country;
 
+
+            locationBox.classList.add(
+                "show"
+            );
 
             centerBox.classList.add(
                 "show"
@@ -916,6 +1075,7 @@ body{
 
 
                 await video.play();
+
 
                 startProgress();
 
