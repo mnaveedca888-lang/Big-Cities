@@ -86,6 +86,10 @@ If CORS fails, confirm the exact origin in [backend/src/cors.ts](../backend/src/
 - the read-only check lists at most one key internally and reads at most one byte; it never prints keys or credentials
 - the read-only check cannot prove write permission; its output explicitly keeps `writePermissionVerified` false
 - the local inventory dry run is `npm run build` followed by `npm run migrate:images:r2 -- --batch-size 100`; it does not contact R2 or change the inventory
+- read-only staging reconciliation is `npm run build` followed by `npm run reconcile:images:r2`; it requires the inventory file, a staging-only `DATABASE_URL`, and R2 list access
+- when the inventory is not present in the backend runtime, after the reconciliation code is available there run `npm run reconcile:images:r2 -- --inventory-url https://raw.githubusercontent.com/mnaveedca888-lang/Big-Cities/bcd4ae73629b0a771758e16995090c9b878f17be/docs/R2_IMAGE_MIGRATION_INVENTORY.csv`
+- reconciliation uses a PostgreSQL read-only transaction and R2 `ListObjectsV2` only; it does not read object bodies, upload/delete objects, or print URLs, identifiers, object keys, or credentials
+- the reconciliation report distinguishes database references, local inventory source files, external URLs, present/missing objects, and ambiguous references; it does not verify object read or write permission
 - if an approved migration is interrupted, rerun from the first batch; deterministic keys are checked by size and SHA-256 and conditional object creation prevents overwrites
 - migration execution remains blocked until explicit approval, backup verification, and database-reference reconciliation
 

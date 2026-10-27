@@ -19,7 +19,8 @@
     "seed:verified-daily-events": "node -r ts-node/register scripts/import_verified_daily_seed_events.ts",
     "verify:locations": "node scripts/verify_locations.js",
     "migrate:images:r2": "node scripts/migrate-images-to-r2.mjs",
-    "check:r2:read-only": "node scripts/check-r2-read-only.mjs"
+    "check:r2:read-only": "node scripts/check-r2-read-only.mjs",
+    "reconcile:images:r2": "node scripts/reconcile-images-r2.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1156.0",
