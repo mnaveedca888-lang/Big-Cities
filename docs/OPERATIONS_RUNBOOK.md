@@ -16,6 +16,12 @@
 4. Leave `UPLOAD_STORAGE_DRIVER=disabled` until the R2 endpoint, bucket, credentials, and staging DB isolation are verified; then use `r2` (or the compatible `s3` alias).
 5. Keep `ENABLE_STAGING_CANDIDATE_CORS=false` unless testing the isolated candidate origin.
 
+## Hostless staging backend build
+
+- The backend has its own `backend/package.json` and `backend/package-lock.json`; the repository-root manifest is for the frontend. Check the backend dependency from the backend directory with `npm ls @aws-sdk/client-s3 --depth=0`, not from the monorepo root.
+- Configure the staging Hostless app to build the migration branch with `working_directory: backend` and `build_context_directory: /`. The backend build steps are `npm ci && npx prisma generate`, followed by `npm run build`; the package start script is `node dist/main.js`.
+- The repository does not currently contain a `hostless.yaml`, so the deployed branch and Hostless working/build directories must be confirmed in the staging app settings before release. Do not copy these settings to production.
+
 ## Build and test
 
 Run the following from the repo root:
@@ -76,6 +82,12 @@ If CORS fails, confirm the exact origin in [backend/src/cors.ts](../backend/src/
 - verify `UPLOAD_STORAGE_DRIVER` and `OBJECT_STORAGE_*` values
 - confirm bucket existence and permissions
 - uploads fail closed when R2 is not configured; there is no local filesystem fallback
+- from a backend runtime shell with the staging environment loaded, run `npm run build` then `npm run check:r2:read-only`
+- the read-only check lists at most one key internally and reads at most one byte; it never prints keys or credentials
+- the read-only check cannot prove write permission; its output explicitly keeps `writePermissionVerified` false
+- the local inventory dry run is `npm run build` followed by `npm run migrate:images:r2 -- --batch-size 100`; it does not contact R2 or change the inventory
+- if an approved migration is interrupted, rerun from the first batch; deterministic keys are checked by size and SHA-256 and conditional object creation prevents overwrites
+- migration execution remains blocked until explicit approval, backup verification, and database-reference reconciliation
 
 ### Database
 - verify `DATABASE_URL`

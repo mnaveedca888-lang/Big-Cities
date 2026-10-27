@@ -1,6 +1,13 @@
 import path from 'path';
-import { randomUUID } from 'crypto';
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { createHash, randomUUID } from 'crypto';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import type { MigrationObjectStore } from '../images/r2-migration';
 
 export type UploadStorageDriver = 's3' | 'disabled';
 
@@ -128,6 +135,115 @@ const fileContentTypeByExtension: Record<string, string> = {
   '.avif': 'image/avif',
   '.bmp': 'image/bmp',
 };
+
+async function objectBodyToBuffer(body: unknown): Promise<Buffer> {
+  if (body instanceof Uint8Array) return Buffer.from(body);
+  if (body && typeof (body as NodeJS.ReadableStream)[Symbol.asyncIterator] === 'function') {
+    const chunks: Buffer[] = [];
+    for await (const chunk of body as AsyncIterable<Buffer | Uint8Array | string>) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    return Buffer.concat(chunks);
+  }
+  throw new Error('Object storage returned an empty image body.');
+}
+
+async function readOneByte(body: unknown): Promise<void> {
+  if (body instanceof Uint8Array) {
+    if (body.length === 0) throw new Error('Object storage returned an empty image body.');
+    return;
+  }
+  if (!body || typeof (body as NodeJS.ReadableStream)[Symbol.asyncIterator] !== 'function') {
+    throw new Error('Object storage returned an empty image body.');
+  }
+
+  const iterator = (body as AsyncIterable<Buffer | Uint8Array | string>)[Symbol.asyncIterator]();
+  try {
+    const first = await iterator.next();
+    if (first.done || Buffer.from(first.value).length === 0) {
+      throw new Error('Object storage returned an empty image body.');
+    }
+  } finally {
+    await iterator.return?.();
+  }
+}
+
+export function createR2MigrationObjectStore(): MigrationObjectStore {
+  const config = getS3Configuration();
+  const client = new S3Client({
+    region: config.region,
+    endpoint: config.endpoint,
+    credentials: {
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey,
+    },
+    forcePathStyle: true,
+  });
+
+  return {
+    async readObject(key) {
+      try {
+        const response = await client.send(new GetObjectCommand({ Bucket: config.bucket, Key: key }));
+        return objectBodyToBuffer(response.Body);
+      } catch (error) {
+        const name = error instanceof Error ? error.name : '';
+        if (name === 'NoSuchKey' || name === 'NotFound') return null;
+        throw error;
+      }
+    },
+    async putObjectIfAbsent(key, buffer, contentType) {
+      await client.send(new PutObjectCommand({
+        Bucket: config.bucket,
+        Key: key,
+        Body: buffer,
+        ContentType: contentType,
+        ChecksumSHA256: createHash('sha256').update(buffer).digest('base64'),
+        IfNoneMatch: '*',
+      }));
+    },
+  };
+}
+
+export async function probeR2ReadAccess(): Promise<{
+  bucketAccess: 'confirmed' | 'failed';
+  listAccess: 'confirmed' | 'failed';
+  objectReadAccess: 'confirmed' | 'failed' | 'not_tested_no_nonempty_object';
+}> {
+  const config = getS3Configuration();
+  const client = new S3Client({
+    region: config.region,
+    endpoint: config.endpoint,
+    credentials: {
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey,
+    },
+    forcePathStyle: true,
+  });
+  const result = {
+    bucketAccess: 'failed' as 'confirmed' | 'failed',
+    listAccess: 'failed' as 'confirmed' | 'failed',
+    objectReadAccess: 'not_tested_no_nonempty_object' as 'confirmed' | 'failed' | 'not_tested_no_nonempty_object',
+  };
+  try {
+    const listing = await client.send(new ListObjectsV2Command({ Bucket: config.bucket, MaxKeys: 100 }));
+    result.bucketAccess = 'confirmed';
+    result.listAccess = 'confirmed';
+    const firstReadableObject = listing.Contents?.find((entry) => Boolean(entry.Key) && (entry.Size ?? 0) > 0);
+    const key = firstReadableObject?.Key;
+    if (!key) return result;
+
+    try {
+      const object = await client.send(new GetObjectCommand({ Bucket: config.bucket, Key: key, Range: 'bytes=0-0' }));
+      await readOneByte(object.Body);
+      result.objectReadAccess = 'confirmed';
+    } catch {
+      result.objectReadAccess = 'failed';
+    }
+    return result;
+  } finally {
+    client.destroy();
+  }
+}
 
 export function createUploadStorage(): UploadStorage {
   const driver = getUploadStorageDriver();
