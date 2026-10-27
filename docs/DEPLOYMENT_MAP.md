@@ -49,8 +49,10 @@ These should be checked in the provider UI or secure environment settings before
 
 ## Candidate-only testing boundary
 
-The candidate origin is intentionally gated by `ENABLE_STAGING_CANDIDATE_CORS`. This is a staging and testing control, not a production setting.
+The candidate origin is intentionally gated by `ENABLE_STAGING_CANDIDATE_CORS`. Set it to `true` only in the Hostless staging backend while testing this exact candidate origin; leave it absent or `false` in production.
 
 The candidate workflow must stay isolated and should be disabled again once validation is complete.
+
+The current staging Hostless environment-variable list did not include `ENABLE_STAGING_CANDIDATE_CORS`. With that flag absent, the backend CORS callback rejects the candidate origin, so candidate GET responses omit `Access-Control-Allow-Origin` and candidate preflights fall through to Fastify's 404 route response. Adding the existing flag to staging and restarting/redeploying the staging service is the required runtime fix; no code change is needed for allowlist behavior.
 
 Use `npm run build:candidate` for the candidate Worker. It writes the static bundle to the directory referenced by the candidate Wrangler configuration and forces the staging API origin. Use `npm run build:production` only after `VITE_API_BASE_URL` has been approved as a dedicated production API origin; the command fails closed for staging, preview, candidate, or missing URLs.
