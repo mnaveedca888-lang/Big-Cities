@@ -7,7 +7,7 @@ import { normalizeLocalImageUrl } from '../images/local-image';
 
 const localImageSchema = z.string().trim().refine(
   (value) => normalizeLocalImageUrl(value) !== null,
-  'Image URL must reference an existing local /images/ file',
+  'Image URL must reference a safe /images/ object key',
 );
 
 const createSchema = z.object({

@@ -108,10 +108,7 @@ describe('event image writes', () => {
     else process.env.JWT_ACCESS_TOKEN_SECRET = originalSecret;
   });
 
-  it.each([
-    'https://images.unsplash.com/photo.jpg',
-    '/images/not-downloaded/event.webp',
-  ])('rejects non-local or missing image path %s before creating an event', async (image) => {
+  it('rejects external image URLs before creating an event', async () => {
     process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
     const { app, eventCreate } = await createEventApi(new Map());
     const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
@@ -124,7 +121,7 @@ describe('event image writes', () => {
         title: 'Local Image Validation Event',
         startAt: '2026-11-01T10:00:00.000Z',
         endAt: '2026-11-01T11:00:00.000Z',
-        image,
+        image: 'https://images.unsplash.com/photo.jpg',
       },
     });
 
@@ -132,11 +129,11 @@ describe('event image writes', () => {
     expect(eventCreate).not.toHaveBeenCalled();
   });
 
-  it('accepts an existing local image path', async () => {
+  it('accepts a safe image object key without a local file', async () => {
     process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
     const { app, eventCreate } = await createEventApi(new Map());
     const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
-    const image = '/images/Logo_design_for_Big_Cities_202608061337_11zon.webp';
+    const image = '/images/not-on-disk/event.webp';
 
     const response = await app.inject({
       method: 'POST',

@@ -1,7 +1,3 @@
-const fs = require('node:fs');
-const path = require('node:path');
-
-const imageRoot = path.resolve(__dirname, '..', 'public', 'Images');
 const imageExtension = /\.(jpg|jpeg|png|webp|gif|svg|avif|bmp|ico)$/i;
 
 function normalizeLocalImageUrl(value) {
@@ -9,16 +5,8 @@ function normalizeLocalImageUrl(value) {
 
   try {
     const segments = value.slice('/images/'.length).split(/[?#]/, 1)[0].split('/').map(decodeURIComponent);
-    if (segments.some((segment) => !segment || segment === '.' || segment === '..' || segment.includes('/') || segment.includes('\\'))) return null;
-    let absolutePath = imageRoot;
-    for (const segment of segments) {
-      const entries = fs.readdirSync(absolutePath);
-      if (!entries.includes(segment)) return null;
-      absolutePath = path.join(absolutePath, segment);
-    }
-    const relativePath = path.relative(imageRoot, absolutePath);
-    if (relativePath.startsWith('..') || path.isAbsolute(relativePath) || !imageExtension.test(absolutePath)) return null;
-    if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) return null;
+    if (segments.some((segment) => !segment || segment === '.' || segment === '..' || segment.includes('/') || segment.includes('\\') || segment.includes('\0'))) return null;
+    if (!imageExtension.test(segments[segments.length - 1] ?? '')) return null;
     return `/images/${segments.map(encodeURIComponent).join('/')}`;
   } catch {
     return null;
@@ -39,7 +27,7 @@ function sanitizeImageFields(value, model, fieldPath = []) {
       if (entry == null) continue;
       const localUrl = normalizeLocalImageUrl(entry);
       if (!localUrl) {
-        console.warn(`[local-image-write-guard] Removed non-local or missing image at ${model}.${currentPath.join('.')}`);
+        console.warn(`[local-image-write-guard] Removed unsafe image reference at ${model}.${currentPath.join('.')}`);
         value[key] = null;
       } else {
         value[key] = localUrl;

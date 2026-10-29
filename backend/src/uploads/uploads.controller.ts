@@ -4,8 +4,6 @@ import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
 import { createUploadStorage, getUploadStorageDriver, isAllowedUploadMimeType } from './upload-storage';
-import fs from 'fs';
-import path from 'path';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
@@ -53,16 +51,21 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient)
       return reply.code(400).send({ success: false, error: { code: 'INVALID_PATH', message: 'Invalid image path.' } });
     }
     const key = decodeURIComponent(rawKey).replace(/^\/+/, '');
-    if (key.startsWith('uploads/') || getUploadStorageDriver() !== 's3') return reply.callNotFound();
+    if (key.startsWith('uploads/')) return reply.callNotFound();
+    if (getUploadStorageDriver() !== 's3') {
+      return reply.code(503).send({ success: false, error: { code: 'OBJECT_STORAGE_UNAVAILABLE', message: 'Image storage is not configured.' } });
+    }
 
     try {
       const { buffer, contentType } = await createUploadStorage().readFile(key);
       return reply.header('Content-Type', contentType).header('Cache-Control', 'private, max-age=300, no-transform').send(buffer);
-    } catch {
-      const localPath = path.resolve(__dirname, '..', '..', 'public', 'Images', ...key.split('/'));
-      const imagesRoot = path.resolve(__dirname, '..', '..', 'public', 'Images');
-      if (!localPath.startsWith(imagesRoot + path.sep) || !fs.existsSync(localPath)) return reply.callNotFound();
-      return reply.send(fs.readFileSync(localPath));
+    } catch (err: any) {
+      const message = String(err?.message || '');
+      if (/Missing required object-store configuration|S3\/R2 storage is not enabled/i.test(message)) {
+        return reply.code(503).send({ success: false, error: { code: 'OBJECT_STORAGE_UNAVAILABLE', message: 'Image storage is not configured.' } });
+      }
+      app.log.warn(`Catalog image fetch failed for ${key}: ${message}`);
+      return reply.code(404).send({ success: false, error: { code: 'IMAGE_NOT_FOUND', message: 'Image not found.' } });
     }
   });
 

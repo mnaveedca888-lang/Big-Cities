@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
@@ -8,6 +6,7 @@ import { buildPagination } from '../utils/pagination';
 import { buildCanonicalCountryProfile } from './countryProfile';
 import { buildCanonicalCityProfile } from './cityProfile';
 import { localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
+import { getCatalogImageFileNames, hasCatalogImage } from '../images/catalog-image-index';
 
 const PAKISTAN_IMAGE_FOLDER = 'Pakistan cities images';
 const PAKISTAN_COUNTRY_IMAGE_FILE = 'Pakistan.jpg';
@@ -167,9 +166,7 @@ function getAsiaImageUrl(filename: string, request: FastifyRequest) {
 function getCountryImageFilenameByCode(directoryName: string, countryCode: string) {
   const normalizedCode = countryCode.trim().toLowerCase();
   if (!/^[a-z]{2}$/.test(normalizedCode)) return null;
-  const folderPath = path.join(__dirname, '..', '..', 'public', 'Images', directoryName);
-  if (!fs.existsSync(folderPath)) return null;
-  const files = fs.readdirSync(folderPath)
+  const files = getCatalogImageFileNames(directoryName)
     .filter((fileName) => /\.(jpg|jpeg|png|webp|svg)$/i.test(fileName))
     .filter((fileName) => fileName.toLowerCase().startsWith(`${normalizedCode}-`))
     .sort((left, right) => right.length - left.length);
@@ -199,8 +196,7 @@ function getAsiaCityImageUrl(slug: string | undefined | null, request: FastifyRe
   if (!slug) return null;
   const normalizedSlug = slug.trim().toLowerCase();
   const filename = `${normalizedSlug}.webp`;
-  const imagePath = path.join(__dirname, '..', '..', 'public', 'Images', ASIA_IMAGE_FOLDER, filename);
-  if (!fs.existsSync(imagePath)) return null;
+  if (!hasCatalogImage(ASIA_IMAGE_FOLDER, filename)) return null;
   return getAsiaImageUrl(filename, request);
 }
 
@@ -210,8 +206,7 @@ function getSouthAmericaCityImageUrl(countryCode: string | undefined | null, slu
   const normalizedSlug = slug.trim().toLowerCase();
   if (!normalizedSlug.startsWith(`${normalizedCode}-`)) return null;
   const filename = `${normalizedSlug}.webp`;
-  const imagePath = path.join(__dirname, '..', '..', 'public', 'Images', SOUTH_AMERICA_IMAGE_FOLDER, filename);
-  if (!fs.existsSync(imagePath)) return null;
+  if (!hasCatalogImage(SOUTH_AMERICA_IMAGE_FOLDER, filename)) return null;
   return localImageUrl(SOUTH_AMERICA_IMAGE_FOLDER, filename);
 }
 
@@ -230,21 +225,18 @@ function normalizeLookupToken(value: string) {
 function getNorthAmericaCityImageUrl(countryCode: string | undefined | null, slug: string | undefined | null, cityName: string | undefined | null, request: FastifyRequest) {
   if (!countryCode || (!slug && !cityName)) return null;
 
-  const folderPath = path.join(__dirname, '..', '..', 'public', 'Images', NORTH_AMERICA_IMAGE_FOLDER);
-  if (!fs.existsSync(folderPath)) return null;
-
   const normalizedCountryCode = countryCode.trim().toLowerCase();
   const normalizedSlug = slug?.trim().toLowerCase();
   const aliasFilename = normalizedSlug ? NORTH_AMERICA_CITY_IMAGE_ALIASES[normalizedSlug] : null;
-  if (aliasFilename?.startsWith(`${normalizedCountryCode}-`) && fs.existsSync(path.join(folderPath, aliasFilename))) {
+  if (aliasFilename?.startsWith(`${normalizedCountryCode}-`) && hasCatalogImage(NORTH_AMERICA_IMAGE_FOLDER, aliasFilename)) {
     return localImageUrl(NORTH_AMERICA_IMAGE_FOLDER, aliasFilename);
   }
 
   const cityNameSlug = cityName?.trim().toLowerCase().replace(/'/g, '').replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   const citySlug = normalizedSlug ? normalizeLookupToken(normalizedSlug).replace(new RegExp(`^${normalizeLookupToken(countryCode)}-`), '') : '';
   const expectedStems = new Set([cityNameSlug, citySlug].filter(Boolean).map((value) => `${normalizedCountryCode}-${value}`));
-  const imageFiles = fs.readdirSync(folderPath).filter((fileName) => /\.(jpg|jpeg|png|webp|svg)$/i.test(fileName));
-  const match = imageFiles.find((fileName) => expectedStems.has(path.basename(fileName, path.extname(fileName)).toLowerCase()));
+  const imageFiles = getCatalogImageFileNames(NORTH_AMERICA_IMAGE_FOLDER).filter((fileName) => /\.(jpg|jpeg|png|webp|svg)$/i.test(fileName));
+  const match = imageFiles.find((fileName) => expectedStems.has(fileName.replace(/\.[^.]+$/, '').toLowerCase()));
 
   if (!match) return null;
 
@@ -256,17 +248,15 @@ function getAustraliaCityImageUrl(countryCode: string | undefined | null, slug: 
   const normalizedCountryCode = countryCode.trim().toUpperCase();
   const normalizedSlug = slug.trim().toLowerCase();
   if (!AUSTRALIA_COUNTRY_CODES.has(normalizedCountryCode) || !normalizedSlug.startsWith(`${normalizedCountryCode.toLowerCase()}-`)) return null;
-  const imageDirectory = path.join(__dirname, '..', '..', 'public', 'Images', AUSTRALIA_IMAGE_FOLDER);
-  if (!fs.existsSync(imageDirectory)) return null;
   const aliasFilename = AUSTRALIA_CITY_IMAGE_ALIASES[normalizedSlug];
-  const filename = aliasFilename ?? fs.readdirSync(imageDirectory)
+  const filename = aliasFilename ?? getCatalogImageFileNames(AUSTRALIA_IMAGE_FOLDER)
     .filter((fileName) => fileName.toLowerCase().startsWith(`${normalizedCountryCode.toLowerCase()}-`) && fileName.toLowerCase().endsWith('.webp'))
     .filter((fileName) => {
       const imageSlug = fileName.slice(0, -'.webp'.length).toLowerCase();
       return normalizedSlug === imageSlug || normalizedSlug.startsWith(`${imageSlug}-`);
     })
     .sort((left, right) => right.length - left.length)[0];
-  if (!filename || !fs.existsSync(path.join(imageDirectory, filename))) return null;
+  if (!filename || !hasCatalogImage(AUSTRALIA_IMAGE_FOLDER, filename)) return null;
   return localImageUrl(AUSTRALIA_IMAGE_FOLDER, filename);
 }
 
@@ -304,7 +294,7 @@ function hasInvalidProfileImage(value: unknown, path: Array<string | number>, co
     const entryPath = [...path, key];
     if (/(image|thumbnail|avatar|flag|logo)/i.test(key)) {
       if (entry !== null && (typeof entry !== 'string' || normalizeLocalImageUrl(entry) === null)) {
-        context.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'Image references must use an existing local /images/ file.' });
+        context.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'Image references must use a safe /images/ object key.' });
         invalid = true;
       }
     } else if (entry && typeof entry === 'object') {

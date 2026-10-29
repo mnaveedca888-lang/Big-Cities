@@ -1,17 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import { localImageUrl } from '../images/local-image';
+import { getCatalogImageFileNames } from '../images/catalog-image-index';
 
-const PAKISTAN_IMAGES_DIR = path.join(__dirname, '..', '..', 'public', 'Images', 'Events in Pakistan');
-const AZERBAIJAN_IMAGES_DIR = path.join(__dirname, '..', '..', 'public', 'Images', 'Azerbaijan events images');
-
-const pakistaniEventFileNames = fs.existsSync(PAKISTAN_IMAGES_DIR)
-  ? fs.readdirSync(PAKISTAN_IMAGES_DIR).filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName))
-  : [];
-
-const azerbaijanEventFileNames = fs.existsSync(AZERBAIJAN_IMAGES_DIR)
-  ? fs.readdirSync(AZERBAIJAN_IMAGES_DIR).filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName))
-  : [];
+const pakistaniEventFileNames = getCatalogImageFileNames('Events in Pakistan').filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName));
+const azerbaijanEventFileNames = getCatalogImageFileNames('Azerbaijan events images').filter((fileName) => /\.(jpe?g|png|webp)$/i.test(fileName));
 
 const normalizeKey = (value: string) =>
   String(value)
