@@ -1,10 +1,11 @@
-import fs from 'fs';
-import path from 'path';
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
+import { createUploadStorage, getUploadStorageDriver, isAllowedUploadMimeType } from './upload-storage';
+import fs from 'fs';
+import path from 'path';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
@@ -19,7 +20,51 @@ const presignSchema = z.object({
 export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient) {
   const auth = new AuthService(prisma as any);
 
-  const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true';
+  const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true' && getUploadStorageDriver() !== 'disabled';
+
+  app.get('/images/uploads/*', async (request, reply) => {
+    const rawKey = ((request.params as any)['*'] ?? '').trim();
+    if (!rawKey || rawKey.includes('..') || rawKey.includes('\\')) {
+      return reply.code(400).send({ success: false, error: { code: 'INVALID_PATH', message: 'Invalid image path.' } });
+    }
+
+    try {
+      const storage = createUploadStorage();
+      const key = decodeURIComponent(rawKey).replace(/^\/+/, '');
+      const { buffer, contentType } = await storage.readFile(key);
+      return reply
+        .header('Content-Type', contentType)
+        .header('Cache-Control', 'private, max-age=300, no-transform')
+        .header('Vary', 'Authorization')
+        .send(buffer);
+    } catch (err: any) {
+      const message = String(err?.message || '');
+      if (/Missing required object-store configuration|S3\/R2 storage is not enabled/i.test(message)) {
+        return reply.code(503).send({ success: false, error: { code: 'OBJECT_STORAGE_UNAVAILABLE', message: 'Image storage is not configured.' } });
+      }
+      app.log.warn(`Private image fetch failed for ${rawKey}: ${message}`);
+      return reply.code(404).send({ success: false, error: { code: 'IMAGE_NOT_FOUND', message: 'Image not found.' } });
+    }
+  });
+
+  app.get('/images/*', async (request, reply) => {
+    const rawKey = ((request.params as any)['*'] ?? '').trim();
+    if (!rawKey || rawKey.includes('..') || rawKey.includes('\\')) {
+      return reply.code(400).send({ success: false, error: { code: 'INVALID_PATH', message: 'Invalid image path.' } });
+    }
+    const key = decodeURIComponent(rawKey).replace(/^\/+/, '');
+    if (key.startsWith('uploads/') || getUploadStorageDriver() !== 's3') return reply.callNotFound();
+
+    try {
+      const { buffer, contentType } = await createUploadStorage().readFile(key);
+      return reply.header('Content-Type', contentType).header('Cache-Control', 'private, max-age=300, no-transform').send(buffer);
+    } catch {
+      const localPath = path.resolve(__dirname, '..', '..', 'public', 'Images', ...key.split('/'));
+      const imagesRoot = path.resolve(__dirname, '..', '..', 'public', 'Images');
+      if (!localPath.startsWith(imagesRoot + path.sep) || !fs.existsSync(localPath)) return reply.callNotFound();
+      return reply.send(fs.readFileSync(localPath));
+    }
+  });
 
   app.post('/uploads/presign', async (request, reply) => {
     if (!uploadsEnabled()) {
@@ -57,20 +102,33 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient)
         if (!currentPart.file || !currentPart.filename) continue;
         const chunks: Uint8Array[] = [];
         for await (const chunk of currentPart.file) chunks.push(chunk);
-        files.push({ fieldname: currentPart.fieldname, filename: currentPart.filename, mimetype: currentPart.mimetype, data: Buffer.concat(chunks) });
+        const finalBuffer = Buffer.concat(chunks);
+        files.push({ fieldname: currentPart.fieldname, filename: currentPart.filename, mimetype: currentPart.mimetype, data: finalBuffer });
       }
       if (files.length === 0) return reply.code(400).send({ success: false, error: { message: 'No file uploaded' } });
-      const uploadDir = path.join(__dirname, '..', '..', 'public', 'Images', 'uploads', userId);
-      await fs.promises.mkdir(uploadDir, { recursive: true });
-      const savedFiles = [] as Array<{ url: string; fileKey: string }>
+
+      const savedFiles = [] as Array<{ url: string; fileKey: string; size: number }>
       for (const file of files) {
-        const safeName = file.filename!.replace(/[^a-zA-Z0-9._-]+/g, '-');
-        const fileKey = `${userId}/${Date.now()}-${safeName}`;
-        const targetPath = path.join(uploadDir, `${Date.now()}-${safeName}`);
-        await fs.promises.writeFile(targetPath, file.data);
-        const url = `/images/uploads/${userId}/${encodeURIComponent(path.basename(targetPath))}`;
-        await prisma.upload.create({ data: { userId, fileKey, url, type: file.mimetype || null, size: file.data.length } });
-        savedFiles.push({ url, fileKey });
+        if (file.data.length === 0) {
+          throw new Error('Uploaded file is empty.');
+        }
+        if (file.data.length > 20 * 1024 * 1024) {
+          throw new Error('Uploaded file exceeds the 20 MiB limit.');
+        }
+        if (!isAllowedUploadMimeType(file.mimetype)) {
+          throw new Error('Unsupported file type. Use JPG, PNG, WEBP, GIF, AVIF, SVG, or BMP.');
+        }
+        const safeName = (file.filename || 'upload').replace(/[^a-zA-Z0-9._-]+/g, '-');
+        const stored = await createUploadStorage().storeFile({
+          userId,
+          filename: safeName,
+          contentType: file.mimetype || 'application/octet-stream',
+          buffer: file.data,
+        });
+        const fileKey = stored.fileKey;
+        const url = stored.url;
+        await prisma.upload.create({ data: { userId, fileKey, url, type: file.mimetype || null, size: stored.size } });
+        savedFiles.push({ url, fileKey, size: stored.size });
       }
       reply.send({ success: true, data: savedFiles });
     } catch (err: any) {

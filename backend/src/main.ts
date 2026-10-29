@@ -1,10 +1,8 @@
 import 'dotenv/config';
-import path from 'path';
 import Fastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import fastifyMultipart from '@fastify/multipart';
-import fastifyStatic from '@fastify/static';
 import { PrismaClient } from '@prisma/client';
 import registerAuthRoutes from './auth/auth.controller';
 import registerUserRoutes from './users/user.controller';
@@ -71,27 +69,17 @@ async function start() {
 
   await app.register(fastifyMultipart, { limits: { fileSize: 20 * 1024 * 1024 } });
 
-  await app.register(fastifyStatic, {
-    root: path.join(__dirname, '..', 'public', 'Images'),
-    prefix: '/images/',
-    decorateReply: false,
-  });
+  registerUploadRoutes(app, prisma as any);
 
-  // register auth + domain routes
-  try {
-    registerAuthRoutes(app, prisma as any);
-    registerUserRoutes(app, prisma as any);
-    registerDashboardRoutes(app, prisma as any);
-    registerCatalogRoutes(app, prisma as any);
-    registerNotificationsRoutes(app, prisma as any);
-    registerUploadRoutes(app, prisma as any);
-    registerAdminRoutes(app, prisma as any);
-    registerEventRoutes(app, prisma as any);
-    registerSearchRoutes(app, prisma as any);
-    registerEventDiscoveryRoutes(app, prisma as any);
-  } catch (err) {
-    app.log.error('Failed to register routes', err as any);
-  }
+  registerAuthRoutes(app, prisma as any);
+  registerUserRoutes(app, prisma as any);
+  registerDashboardRoutes(app, prisma as any);
+  registerCatalogRoutes(app, prisma as any);
+  registerNotificationsRoutes(app, prisma as any);
+  registerAdminRoutes(app, prisma as any);
+  registerEventRoutes(app, prisma as any);
+  registerSearchRoutes(app, prisma as any);
+  registerEventDiscoveryRoutes(app, prisma as any);
 
   const syncEnabled = databaseWritesEnabled() && process.env.EVENT_SYNC_ENABLED === 'true';
   const stopEventSyncScheduler = syncEnabled ? startEventSyncScheduler(prisma, app.log) : null;
