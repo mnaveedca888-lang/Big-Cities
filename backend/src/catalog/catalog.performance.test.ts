@@ -9,13 +9,24 @@ describe('catalog directory read endpoints', () => {
   ]);
   const cityCount = vi.fn().mockResolvedValue(42);
   const countryFindMany = vi.fn().mockResolvedValue([
-    { code: 'JP', name: 'Japan', continent: { name: 'Asia' }, profile: { mustNotReturn: true } },
+    {
+      code: 'JP',
+      name: 'Japan',
+      continent: { name: 'Asia' },
+      _count: { events: 17 },
+      profile: { mustNotReturn: true },
+    },
   ]);
   const countryCount = vi.fn().mockResolvedValue(550);
+  const countryFindUnique = vi.fn().mockResolvedValue({ continent: { name: 'Asia' } });
+  const eventGroupBy = vi.fn().mockResolvedValue([
+    { countryCode: 'JP', _count: { _all: 17 } },
+  ]);
   const prisma = new Proxy({}, {
     get: (_client, model) => {
       if (model === 'city') return { findMany: cityFindMany, count: cityCount };
-      if (model === 'country') return { findMany: countryFindMany, count: countryCount };
+      if (model === 'country') return { findMany: countryFindMany, findUnique: countryFindUnique, count: countryCount };
+      if (model === 'event') return { groupBy: eventGroupBy };
       return {};
     },
   }) as any;
@@ -27,6 +38,8 @@ describe('catalog directory read endpoints', () => {
     cityCount.mockClear();
     countryFindMany.mockClear();
     countryCount.mockClear();
+    countryFindUnique.mockClear();
+    eventGroupBy.mockClear();
   });
 
   it('returns only the directory fields and avoids loading city profiles', async () => {
@@ -99,7 +112,7 @@ describe('catalog directory read endpoints', () => {
     expect(response.json()).toEqual({
       success: true,
       data: {
-        items: [{ code: 'JP', name: 'Japan', continent: 'Asia' }],
+        items: [{ code: 'JP', name: 'Japan', continent: 'Asia', events: 17 }],
         pagination: { page: 2, perPage: 500, total: 550, totalPages: 2 },
       },
     });
@@ -125,7 +138,68 @@ describe('catalog directory read endpoints', () => {
         continent: { name: 'Asia' },
       },
     });
+    expect(eventGroupBy).toHaveBeenCalledWith({
+      by: ['countryCode'],
+      _count: { _all: true },
+      where: { countryCode: { in: ['JP'] } },
+    });
     expect(response.json().data.items[0]).not.toHaveProperty('profile');
+  });
+
+  it('omits event-count aggregation when a directory consumer does not need event labels', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries/directory?continent=Asia&perPage=100&includeEventCounts=false',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().data.items).toEqual([
+      { code: 'JP', name: 'Japan', continent: 'Asia' },
+    ]);
+    expect(eventGroupBy).not.toHaveBeenCalled();
+  });
+
+  it('returns a lightweight paginated country city directory with the existing city eligibility rules', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries/PK/cities/directory?page=2&perPage=10',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().data).toEqual({
+      items: [{ slug: 'pk-lahore', name: 'Lahore' }],
+      pagination: { page: 2, perPage: 10, total: 42, totalPages: 5 },
+    });
+    expect(countryFindUnique).toHaveBeenCalledWith({
+      where: { code: 'PK' },
+      select: { continent: { select: { name: true } } },
+    });
+    expect(cityFindMany).toHaveBeenCalledWith({
+      where: { countryCode: 'PK' },
+      orderBy: { name: 'asc' },
+      skip: 10,
+      take: 10,
+      select: { slug: true, name: true },
+    });
+    expect(cityCount).toHaveBeenCalledWith({ where: { countryCode: 'PK' } });
+  });
+
+  it('limits the South America city directory to verified cities, matching the existing endpoint', async () => {
+    countryFindUnique.mockResolvedValueOnce({ continent: { name: 'South America' } });
+
+    const response = await app.inject({
+      method: 'GET',
+      url: '/countries/AR/cities/directory',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(cityFindMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { countryCode: 'AR', isVerifiedCity: true },
+      select: { slug: true, name: true },
+    }));
+    expect(cityCount).toHaveBeenCalledWith({
+      where: { countryCode: 'AR', isVerifiedCity: true },
+    });
   });
 
   afterEach(async () => {

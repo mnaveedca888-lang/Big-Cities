@@ -3,13 +3,13 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Bell, Moon, Search, Sun, Globe2, Menu, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { siteConfig } from '@/config/site';
 import { useEffect, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
-import { getCountries } from '@/services/catalog';
-import type { CountryItem } from '@/types';
+import { getCountryDirectory } from '@/services/catalog';
 import { SafeImage } from '@/components/ui/safe-image';
 
 const logoImage = '/images/Logo_design_for_Big_Cities_202608061337_11zon.webp';
@@ -21,48 +21,32 @@ export function Header() {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<CountryItem[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const debouncedQuery = useDebounce(query, 350);
+  const trimmedQuery = debouncedQuery.trim();
+  const countrySearchQuery = useQuery({
+    queryKey: ['header-country-search', trimmedQuery],
+    queryFn: () => getCountryDirectory({ q: trimmedQuery, page: 1, perPage: 50 }),
+    enabled: Boolean(trimmedQuery),
+    placeholderData: keepPreviousData,
+    staleTime: 5 * 60_000,
+  });
+  const results = countrySearchQuery.data?.items ?? [];
+  const isLoading = Boolean(query.trim()) && (
+    query.trim() !== trimmedQuery || countrySearchQuery.isFetching
+  );
+  const hasError = Boolean(countrySearchQuery.error);
+  const errorMessage = countrySearchQuery.error && typeof countrySearchQuery.error === 'object' && 'message' in countrySearchQuery.error
+    ? String(countrySearchQuery.error.message)
+    : 'Country search is temporarily unavailable.';
 
   useEffect(() => {
-    const trimmed = debouncedQuery.trim();
-    if (!trimmed) {
-      setResults([]);
-      setError(null);
+    if (!trimmedQuery) {
       setOpen(false);
-      setIsLoading(false);
       return;
     }
 
-    let ignore = false;
-    setIsLoading(true);
-    setError(null);
     setOpen(true);
-
-    void getCountries({ q: trimmed, page: 1, perPage: 50, sort: 'name' })
-      .then((data) => {
-        if (!ignore) {
-          setResults(data.items ?? []);
-          setIsLoading(false);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!ignore) {
-          const message = err && typeof err === 'object' && 'message' in err && typeof (err as { message?: unknown }).message === 'string'
-            ? (err as { message: string }).message
-            : 'Country search is temporarily unavailable.';
-          setError(message);
-          setResults([]);
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, [debouncedQuery]);
+  }, [trimmedQuery]);
 
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -86,6 +70,7 @@ export function Header() {
           <SafeImage
             src={logoImage}
             alt="Big Cities Event Monitor logo"
+            loading="eager"
             className="h-10 w-10 rounded-2xl object-contain bg-white shadow-sm dark:bg-slate-900"
             fallbackClassName="h-10 w-10 rounded-2xl bg-white dark:bg-slate-900"
           />
@@ -119,18 +104,24 @@ export function Header() {
               />
               {isLoading ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-slate-500" /> : null}
             </label>
-            {open && (query.trim().length >= 1 || error) ? (
+            {open && (query.trim().length >= 1 || hasError) ? (
               <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-3xl border border-slate-200 bg-white/95 p-3 shadow-xl dark:border-slate-800 dark:bg-slate-900/95">
                 {isLoading ? <p className="px-2 py-3 text-sm text-slate-500">Searching…</p> : null}
-                {!isLoading && error ? <p className="px-2 py-3 text-sm text-slate-500">{error}</p> : null}
-                {!isLoading && !error ? (
+                {!isLoading && hasError ? <p className="px-2 py-3 text-sm text-slate-500">{errorMessage}</p> : null}
+                {!isLoading && !hasError ? (
                   <div className="space-y-3">
                     {results.length ? (
                       <div>
                         <p className="px-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Countries</p>
                         <div className="mt-2 space-y-1">
                           {results.map((country) => (
-                            <button key={country.code} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => handleSelect(`/country/${country.code}`)} className="flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm transition hover:bg-slate-100 dark:hover:bg-slate-800">
+                            <button
+                              key={country.code}
+                              type="button"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => handleSelect(`/country/${country.code}`)}
+                              className="flex w-full items-center justify-between rounded-2xl px-2 py-2 text-left text-sm transition hover:bg-slate-100 dark:hover:bg-slate-800"
+                            >
                               <span className="flex-1">
                                 <span className="block font-medium text-slate-900 dark:text-white">{country.name}</span>
                                 <span className="block text-xs text-slate-500">{country.continent ?? 'Country'} · {country.code}</span>

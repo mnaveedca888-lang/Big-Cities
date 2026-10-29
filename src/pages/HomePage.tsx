@@ -2,15 +2,15 @@ import { Helmet } from 'react-helmet-async';
 import { Globe2, CalendarDays, Users, ShieldCheck, Building2, Tags, Plane } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Section } from '@/components/ui/section';
 import { DataState } from '@/components/ui/data-state';
 import { Card } from '@/components/ui/card';
 import { EventCard } from '@/components/features/EventCard';
 import { apiClient } from '@/api/client';
-import { getCategories, getCities, getContinents, getCountries, getCountryCities } from '@/services/catalog';
-import { getEvents, getFeaturedEvents } from '@/services/events';
+import { getCategories, getContinents, getCountryCityDirectory, getCountryDirectory, getVerifiedCityCount } from '@/services/catalog';
+import { getEventsPage, getFeaturedEvents } from '@/services/events';
 import type { EventItem } from '@/types';
 import type { CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
 import heroBannerHtml from '../../images/Banner for Home page.html?url';
@@ -20,49 +20,70 @@ export default function HomePage() {
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
 
-  const continentsQuery = useQuery({ queryKey: ['home-continents'], queryFn: getContinents, refetchOnMount: 'always' });
-  const countriesQuery = useQuery({ queryKey: ['home-countries', continent], queryFn: () => getCountries({ continent, perPage: 500, sort: 'name' }), enabled: Boolean(continent), refetchOnMount: 'always' });
-  const citiesQuery = useQuery({ queryKey: ['home-cities', country], queryFn: () => getCountryCities(country), enabled: Boolean(country), refetchOnMount: 'always' });
-  const featuredEventsQuery = useQuery({ queryKey: ['home-featured-events'], queryFn: getFeaturedEvents, refetchOnMount: 'always' });
-  const locationEventsQuery = useQuery({
-    queryKey: ['home-location-events', continent, country, city],
-    queryFn: () => getEvents({ country, city, exactCity: true, perPage: 100 }),
+  const continentsQuery = useQuery({
+    queryKey: ['continents'],
+    queryFn: getContinents,
+    staleTime: 5 * 60_000,
+  });
+  const countriesQuery = useQuery({
+    queryKey: ['home-countries', continent],
+    queryFn: () => getCountryDirectory({ continent, perPage: 500, includeEventCounts: false }),
+    enabled: Boolean(continent),
+    staleTime: 5 * 60_000,
+  });
+  const citiesQuery = useInfiniteQuery({
+    queryKey: ['home-city-directory', country],
+    queryFn: ({ pageParam }) => getCountryCityDirectory(country, { page: pageParam, perPage: 100 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.pagination.page < lastPage.pagination.totalPages
+      ? lastPage.pagination.page + 1
+      : undefined,
+    enabled: Boolean(country),
+    staleTime: 5 * 60_000,
+  });
+  const featuredEventsQuery = useQuery({ queryKey: ['home-featured-events'], queryFn: getFeaturedEvents });
+  const locationEventsQuery = useInfiniteQuery({
+    queryKey: ['home-location-events', country, city],
+    queryFn: ({ pageParam }) => getEventsPage({ country, city, exactCity: true, perPage: 12, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.pagination.page < lastPage.pagination.totalPages
+      ? lastPage.pagination.page + 1
+      : undefined,
     enabled: Boolean(city),
-    refetchOnMount: 'always',
+    staleTime: 5 * 60_000,
   });
 
   const statsQuery = useQuery({
     queryKey: ['home-platform-counts'],
     queryFn: async () => {
       const [countriesResponse, citiesResponse, eventsResponse, categoriesResponse] = await Promise.all([
-        apiClient.get('/countries', { params: { page: 1, perPage: 1 } }),
-        getCities(),
+        getCountryDirectory({ page: 1, perPage: 1 }),
+        getVerifiedCityCount(),
         apiClient.get('/events', { params: { page: 1, perPage: 1 } }),
-        getCategories({ page: 1, perPage: 1000 }),
+        getCategories({ page: 1, perPage: 1 }),
       ]);
 
-      const countries = Number(countriesResponse.data?.data?.pagination?.total ?? 0);
-      const cities = Array.isArray(citiesResponse) ? citiesResponse.length : 0;
+      const countries = Number(countriesResponse?.pagination?.total ?? 0);
+      const cities = Number(citiesResponse ?? 0);
       const events = Number(eventsResponse.data?.data?.pagination?.total ?? 0);
       const categories = Number(categoriesResponse?.pagination?.total ?? 0);
 
       return { countries, cities, events, categories };
     },
-    refetchOnMount: 'always',
   });
 
   const countries = countriesQuery.data?.items ?? [];
-  const cities = citiesQuery.data ?? [];
+  const cities = citiesQuery.data?.pages.flatMap((page) => page.items) ?? [];
   const featuredEvents = useMemo(() => Array.isArray(featuredEventsQuery.data) ? featuredEventsQuery.data : [], [featuredEventsQuery.data]);
   const locationEvents = useMemo(() => {
-    return Array.isArray(locationEventsQuery.data) ? locationEventsQuery.data : [];
+    return locationEventsQuery.data?.pages.flatMap((page) => page.items) ?? [];
   }, [locationEventsQuery.data]);
 
   const selectedCountryName = countries.find((item: CountryItem) => item.code === country)?.name ?? country;
   const selectedCityName = cities.find((item: CityItem) => item.slug === city)?.name ?? city;
   const selectedCountryCount = countriesQuery.data?.pagination?.total ?? countries.length;
-  const selectedCityCount = cities.length;
-  const selectedEventCount = locationEvents.length;
+  const selectedCityCount = citiesQuery.data?.pages[0]?.pagination.total ?? cities.length;
+  const selectedEventCount = locationEventsQuery.data?.pages[0]?.pagination.total ?? locationEvents.length;
 
   const locationHeroCount = city
     ? (locationEventsQuery.isLoading ? `${selectedCityName} · Loading Events...` : `${selectedCityName} · ${selectedEventCount} ${selectedEventCount === 1 ? 'Event' : 'Events'}`)
@@ -159,6 +180,10 @@ export default function HomePage() {
                     <h3 className="text-lg font-semibold text-slate-950 dark:text-white">Countries in {continent}</h3>
                     {countriesQuery.isLoading ? (
                       <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">Loading countries...</p>
+                    ) : countriesQuery.isError && countries.length === 0 ? (
+                      <p role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">
+                        Countries are unavailable right now. <button type="button" className="underline" onClick={() => { void countriesQuery.refetch(); }}>Retry</button>
+                      </p>
                     ) : countries.length ? (
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         {countries.map((item: CountryItem) => (
@@ -177,6 +202,10 @@ export default function HomePage() {
                     <h3 className="text-lg font-semibold text-slate-950 dark:text-white">Cities in {countries.find((item) => item.code === country)?.name || country}</h3>
                     {citiesQuery.isLoading ? (
                       <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">Loading cities...</p>
+                    ) : citiesQuery.isError && cities.length === 0 ? (
+                      <p role="alert" className="mt-3 text-sm text-rose-600 dark:text-rose-400">
+                        Cities are unavailable right now. <button type="button" className="underline" onClick={() => { void citiesQuery.refetch(); }}>Retry</button>
+                      </p>
                     ) : cities.length ? (
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         {cities.map((item: CityItem) => (
@@ -184,6 +213,16 @@ export default function HomePage() {
                             {item.name}
                           </Link>
                         ))}
+                        {citiesQuery.hasNextPage ? (
+                          <button
+                            type="button"
+                            className="rounded-2xl border border-slate-300 bg-white p-4 text-sm font-semibold text-slate-700 shadow-sm disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
+                            disabled={citiesQuery.isFetchingNextPage}
+                            onClick={() => { void citiesQuery.fetchNextPage(); }}
+                          >
+                            {citiesQuery.isFetchingNextPage ? 'Loading more cities...' : citiesQuery.isError ? 'Retry loading cities' : 'Load more cities'}
+                          </button>
+                        ) : null}
                       </div>
                     ) : (
                       <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">No cities available.</p>
@@ -191,12 +230,27 @@ export default function HomePage() {
                   </div>
                 ) : null}
                 {city ? (
-                  <DataState isLoading={locationEventsQuery.isLoading} error={locationEventsQuery.error ? 'Events are unavailable right now.' : undefined} onRetry={() => { void locationEventsQuery.refetch(); }} isEmpty={!locationEventsQuery.isLoading && locationEvents.length === 0} emptyTitle="No events found for this location" emptyDescription="Try another country, city, or event category.">
+                  <DataState isLoading={locationEventsQuery.isLoading} error={locationEventsQuery.error && locationEvents.length === 0 ? 'Events are unavailable right now.' : undefined} onRetry={() => { void locationEventsQuery.refetch(); }} isEmpty={!locationEventsQuery.isLoading && !locationEventsQuery.isError && locationEvents.length === 0} emptyTitle="No events found for this location" emptyDescription="Try another country, city, or event category.">
                     <div className="mt-6">
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{locationEvents.length} events found{city ? ` in ${cities.find((item) => item.slug === city)?.name || city}` : country ? ` in ${countries.find((item) => item.code === country)?.name || country}` : ` across ${continent}`}</p>
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{selectedEventCount} events found{city ? ` in ${cities.find((item) => item.slug === city)?.name || city}` : country ? ` in ${countries.find((item) => item.code === country)?.name || country}` : ` across ${continent}`}</p>
                       <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                         {locationEvents.map((event: EventItem) => <EventCard key={event.id} event={event} />)}
                       </div>
+                      {locationEventsQuery.isError && locationEvents.length ? (
+                        <p role="alert" className="mt-4 text-sm text-rose-600 dark:text-rose-400">
+                          More events could not be loaded. <button type="button" className="underline" onClick={() => { void locationEventsQuery.fetchNextPage(); }}>Retry</button>
+                        </p>
+                      ) : null}
+                      {locationEventsQuery.hasNextPage ? (
+                        <button
+                          type="button"
+                          className="mt-5 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
+                          disabled={locationEventsQuery.isFetchingNextPage}
+                          onClick={() => { void locationEventsQuery.fetchNextPage(); }}
+                        >
+                          {locationEventsQuery.isFetchingNextPage ? 'Loading more events...' : 'Load more events'}
+                        </button>
+                      ) : null}
                     </div>
                   </DataState>
                 ) : (!country && !city && !continent ? (

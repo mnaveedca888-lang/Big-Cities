@@ -127,11 +127,16 @@ const cityDirectoryQuerySchema = z.object({
   aliasSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
   excludeSlugs: z.string().max(5000).regex(/^[a-z0-9-]+(?:,[a-z0-9-]+)*$/i).optional(),
 });
+const countryCityDirectoryQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  perPage: z.coerce.number().int().min(1).max(100).default(100),
+});
 const countryDirectoryQuerySchema = z.object({
   q: z.string().trim().max(100).optional(),
   continent: z.string().trim().max(100).optional(),
   page: z.coerce.number().int().min(1).default(1),
   perPage: z.coerce.number().int().min(1).default(12),
+  includeEventCounts: z.enum(['true', 'false']).optional(),
 });
 
 function getPakistanImageUrl(filename: string, request: FastifyRequest) {
@@ -747,6 +752,20 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       }),
       prisma.country.count({ where }),
     ]);
+    const eventCounts = query.includeEventCounts === 'false'
+      ? []
+      : await prisma.event.groupBy({
+          by: ['countryCode'],
+          _count: { _all: true },
+          where: { countryCode: { in: countries.map((country: { code: string }) => country.code) } },
+        });
+    const eventCountMap = new Map(
+      eventCounts.map((row: { countryCode: string | null; _count: { _all: number } }) => [
+        row.countryCode,
+        Number(row._count._all),
+      ]),
+    );
+    const includeEventCounts = query.includeEventCounts !== 'false';
     reply.send({
       success: true,
       data: {
@@ -754,6 +773,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
           code: country.code,
           name: country.name,
           continent: country.continent?.name ?? null,
+          ...(includeEventCounts ? { events: eventCountMap.get(country.code) ?? 0 } : {}),
         })),
         pagination: buildPagination(page, perPage, total, 500),
       },
@@ -841,6 +861,43 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         : { countryCode: normalizedCode };
       const cities = await prisma.city.findMany({ where: cityWhere, orderBy: { name: 'asc' } });
       reply.send({ success: true, data: cities.map((city) => normalizeCity(city, request)) });
+    } catch (error: any) {
+      reply.code(400).send({ success: false, error: { message: error.message } });
+    }
+  });
+
+  app.get('/countries/:code/cities/directory', async (request, reply) => {
+    try {
+      const { code } = countryParamSchema.parse(request.params || {});
+      const query = countryCityDirectoryQuerySchema.parse(request.query || {});
+      const normalizedCode = code.trim().toUpperCase();
+      const country = await prisma.country.findUnique({
+        where: { code: normalizedCode },
+        select: { continent: { select: { name: true } } },
+      });
+      if (!country) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+
+      const where = {
+        countryCode: normalizedCode,
+        ...(country.continent?.name === 'South America' ? { isVerifiedCity: true } : {}),
+      };
+      const [cities, total] = await Promise.all([
+        prisma.city.findMany({
+          where,
+          orderBy: { name: 'asc' },
+          skip: (query.page - 1) * query.perPage,
+          take: query.perPage,
+          select: { slug: true, name: true },
+        }),
+        prisma.city.count({ where }),
+      ]);
+      reply.send({
+        success: true,
+        data: {
+          items: cities,
+          pagination: buildPagination(query.page, query.perPage, total, 100),
+        },
+      });
     } catch (error: any) {
       reply.code(400).send({ success: false, error: { message: error.message } });
     }

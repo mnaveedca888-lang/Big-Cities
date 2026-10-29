@@ -1,6 +1,6 @@
 ﻿import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
 import { Filter, List, Map, Search } from 'lucide-react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { DataState } from '@/components/ui/data-state';
 import { EventCard } from '@/components/features/EventCard';
 import { getEvents } from '@/services/events';
-import { filterHiddenCategories, isCategoryHiddenByUi } from '@/services/catalog';
+import { filterHiddenCategories, getCountryDirectory, isCategoryHiddenByUi } from '@/services/catalog';
 import type { EventItem } from '@/types';
 
 type ViewMode = 'list' | 'map';
@@ -91,28 +91,34 @@ function EventsMapView({ events }: { events: EventItem[] }) {
 export default function EventsPage() {
   const [view, setView] = useState<ViewMode>('list');
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [category, setCategory] = useState('');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedSearch(search.trim()), 250);
+    return () => window.clearTimeout(timeout);
+  }, [search]);
+
   const eventsQuery = useQuery({
-    queryKey: ['events-list', search, category, country, city],
-    queryFn: () => getEvents({ q: search || undefined, category: category || undefined, country: country || undefined, city: city || undefined, perPage: 100 }),
-    refetchOnMount: 'always',
+    queryKey: ['events-list', debouncedSearch, category, country, city],
+    queryFn: () => getEvents({ q: debouncedSearch || undefined, category: category || undefined, country: country || undefined, city: city || undefined, perPage: 100 }),
+    placeholderData: keepPreviousData,
   });
 
   const events = useMemo(() => (Array.isArray(eventsQuery.data) ? eventsQuery.data.filter((event) => !isCategoryHiddenByUi(event.category)) : []), [eventsQuery.data]);
 
   const countriesQuery = useQuery({
     queryKey: ['countries-list'],
-    queryFn: () => getCountries({ perPage: 300 }),
+    queryFn: () => getCountryDirectory({ perPage: 300 }),
     refetchOnMount: false,
   });
   const catalogCountries = filterHiddenCategories(countriesQuery.data?.items ?? []);
 
   const filteredEvents = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
+    const normalizedSearch = debouncedSearch.toLowerCase();
     const selectedCountryName = (catalogCountries.find((c) => c.code === country)?.name || '').toLowerCase();
     return events.filter((event) => {
       const haystack = [event.title, event.description, event.country, event.countryCode, event.city, event.citySlug, event.category].filter(Boolean).join(' ').toLowerCase();
@@ -124,7 +130,7 @@ export default function EventsPage() {
       const matchesCity = !city || (event.city || event.citySlug || '').toLowerCase() === city.toLowerCase();
       return matchesSearch && matchesCategory && matchesCountry && matchesCity;
     });
-  }, [events, search, category, country, city, catalogCountries]);
+  }, [events, debouncedSearch, category, country, city, catalogCountries]);
 
   const filterSummary = useMemo(() => buildFilterSummary(events), [events]);
 
@@ -153,7 +159,7 @@ export default function EventsPage() {
               <Search className="h-4 w-4 text-slate-500" />
               <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search events, cities, organizers" className="h-8 min-w-0 border-0 bg-transparent px-0 shadow-none" />
             </label>
-            <Button onClick={() => { void eventsQuery.refetch(); }}>Search</Button>
+            <Button onClick={() => setDebouncedSearch(search.trim())}>Search</Button>
           </div>
 
           {showFilters ? (
@@ -213,4 +219,3 @@ export default function EventsPage() {
     </>
   );
 }
-
