@@ -1,7 +1,12 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { afterEach, describe, expect, it } from 'vitest';
-import { DEVELOPMENT_FRONTEND_ORIGIN, getCorsOptions, PRODUCTION_FRONTEND_ORIGIN } from './cors';
+import {
+  DEVELOPMENT_FRONTEND_ORIGIN,
+  getCorsOptions,
+  PRODUCTION_FRONTEND_ORIGIN,
+  STAGING_CANDIDATE_FRONTEND_ORIGIN,
+} from './cors';
 
 const apps: ReturnType<typeof Fastify>[] = [];
 
@@ -41,6 +46,32 @@ describe('CORS configuration', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.headers['access-control-allow-origin']).toBeUndefined();
+  });
+
+  it('allows the test Worker only when the staging CORS flag is enabled', async () => {
+    const previousValue = process.env.ENABLE_STAGING_CANDIDATE_CORS;
+    process.env.ENABLE_STAGING_CANDIDATE_CORS = 'true';
+    try {
+      const app = await createCorsApp('production');
+      const response = await app.inject({
+        method: 'OPTIONS',
+        url: '/health/live',
+        headers: {
+          origin: STAGING_CANDIDATE_FRONTEND_ORIGIN,
+          'access-control-request-method': 'POST',
+          'access-control-request-headers': 'content-type',
+        },
+      });
+
+      expect(response.statusCode).toBe(204);
+      expect(response.headers['access-control-allow-origin']).toBe(STAGING_CANDIDATE_FRONTEND_ORIGIN);
+    } finally {
+      if (previousValue === undefined) {
+        delete process.env.ENABLE_STAGING_CANDIDATE_CORS;
+      } else {
+        process.env.ENABLE_STAGING_CANDIDATE_CORS = previousValue;
+      }
+    }
   });
 
   it('allows localhost only outside production', async () => {
