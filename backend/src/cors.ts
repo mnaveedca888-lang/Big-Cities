@@ -26,5 +26,6 @@ export function getCorsOptions(nodeEnv = process.env.NODE_ENV): FastifyCorsOptio
     },
     methods: ['GET', 'HEAD', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Authorization', 'Content-Type'],
+    credentials: true,
   };
 }
