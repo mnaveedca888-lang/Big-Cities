@@ -781,7 +781,14 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
           }
           await drainImageCleanupQueue(prisma, app.log, uploaded.map((file) => file.url));
         }
-        app.log.error({ countryCode: normalizedCode }, 'Country image update failed');
+        app.log.error(
+          {
+            countryCode: normalizedCode,
+            errorName: error?.name,
+            errorMessage: error instanceof Error ? error.message : String(error),
+          },
+          'Country image update failed',
+        );
         return reply.code(500).send({ success: false, error: { code: 'COUNTRY_IMAGE_UPDATE_FAILED', message: 'Country images could not be saved.' } });
       }
     } catch (error: any) {
