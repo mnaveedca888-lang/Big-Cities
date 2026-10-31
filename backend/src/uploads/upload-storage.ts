@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import sharp from 'sharp';
 
 export type UploadStorageDriver = 'local' | 's3' | 'disabled';
 
@@ -48,6 +49,20 @@ function buildSafeFileKey(userId: string, filename: string, prefix = 'uploads') 
   return `${safeUserId}/${safePrefix}${Date.now()}-${randomUUID()}-${safeName}`;
 }
 
+function validateObjectKey(fileKey: string) {
+  const key = fileKey.replace(/^\/+/, '');
+  const segments = key.split('/');
+  if (!key || segments.some((segment) => (
+    !segment
+    || segment === '.'
+    || segment === '..'
+    || !/^[A-Za-z0-9._-]+$/.test(segment)
+  ))) {
+    throw new Error('Invalid object storage key.');
+  }
+  return key;
+}
+
 function ensureWithinBase(basePath: string, targetPath: string) {
   const relative = path.relative(basePath, targetPath);
   if (relative.startsWith('..') || path.isAbsolute(relative)) {
@@ -78,30 +93,58 @@ const extensionsByContentType: Record<string, string[]> = {
   'image/bmp': ['.bmp'],
 };
 
-export function isValidImageContent(contentType: string | undefined, filename: string, buffer: Buffer) {
+export async function isValidImageContent(contentType: string | undefined, filename: string, buffer: Buffer) {
   const normalizedType = contentType?.trim().toLowerCase();
   if (!normalizedType || !isAllowedUploadMimeType(normalizedType)) return false;
   if (!hasMatchingImageExtension(normalizedType, filename)) return false;
 
+  let hasMatchingSignature = false;
   switch (normalizedType) {
     case 'image/jpeg':
-      return buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+      hasMatchingSignature = buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+      break;
     case 'image/png':
-      return buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+      hasMatchingSignature = buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+      break;
     case 'image/webp':
-      return buffer.length >= 12 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP';
+      hasMatchingSignature = buffer.length >= 12 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP';
+      break;
     case 'image/gif':
-      return buffer.toString('ascii', 0, 6) === 'GIF87a' || buffer.toString('ascii', 0, 6) === 'GIF89a';
+      hasMatchingSignature = buffer.toString('ascii', 0, 6) === 'GIF87a' || buffer.toString('ascii', 0, 6) === 'GIF89a';
+      break;
     case 'image/avif':
-      return buffer.length >= 12 && buffer.toString('ascii', 4, 8) === 'ftyp' && /^(avif|avis)$/.test(buffer.toString('ascii', 8, 12));
+      hasMatchingSignature = buffer.length >= 12 && buffer.toString('ascii', 4, 8) === 'ftyp' && /^(avif|avis)$/.test(buffer.toString('ascii', 8, 12));
+      break;
     case 'image/bmp':
-      return buffer.length >= 2 && buffer.toString('ascii', 0, 2) === 'BM';
+      hasMatchingSignature = buffer.length >= 2 && buffer.toString('ascii', 0, 2) === 'BM';
+      break;
     case 'image/svg+xml': {
       const svg = buffer.toString('utf8').trim();
-      return /^<svg(?:\s|>)/i.test(svg) && !/<script\b|<foreignObject\b|\son\w+\s*=|(?:href|src)\s*=\s*["']\s*(?:https?:|javascript:|data:)/i.test(svg);
+      hasMatchingSignature = /^<svg(?:\s|>)/i.test(svg) && !/<script\b|<foreignObject\b|\son\w+\s*=|(?:href|src)\s*=\s*["']\s*(?:https?:|javascript:|data:)/i.test(svg);
+      break;
     }
     default:
       return false;
+  }
+
+  if (!hasMatchingSignature) return false;
+  const expectedFormats: Record<string, string[]> = {
+    'image/jpeg': ['jpeg'],
+    'image/png': ['png'],
+    'image/webp': ['webp'],
+    'image/gif': ['gif'],
+    'image/avif': ['heif'],
+    'image/bmp': ['bmp'],
+    'image/svg+xml': ['svg'],
+  };
+  try {
+    const image = sharp(buffer, { failOn: 'error', limitInputPixels: 20_000_000 });
+    const metadata = await image.metadata();
+    if (!metadata.format || !expectedFormats[normalizedType].includes(metadata.format)) return false;
+    await image.resize({ width: 1, height: 1, fit: 'inside' }).toBuffer();
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -200,7 +243,7 @@ export function createUploadStorage(): UploadStorage {
         };
       },
       async readFile(fileKey: string) {
-        const key = fileKey.replace(/^\/+/, '');
+        const key = validateObjectKey(fileKey);
         const response = await client.send(new GetObjectCommand({
           Bucket: config.bucket,
           Key: key,
@@ -220,7 +263,8 @@ export function createUploadStorage(): UploadStorage {
         };
       },
       async deleteFile(fileKey: string) {
-        await client.send(new DeleteObjectCommand({ Bucket: config.bucket, Key: fileKey.replace(/^\/+/, '') }));
+        const key = validateObjectKey(fileKey);
+        await client.send(new DeleteObjectCommand({ Bucket: config.bucket, Key: key }));
       },
     };
   }

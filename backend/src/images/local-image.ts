@@ -29,14 +29,16 @@ export function normalizeLocalImageUrl(value: unknown): string | null {
   }
 }
 
-function isSafePersistentUploadUrl(value: unknown) {
+export function isSafePersistentUploadUrl(value: unknown): value is string {
   if (process.env.UPLOAD_STORAGE_DRIVER !== 's3' || typeof value !== 'string') return false;
-  const match = /^\/images\/uploads\/([^/]+)\/([^/]+)$/.exec(value);
-  if (!match) return false;
+  const prefix = '/images/uploads/';
+  if (!value.startsWith(prefix)) return false;
+  const objectKey = value.slice(prefix.length);
+  if (!/^[A-Za-z0-9._/-]+$/.test(objectKey)) return false;
   try {
-    const segments = match.slice(1).map(decodeURIComponent);
+    const segments = objectKey.split('/').map(decodeURIComponent);
     return segments.every((segment) => segment.length > 0 && segment !== '.' && segment !== '..'
-      && !segment.includes('/') && !segment.includes('\\'));
+      && !segment.includes('/') && !segment.includes('\\') && /^[A-Za-z0-9._-]+$/.test(segment));
   } catch {
     return false;
   }

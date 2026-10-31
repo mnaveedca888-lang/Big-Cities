@@ -18,6 +18,7 @@ import registerEventRoutes, { EVENT_SLUG_MAX_LENGTH } from './events/event.contr
 import registerSearchRoutes from './search/search.controller';
 import { registerEventDiscoveryRoutes } from './events/discovery.controller';
 import { startEventSyncScheduler } from './events/ingestion/scheduler';
+import { startImageCleanupWorker } from './uploads/image-lifecycle';
 import { databaseWritesEnabled, registerStagingWriteGuard } from './staging-write-guard';
 import { installLocalImageWriteGuard } from './images/local-image';
 import { getCorsOptions } from './cors';
@@ -70,7 +71,7 @@ async function start() {
     app.log.error('Prisma connection failed', err as any);
   }
 
-  await app.register(fastifyMultipart, { limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
+  await app.register(fastifyMultipart, { limits: { fileSize: 5 * 1024 * 1024, files: 2 } });
 
   registerUploadImageRoutes(app);
   await app.register(fastifyStatic, {
@@ -100,12 +101,14 @@ async function start() {
   if (!stopEventSyncScheduler) {
     app.log.info('Automatic event synchronization remains disabled for staging safety');
   }
+  const stopImageCleanupWorker = startImageCleanupWorker(prisma, app.log);
   let shuttingDown = false;
   const shutdown = async (signal: string) => {
     if (shuttingDown) return;
     shuttingDown = true;
     app.log.info(`Shutting down on ${signal}`);
     stopEventSyncScheduler?.();
+    stopImageCleanupWorker?.();
     await app.close();
     await prisma.$disconnect();
     process.exit(0);

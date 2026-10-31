@@ -6,8 +6,15 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import { randomUUID } from 'crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import sharp from 'sharp';
 import registerUploadRoutes from './uploads.controller';
 import { registerUploadImageRoutes, type UploadStorage } from './upload-storage';
+
+async function createValidPng() {
+  return sharp({
+    create: { width: 1, height: 1, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+  }).png().toBuffer();
+}
 
 describe('admin image upload validation', () => {
   const envKeys = ['DATABASE_WRITES_ENABLED', 'UPLOADS_ENABLED', 'JWT_ACCESS_TOKEN_SECRET'] as const;
@@ -16,23 +23,36 @@ describe('admin image upload validation', () => {
   let uploadCreate: ReturnType<typeof vi.fn>;
   let mkdirSpy: ReturnType<typeof vi.spyOn>;
   let writeFileSpy: ReturnType<typeof vi.spyOn>;
+  let removeFileSpy: ReturnType<typeof vi.spyOn>;
+  let cleanupJobUpsert: ReturnType<typeof vi.fn>;
   let authorization: string;
+  let validPng: Buffer;
 
   beforeEach(async () => {
     for (const key of envKeys) originalEnv.set(key, process.env[key]);
     process.env.DATABASE_WRITES_ENABLED = 'true';
     process.env.UPLOADS_ENABLED = 'true';
     process.env.JWT_ACCESS_TOKEN_SECRET = 'test-upload-secret';
+    validPng = await createValidPng();
     authorization = `Bearer ${jwt.sign({ sub: 'admin-user' }, process.env.JWT_ACCESS_TOKEN_SECRET)}`;
     uploadCreate = vi.fn().mockResolvedValue({});
+    cleanupJobUpsert = vi.fn().mockResolvedValue({});
     mkdirSpy = vi.spyOn(fs.promises, 'mkdir').mockResolvedValue(undefined as any);
     writeFileSpy = vi.spyOn(fs.promises, 'writeFile').mockResolvedValue(undefined);
+    removeFileSpy = vi.spyOn(fs.promises, 'rm').mockResolvedValue(undefined);
     const prisma = {
+      $transaction: vi.fn(async (callback: (transaction: any) => unknown) => callback({
+        $queryRaw: vi.fn().mockResolvedValue([]),
+        imageCleanupJob: {
+          findUnique: vi.fn().mockResolvedValue(null),
+          upsert: cleanupJobUpsert,
+        },
+      })),
       user: { findUnique: vi.fn().mockResolvedValue({ id: 'admin-user', role: { name: 'admin' } }) },
       upload: { create: uploadCreate },
     } as any;
     app = Fastify();
-    await app.register(multipart, { limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
+    await app.register(multipart, { limits: { fileSize: 5 * 1024 * 1024, files: 2 } });
     registerUploadRoutes(app, prisma);
     await app.ready();
   });
@@ -41,6 +61,7 @@ describe('admin image upload validation', () => {
     await app.close();
     mkdirSpy.mockRestore();
     writeFileSpy.mockRestore();
+    removeFileSpy.mockRestore();
     for (const key of envKeys) {
       const value = originalEnv.get(key);
       if (value === undefined) delete process.env[key];
@@ -68,9 +89,12 @@ describe('admin image upload validation', () => {
 
   it('rejects files whose bytes do not match an allowed image MIME type', async () => {
     const response = await imageRequest(Buffer.from('not an image'));
+    const truncatedImage = await imageRequest(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
 
     expect(response.statusCode).toBe(400);
     expect(response.json()).toMatchObject({ error: { message: 'Image content does not match its content type.' } });
+    expect(truncatedImage.statusCode).toBe(400);
+    expect(truncatedImage.json()).toMatchObject({ error: { message: 'Image content does not match its content type.' } });
     expect(uploadCreate).not.toHaveBeenCalled();
     expect(mkdirSpy).not.toHaveBeenCalled();
     expect(writeFileSpy).not.toHaveBeenCalled();
@@ -88,8 +112,7 @@ describe('admin image upload validation', () => {
   });
 
   it('rejects mismatched extensions and files larger than 5 MB', async () => {
-    const pngHeader = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-    const mismatchedExtension = await imageRequest(pngHeader, 'upload.jpg');
+    const mismatchedExtension = await imageRequest(validPng, 'upload.jpg');
     const oversized = await imageRequest(Buffer.alloc(5 * 1024 * 1024 + 1), 'large.png');
 
     expect(mismatchedExtension.statusCode).toBe(400);
@@ -110,7 +133,7 @@ describe('admin image upload validation', () => {
     process.env.NODE_ENV = 'production';
     delete process.env.UPLOAD_STORAGE_DRIVER;
     try {
-      const response = await imageRequest(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+      const response = await imageRequest(validPng);
 
       expect(response.statusCode).toBe(503);
       expect(response.json()).toMatchObject({
@@ -141,16 +164,39 @@ describe('admin image upload validation', () => {
   });
 
   it('stores an image only after MIME, extension, and signature validation', async () => {
-    const pngHeader = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-    const response = await imageRequest(pngHeader);
+    const response = await imageRequest(validPng);
 
     expect(response.statusCode).toBe(200);
     expect(response.json().data).toHaveLength(1);
     expect(uploadCreate).toHaveBeenCalledWith(expect.objectContaining({
-      data: expect.objectContaining({ userId: 'admin-user', type: 'image/png', size: pngHeader.length }),
+      data: expect.objectContaining({ userId: 'admin-user', type: 'image/png', size: validPng.length }),
     }));
     expect(mkdirSpy).toHaveBeenCalledOnce();
     expect(writeFileSpy).toHaveBeenCalledOnce();
+  });
+
+  it('returns a server error and removes the object when upload metadata persistence fails', async () => {
+    uploadCreate.mockRejectedValueOnce(new Error('simulated database failure'));
+    const response = await imageRequest(validPng);
+
+    expect(response.statusCode).toBe(500);
+    expect(response.json()).toMatchObject({ error: { message: 'Internal server error.' } });
+    expect(writeFileSpy).toHaveBeenCalledOnce();
+    expect(removeFileSpy).toHaveBeenCalledOnce();
+  });
+
+  it('queues an orphaned upload for retry if immediate cleanup also fails', async () => {
+    uploadCreate.mockRejectedValueOnce(new Error('simulated database failure'));
+    removeFileSpy.mockRejectedValueOnce(new Error('simulated storage deletion failure'));
+    const response = await imageRequest(validPng);
+
+    expect(response.statusCode).toBe(500);
+    expect(response.json()).toMatchObject({
+      error: { message: 'Upload metadata could not be saved; object cleanup is queued for retry.' },
+    });
+    expect(cleanupJobUpsert).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({ fileKey: expect.stringMatching(/^admin-user\//) }),
+    }));
   });
 });
 
@@ -159,7 +205,7 @@ describe('local image upload persistence', () => {
     const userId = `dashboard-test-${randomUUID()}`;
     const uploadDir = path.resolve(__dirname, '../../public/Images/uploads', userId);
     const publicImages = path.resolve(__dirname, '../../public/Images');
-    const imageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    const imageBytes = await createValidPng();
     const secret = 'test-upload-persistence-secret';
     const authorization = `Bearer ${jwt.sign({ sub: userId }, secret)}`;
     let app: ReturnType<typeof Fastify> | undefined;
@@ -227,7 +273,7 @@ describe('persistent image upload storage', () => {
   it('serves the same uploaded image after the API server is recreated', async () => {
     const userId = `dashboard-test-${randomUUID()}`;
     const secret = 'test-upload-persistence-secret';
-    const imageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    const imageBytes = await createValidPng();
     const storedObjects = new Map<string, { data: Buffer; contentType: string }>();
     const storage: UploadStorage = {
       driver: 's3',

@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { createHash, randomUUID } from 'crypto';
 import { categorySlug } from './ingestion/categories';
-import { normalizeLocalImageUrl } from '../images/local-image';
+import { isSafePersistentUploadUrl, normalizeLocalImageUrl } from '../images/local-image';
+
+function normalizeImageReference(value: unknown): string | null {
+  return normalizeLocalImageUrl(value) ?? (isSafePersistentUploadUrl(value) ? value : null);
+}
 
 export class EventService {
   constructor(private prisma: PrismaClient) {}
@@ -23,7 +27,7 @@ export class EventService {
   private mapEvent(event: any) {
     return {
       ...event,
-      image: normalizeLocalImageUrl(event.image),
+      image: normalizeImageReference(event.image),
     };
   }
 
@@ -75,7 +79,7 @@ export class EventService {
             featured: data.featured || false,
             trending: data.trending || false,
             enabled: data.enabled ?? true,
-            image: normalizeLocalImageUrl(data.image),
+            image: normalizeImageReference(data.image),
             dateOnly: data.dateOnly ?? false,
             venue: data.venue ?? null,
             organizer: data.organizer ?? null,
@@ -112,7 +116,7 @@ export class EventService {
         featured: data.featured || false,
         trending: data.trending || false,
         enabled: data.enabled ?? true,
-        image: normalizeLocalImageUrl(data.image),
+        image: normalizeImageReference(data.image),
         dateOnly: data.dateOnly ?? false,
         venue: data.venue ?? null,
         organizer: data.organizer ?? null,
@@ -245,7 +249,7 @@ export class EventService {
     if (patch.featured !== undefined) data.featured = patch.featured;
     if (patch.trending !== undefined) data.trending = patch.trending;
     if (patch.enabled !== undefined) data.enabled = patch.enabled;
-    if (patch.image !== undefined) data.image = normalizeLocalImageUrl(patch.image);
+    if (patch.image !== undefined) data.image = normalizeImageReference(patch.image);
     if (patch.dateOnly !== undefined) data.dateOnly = patch.dateOnly;
     if (patch.venue !== undefined) data.venue = patch.venue;
     if (patch.organizer !== undefined) data.organizer = patch.organizer;

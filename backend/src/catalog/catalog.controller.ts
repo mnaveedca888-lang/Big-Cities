@@ -7,7 +7,11 @@ import AuthService from '../auth/auth.service';
 import { buildPagination } from '../utils/pagination';
 import { buildCanonicalCountryProfile } from './countryProfile';
 import { buildCanonicalCityProfile } from './cityProfile';
-import { localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
+import { isSafePersistentUploadUrl, localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
+import { databaseWritesEnabled } from '../staging-write-guard';
+import { createUploadStorage, getUploadStorageDriver, isValidImageContent } from '../uploads/upload-storage';
+import { drainImageCleanupQueue, enqueueOwnedImageCleanup } from '../uploads/image-lifecycle';
+import { sendApiError } from '../utils/api-error';
 
 const PAKISTAN_IMAGE_FOLDER = 'Pakistan cities images';
 const PAKISTAN_COUNTRY_IMAGE_FILE = 'Pakistan.jpg';
@@ -310,8 +314,8 @@ function hasInvalidProfileImage(value: unknown, path: Array<string | number>, co
   for (const [key, entry] of Object.entries(value)) {
     const entryPath = [...path, key];
     if (/(image|thumbnail|avatar|flag|logo)/i.test(key)) {
-      if (entry !== null && (typeof entry !== 'string' || normalizeLocalImageUrl(entry) === null)) {
-        context.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'Image references must use an existing local /images/ file.' });
+      if (entry !== null && (typeof entry !== 'string' || (!normalizeLocalImageUrl(entry) && !isSafePersistentUploadUrl(entry)))) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: entryPath, message: 'Image references must use a safe local or private object-storage /images/ path.' });
         invalid = true;
       }
     } else if (entry && typeof entry === 'object') {
@@ -381,7 +385,7 @@ function normalizeCountry(country: any, cityCount = 0, eventCount = 0, request: 
   const localCountryImage = country.code?.toString().trim().toUpperCase() === 'PK' ? getPakistanCountryImageUrl(request) : null;
   const staticCountryImage = getCountryImageUrl(country, request);
   const asiaCountryImage = getAsiaCountryImageUrl(country, request);
-  const resolvedCountryImage = localCountryImage ?? staticCountryImage ?? asiaCountryImage;
+  const resolvedCountryImage = profile?.heroImageUrl ?? localCountryImage ?? staticCountryImage ?? asiaCountryImage;
   if (profile && resolvedCountryImage) {
     profile.heroImageUrl = resolvedCountryImage;
   }
@@ -454,7 +458,7 @@ function sanitizeProfileImages(profile: any): any {
   const normalized: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(profile as Record<string, unknown>)) {
     if (/(image|thumbnail|avatar|flag|logo)/i.test(key)) {
-      normalized[key] = value == null ? null : normalizeLocalImageUrl(value);
+      normalized[key] = value == null ? null : normalizeLocalImageUrl(value) ?? (isSafePersistentUploadUrl(value) ? value : null);
     } else if (value && typeof value === 'object') {
       normalized[key] = sanitizeProfileImages(value);
     } else {
@@ -480,7 +484,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const items = await prisma.continent.findMany({ orderBy: { name: 'asc' }, include: { _count: { select: { countries: true } } } });
       reply.send({ success: true, data: items.map(normalizeContinent) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -502,7 +506,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       ]);
       reply.send({ success: true, data: { items: items.map(normalizeCategory), pagination: buildPagination(page, perPage, total) } });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -513,7 +517,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       if (!category) return reply.code(404).send({ success: false, error: { message: 'Category not found' } });
       reply.send({ success: true, data: normalizeCategory(category) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -529,7 +533,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const category = await prisma.category.create({ data: { name: body.name, slug: body.slug } as any });
       reply.code(201).send({ success: true, data: normalizeCategory(category) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -556,7 +560,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       });
       reply.send({ success: true, data: normalizeCategory(category) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -572,7 +576,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       await prisma.category.delete({ where: { slug } });
       reply.code(204).send();
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -592,7 +596,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const country = await prisma.country.create({ data: { code: normalizedCode, name: body.name, continentId: body.continentId || null, profile: body.profile === undefined ? undefined : body.profile } as any });
       reply.code(201).send({ success: true, data: normalizeCountry(country, 0, 0, request) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -611,13 +615,177 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
       }
       const updated = await prisma.country.update({ where: { code: normalizedCode }, data: { name: body.name ?? existing.name, continentId: body.continentId !== undefined ? body.continentId : existing.continentId, profile: body.profile !== undefined ? body.profile : existing.profile } as any });
+      await drainImageCleanupQueue(prisma, app.log);
       const [cityCount, eventCount] = await Promise.all([
         prisma.city.count({ where: { countryCode: normalizedCode } }),
         prisma.event.count({ where: { countryCode: normalizedCode } }),
       ]);
       reply.send({ success: true, data: normalizeCountry(updated, cityCount, eventCount, request) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
+    }
+  });
+
+  app.post('/countries/:code/images', async (request, reply) => {
+    if (!databaseWritesEnabled() || process.env.UPLOADS_ENABLED !== 'true' || getUploadStorageDriver() !== 's3') {
+      return reply.code(403).send({ success: false, error: { code: 'UPLOADS_DISABLED', message: 'Country image uploads are disabled.' } });
+    }
+
+    const token = getBearerToken(request);
+    if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
+
+    try {
+      const ok = await isAdmin(prisma, auth, token);
+      if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      const userId = await auth.verifyAccessToken(token);
+      const { code } = countryParamSchema.parse(request.params || {});
+      const normalizedCode = code.trim().toUpperCase();
+      const existing = await prisma.country.findUnique({ where: { code: normalizedCode }, include: { continent: true } });
+      if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+
+      const fields: Record<string, string> = {};
+      const files = new Map<string, { filename: string; contentType: string; buffer: Buffer }>();
+      for await (const part of (request as any).parts()) {
+        const currentPart = part as any;
+        if (currentPart.file) {
+          if (!['heroImage', 'flagImage'].includes(currentPart.fieldname) || files.has(currentPart.fieldname)) {
+            return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Only one hero image and one flag image may be uploaded.' } });
+          }
+          const chunks: Uint8Array[] = [];
+          try {
+            for await (const chunk of currentPart.file) chunks.push(chunk);
+          } catch (error: any) {
+            if (error?.code === 'FST_REQ_FILE_TOO_LARGE' || currentPart.file.truncated) {
+              return reply.code(413).send({ success: false, error: { code: 'FILE_TOO_LARGE', message: 'Image exceeds the 5 MB limit.' } });
+            }
+            throw error;
+          }
+          if (currentPart.file.truncated) {
+            return reply.code(413).send({ success: false, error: { code: 'FILE_TOO_LARGE', message: 'Image exceeds the 5 MB limit.' } });
+          }
+          files.set(currentPart.fieldname, {
+            filename: currentPart.filename,
+            contentType: currentPart.mimetype,
+            buffer: Buffer.concat(chunks),
+          });
+        } else if (['name', 'profile', 'continentId'].includes(currentPart.fieldname)) {
+          fields[currentPart.fieldname] = String(currentPart.value ?? '');
+        }
+      }
+
+      if (!files.size) return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Select at least one replacement image.' } });
+
+      let submittedProfile: Record<string, unknown>;
+      let continentId = existing.continentId;
+      try {
+        const parsed = countryUpdateSchema.parse({
+          name: fields.name,
+          continentId: fields.continentId === undefined ? undefined : fields.continentId || null,
+          profile: JSON.parse(fields.profile || '{}'),
+        });
+        const existingProfile = existing.profile && typeof existing.profile === 'object'
+          ? existing.profile as Record<string, unknown>
+          : {};
+        submittedProfile = { ...existingProfile, ...(parsed.profile ?? {}) };
+        fields.name = parsed.name ?? existing.name;
+        continentId = parsed.continentId !== undefined ? parsed.continentId : existing.continentId;
+        if (continentId && !await prisma.continent.findUnique({ where: { id: continentId } })) {
+          return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
+        }
+      } catch {
+        return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Country name or profile is invalid.' } });
+      }
+
+      for (const file of files.values()) {
+        if (!file.buffer.length) return reply.code(400).send({ success: false, error: { code: 'INVALID_IMAGE', message: 'Uploaded image is empty.' } });
+        if (file.buffer.length > 5 * 1024 * 1024) return reply.code(413).send({ success: false, error: { code: 'FILE_TOO_LARGE', message: 'Image exceeds the 5 MB limit.' } });
+        if (!await isValidImageContent(file.contentType, file.filename, file.buffer)) {
+          return reply.code(400).send({ success: false, error: { code: 'INVALID_IMAGE', message: 'Image extension, content type, and file content must match a supported format.' } });
+        }
+      }
+
+      const storage = createUploadStorage();
+      if (storage.driver !== 's3') {
+        return reply.code(503).send({ success: false, error: { code: 'OBJECT_STORAGE_UNAVAILABLE', message: 'Country image storage is not configured.' } });
+      }
+
+      const uploaded: Array<{ fileKey: string; url: string; size: number; contentType: string }> = [];
+      let databaseCommitted = false;
+      try {
+        for (const [field, file] of files) {
+          const stored = await storage.storeFile({
+            userId,
+            filename: file.filename,
+            contentType: file.contentType,
+            buffer: file.buffer,
+          });
+          uploaded.push({ ...stored, contentType: file.contentType });
+
+          const readBack = await storage.readFile(stored.fileKey);
+          if (!readBack.buffer.equals(file.buffer) || readBack.contentType !== file.contentType) {
+            throw new Error('Stored image verification failed.');
+          }
+          submittedProfile[field === 'heroImage' ? 'heroImageUrl' : 'flagImageUrl'] = stored.url;
+        }
+
+        const updated = await prisma.$transaction(async (transaction) => {
+          const attachedAt = new Date();
+          for (const file of uploaded) {
+            await transaction.upload.create({
+              data: {
+                userId,
+                fileKey: file.fileKey,
+                url: file.url,
+                type: file.contentType,
+                size: file.size,
+                attachedAt,
+              },
+            });
+          }
+          return transaction.country.update({
+            where: { code: normalizedCode },
+            data: {
+              name: fields.name,
+              continentId,
+              profile: submittedProfile as any,
+            },
+            include: { continent: true },
+          });
+        });
+        databaseCommitted = true;
+        await drainImageCleanupQueue(prisma, app.log);
+        const [cityCount, eventCount] = await Promise.all([
+          prisma.city.count({ where: { countryCode: normalizedCode } }),
+          prisma.event.count({ where: { countryCode: normalizedCode } }),
+        ]);
+        return reply.send({ success: true, data: normalizeCountry(updated, cityCount, eventCount, request) });
+      } catch (error: any) {
+        if (databaseCommitted) {
+          app.log.error({ countryCode: normalizedCode }, 'Country image update committed but response processing failed');
+          return reply.code(500).send({ success: false, error: { code: 'COUNTRY_IMAGE_UPDATE_COMMITTED', message: 'Country images were saved, but the response could not be completed.' } });
+        }
+        if (uploaded.length) {
+          const cleanupFailures: string[] = [];
+          for (const file of uploaded) {
+            try {
+              await enqueueOwnedImageCleanup(prisma, file.url);
+            } catch {
+              cleanupFailures.push(file.fileKey);
+              app.log.error({ fileKey: file.fileKey }, 'Failed to queue country image cleanup after update failure');
+            }
+          }
+          if (cleanupFailures.length) {
+            return reply.code(500).send({ success: false, error: { code: 'IMAGE_CLEANUP_QUEUE_FAILED', message: 'Country update failed; uploaded image cleanup could not be queued.' } });
+          }
+          await drainImageCleanupQueue(prisma, app.log, uploaded.map((file) => file.url));
+        }
+        app.log.error({ countryCode: normalizedCode }, 'Country image update failed');
+        return reply.code(500).send({ success: false, error: { code: 'COUNTRY_IMAGE_UPDATE_FAILED', message: 'Country images could not be saved.' } });
+      }
+    } catch (error: any) {
+      if (error?.name === 'ZodError') return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Country code is invalid.' } });
+      app.log.error({ err: error }, 'Country image request failed');
+      return reply.code(500).send({ success: false, error: { code: 'COUNTRY_IMAGE_UPDATE_FAILED', message: 'Country images could not be saved.' } });
     }
   });
 
@@ -639,9 +807,10 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         return reply.code(409).send({ success: false, error: { message: 'Country cannot be deleted while cities or events are associated with it.' } });
       }
       await prisma.country.delete({ where: { code: normalizedCode } });
+      await drainImageCleanupQueue(prisma, app.log);
       reply.code(204).send();
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -664,7 +833,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const city = await prisma.city.create({ data: { slug: body.slug, name: body.name, countryCode: normalizedCode, profile: buildCanonicalCityProfile(body.profile ?? null) } as any });
       reply.code(201).send({ success: true, data: normalizeCity(city, request) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -689,9 +858,10 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         }
       }
       const updated = await prisma.city.update({ where: { slug }, data: { name: body.name ?? existing.name, countryCode: nextCountryCode, profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (existing.profile as Record<string, unknown> | null)) } as any });
+      await drainImageCleanupQueue(prisma, app.log);
       reply.send({ success: true, data: normalizeCity(updated, request) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -709,9 +879,10 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         return reply.code(409).send({ success: false, error: { message: 'City cannot be deleted while events are associated with it.' } });
       }
       await prisma.city.delete({ where: { slug } });
+      await drainImageCleanupQueue(prisma, app.log);
       reply.code(204).send();
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -751,7 +922,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const eventCountMap = new Map(eventCounts.map((row: any) => [row.countryCode, Number(row._count._all)]));
       reply.send({ success: true, data: { items: items.map((country) => normalizeCountry(country, cityCountMap.get(country.code) ?? 0, eventCountMap.get(country.code) ?? 0, request)), pagination: buildPagination(page, perPage, total, 500) } });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -821,7 +992,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       ]);
       reply.send({ success: true, data: normalizeCountry(country, cityCount, eventCount, request) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -891,7 +1062,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const cities = await prisma.city.findMany({ where: cityWhere, orderBy: { name: 'asc' } });
       reply.send({ success: true, data: cities.map((city) => normalizeCity(city, request)) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -936,7 +1107,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         },
       });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 
@@ -947,7 +1118,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       if (!city) return reply.code(404).send({ success: false, error: { message: 'City not found' } });
       reply.send({ success: true, data: normalizeCity(city, request) });
     } catch (error: any) {
-      reply.code(400).send({ success: false, error: { message: error.message } });
+      return sendApiError(reply, app.log, error, 'Catalog request failed.');
     }
   });
 }

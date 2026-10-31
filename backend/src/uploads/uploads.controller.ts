@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
 import { createUploadStorage, hasMatchingImageExtension, isAllowedUploadMimeType, isValidImageContent, type UploadStorage } from './upload-storage';
+import { sendApiError } from '../utils/api-error';
+import { enqueueOwnedImageCleanup, getUnattachedUploadExpiresAt } from './image-lifecycle';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
@@ -42,15 +44,23 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient,
     }
     try {
       const userId = await verifyAdmin(getBearerToken(request));
-      const file = await (request as any).file();
+      let file: { filename: string; mimetype: string; buffer: Buffer } | undefined;
+      let hasMultipleFiles = false;
+      for await (const part of (request as any).parts()) {
+        if (!part.file) continue;
+        const buffer = await part.toBuffer();
+        if (file) hasMultipleFiles = true;
+        else file = { filename: part.filename, mimetype: part.mimetype, buffer };
+      }
+      if (hasMultipleFiles) return reply.code(400).send({ success: false, error: { message: 'Upload one image at a time.' } });
       if (!file) return reply.code(400).send({ success: false, error: { message: 'No file uploaded.' } });
-      const buffer = await file.toBuffer();
+      const buffer = file.buffer;
       if (buffer.length === 0) return reply.code(400).send({ success: false, error: { message: 'Uploaded file is empty.' } });
       if (buffer.length > MAX_UPLOAD_SIZE) return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
       if (!isAllowedUploadMimeType(file.mimetype) || !hasMatchingImageExtension(file.mimetype, file.filename)) {
         return reply.code(400).send({ success: false, error: { message: 'Image file extension does not match its content type.' } });
       }
-      if (!isValidImageContent(file.mimetype, file.filename, buffer)) {
+      if (!await isValidImageContent(file.mimetype, file.filename, buffer)) {
         return reply.code(400).send({ success: false, error: { message: 'Image content does not match its content type.' } });
       }
 
@@ -61,20 +71,37 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient,
       const stored = await activeStorage.storeFile({ userId, filename: file.filename, contentType: file.mimetype, buffer });
       try {
         await prisma.upload.create({
-          data: { userId, fileKey: stored.fileKey, url: stored.url, type: file.mimetype, size: stored.size },
+          data: {
+            userId,
+            fileKey: stored.fileKey,
+            url: stored.url,
+            type: file.mimetype,
+            size: stored.size,
+            expiresAt: getUnattachedUploadExpiresAt(),
+          },
         });
       } catch (error) {
-        await activeStorage.deleteFile(stored.fileKey).catch(() => undefined);
+        try {
+          await activeStorage.deleteFile(stored.fileKey);
+        } catch (cleanupError) {
+          app.log.error({ fileKey: stored.fileKey }, 'Failed to remove uploaded image after metadata failure');
+          try {
+            await enqueueOwnedImageCleanup(prisma, stored.url);
+            app.log.warn({ fileKey: stored.fileKey }, 'Queued uploaded image for retry after metadata failure');
+          } catch {
+            app.log.error({ fileKey: stored.fileKey }, 'Failed to queue uploaded image cleanup after metadata failure');
+            return reply.code(500).send({ success: false, error: { message: 'Upload metadata failed; object cleanup also failed and could not be queued.' } });
+          }
+          return reply.code(500).send({ success: false, error: { message: 'Upload metadata could not be saved; object cleanup is queued for retry.' } });
+        }
         throw error;
       }
       return reply.send({ success: true, data: [{ url: stored.url, fileKey: stored.fileKey, size: stored.size }] });
     } catch (err: any) {
-      if (err?.code === 'FST_REQ_FILE_TOO_LARGE') {
+      if (err?.code === 'FST_REQ_FILE_TOO_LARGE' || err?.statusCode === 413) {
         return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
       }
-      const statusCode = err?.statusCode === 401 || err?.statusCode === 403 ? err.statusCode : 400;
-      if (statusCode === 400) app.log.warn({ error: String(err?.message ?? 'unknown') }, 'Upload file failed');
-      return reply.code(statusCode).send({ success: false, error: { message: err?.message || 'Could not upload file.' } });
+      return sendApiError(reply, app.log, err, 'Upload file request failed');
     }
   });
 }

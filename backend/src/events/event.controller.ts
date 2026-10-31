@@ -3,10 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import EventService from './event.service';
 import AuthService from '../auth/auth.service';
 import { z } from 'zod';
-import { normalizeLocalImageUrl } from '../images/local-image';
+import { isSafePersistentUploadUrl, normalizeLocalImageUrl } from '../images/local-image';
+import { drainImageCleanupQueue } from '../uploads/image-lifecycle';
+import { sendApiError } from '../utils/api-error';
 
 const localImageSchema = z.string().trim().refine(
-  (value) => normalizeLocalImageUrl(value) !== null,
+  (value) => normalizeLocalImageUrl(value) !== null || isSafePersistentUploadUrl(value),
   'Image URL must reference an existing local /images/ file',
 );
 const externalHttpUrlSchema = z.string().url().refine((value) => {
@@ -158,7 +160,7 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       });
       reply.send({ success: true, data: res });
     } catch (err: any) {
-      reply.code(400).send({ success: false, error: { message: err.message } });
+      return sendApiError(reply, app.log, err, 'Event request failed.');
     }
   });
 
@@ -180,7 +182,7 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (!ev) return reply.code(404).send({ success: false, error: { message: 'Not found' } });
       reply.send({ success: true, data: ev });
     } catch (err: any) {
-      reply.code(400).send({ success: false, error: { message: err.message } });
+      return sendApiError(reply, app.log, err, 'Event request failed.');
     }
   });
 
@@ -223,7 +225,7 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       });
       reply.code(201).send({ success: true, data: created });
     } catch (err: any) {
-      reply.code(400).send({ success: false, error: { message: err.message } });
+      return sendApiError(reply, app.log, err, 'Event request failed.');
     }
   });
 
@@ -273,9 +275,10 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (body.discoverySourceUrl !== undefined) patch.discoverySourceUrl = body.discoverySourceUrl;
       if (body.discoverySourceName !== undefined) patch.discoverySourceName = body.discoverySourceName;
       const updated = await service.updateBySlug(slug, patch);
+      await drainImageCleanupQueue(prisma, app.log);
       reply.send({ success: true, data: updated });
     } catch (err: any) {
-      reply.code(400).send({ success: false, error: { message: err.message } });
+      return sendApiError(reply, app.log, err, 'Event request failed.');
     }
   });
 
@@ -294,9 +297,10 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
         return reply.code(409).send({ success: false, error: { message: 'Event cannot be deleted while users have saved it.' } });
       }
       await service.deleteBySlug(slug);
+      await drainImageCleanupQueue(prisma, app.log);
       reply.code(204).send();
     } catch (err: any) {
-      reply.code(400).send({ success: false, error: { message: err.message } });
+      return sendApiError(reply, app.log, err, 'Event request failed.');
     }
   });
 }

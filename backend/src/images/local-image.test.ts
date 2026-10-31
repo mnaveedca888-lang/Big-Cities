@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { localImageUrl, localImageWriteMiddleware, normalizeLocalImageUrl } from './local-image';
+import { isSafePersistentUploadUrl, localImageUrl, localImageWriteMiddleware, normalizeLocalImageUrl } from './local-image';
 const installScriptImageWriteGuard = require('../../scripts/local-image-write-guard.cjs') as (client: { $use: (middleware: (params: any, next: (params: any) => Promise<unknown>) => Promise<unknown>) => void }) => void;
 
 describe('local image resolver', () => {
@@ -15,6 +15,19 @@ describe('local image resolver', () => {
     expect(normalizeLocalImageUrl('/images/%2e%2e/private.png')).toBeNull();
     expect(normalizeLocalImageUrl('/images/missing/not-downloaded.webp')).toBeNull();
     expect(normalizeLocalImageUrl('/images/pakistan%20cities%20images/Pakistan.jpg')).toBeNull();
+  });
+
+  it('accepts safely nested persistent upload keys and rejects traversal', () => {
+    const previousDriver = process.env.UPLOAD_STORAGE_DRIVER;
+    process.env.UPLOAD_STORAGE_DRIVER = 's3';
+    try {
+      expect(isSafePersistentUploadUrl('/images/uploads/user-1/uploads/1000-image.png')).toBe(true);
+      expect(isSafePersistentUploadUrl('/images/uploads/user-1/%2e%2e/private.png')).toBe(false);
+      expect(isSafePersistentUploadUrl('/images/uploads/user-1/image.png?redirect=1')).toBe(false);
+    } finally {
+      if (previousDriver === undefined) delete process.env.UPLOAD_STORAGE_DRIVER;
+      else process.env.UPLOAD_STORAGE_DRIVER = previousDriver;
+    }
   });
 
   it('rejects external or missing image writes before Prisma continues', async () => {

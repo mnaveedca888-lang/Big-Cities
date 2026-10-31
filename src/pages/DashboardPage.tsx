@@ -18,6 +18,7 @@ import {
   getCountries,
   getCountryCityDirectory,
   updateCountry,
+  updateCountryWithImages,
   updateCity,
 } from '@/services/catalog';
 import { createEvent, deleteEvent, getEvent, getEventsPage, updateEvent } from '@/services/events';
@@ -370,10 +371,15 @@ async function uploadImageFile(file: File, onProgress: (progress: number) => voi
     },
   });
   const uploadedUrl = response.data?.data?.[0]?.url;
-  if (!uploadedUrl) throw new Error('Upload failed');
-  const localImageUrl = normalizeImageUrl(uploadedUrl);
-  if (!localImageUrl) throw new Error('Upload returned a non-local image path');
-  return localImageUrl;
+  if (!uploadedUrl) throw new Error('Upload failed.');
+  const normalizedUrl = normalizeImageUrl(uploadedUrl);
+  if (!normalizedUrl) throw new Error('Upload returned an invalid image path.');
+  const apiOrigin = new URL(apiBaseUrl || window.location.origin).origin;
+  const uploaded = new URL(normalizedUrl, apiOrigin);
+  if (uploaded.origin !== apiOrigin || !uploaded.pathname.startsWith('/images/uploads/')) {
+    throw new Error('Upload returned an unexpected image location.');
+  }
+  return `${uploaded.pathname}${uploaded.search}${uploaded.hash}`;
 }
 
 function ImagePreview({ value, label }: { value: string; label: string }) {
@@ -385,6 +391,21 @@ function ImagePreview({ value, label }: { value: string; label: string }) {
   if (!src) return null;
   if (failed) return <p className="text-xs text-amber-700 dark:text-amber-300">Image preview unavailable.</p>;
   return <img src={src} alt={label} loading="lazy" className="mt-2 h-24 w-full rounded-xl border border-slate-200 object-cover dark:border-slate-700" onError={() => setFailed(true)} />;
+}
+
+function SelectedFilePreview({ file, label }: { file: File | null; label: string }) {
+  const [src, setSrc] = useState('');
+  useEffect(() => {
+    if (!file) {
+      setSrc('');
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setSrc(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
+
+  return src ? <img src={src} alt={label} className="mt-2 h-24 w-full rounded-xl border border-slate-200 object-cover dark:border-slate-700" /> : null;
 }
 
 function PageControls({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (page: number) => void }) {
@@ -434,6 +455,8 @@ export default function DashboardPage() {
   const [selectedEventSlug, setSelectedEventSlug] = useState('');
   const [countryForm, setCountryForm] = useState<CountryFormState>({ name: '', code: '', continentId: '', heroImageUrl: '', flagImageUrl: '' });
   const [countryProfileData, setCountryProfileData] = useState<Record<string, unknown>>({});
+  const [countryHeroImageFile, setCountryHeroImageFile] = useState<File | null>(null);
+  const [countryFlagImageFile, setCountryFlagImageFile] = useState<File | null>(null);
   const [cityForm, setCityForm] = useState<CityFormState>({ slug: '', name: '', countryCode: '', heroImageUrl: '' });
   const [cityProfileData, setCityProfileData] = useState<Record<string, unknown>>({});
   const [eventForm, setEventForm] = useState<EventFormState>(emptyEventForm());
@@ -578,6 +601,11 @@ export default function DashboardPage() {
   }, [selectedCountry, continents, cityList, selectedCitySlug, isCreatingCountry]);
 
   useEffect(() => {
+    setCountryHeroImageFile(null);
+    setCountryFlagImageFile(null);
+  }, [selectedCountryCode, isCreatingCountry]);
+
+  useEffect(() => {
     if (selectedCityQuery.data && !isCreatingCity) {
       const nextCityForm = readCityForm(selectedCityQuery.data, selectedCountry?.code ?? '');
       setCityForm(nextCityForm);
@@ -592,6 +620,7 @@ export default function DashboardPage() {
   }, [selectedEvent, isCreatingEvent]);
 
   const saveCountry = async () => {
+    const creatingCountry = isCreatingCountry;
     const code = countryForm.code.trim().toUpperCase();
     if (!countryForm.name.trim() || !/^[A-Z]{2}$/.test(code)) {
       setSaveCountryState('error');
@@ -604,27 +633,72 @@ export default function DashboardPage() {
       const mergedProfile = { ...countryProfileData } as Record<string, unknown>;
       mergedProfile.heroImageUrl = countryForm.heroImageUrl.trim() || null;
       mergedProfile.flagImageUrl = countryForm.flagImageUrl.trim() || null;
-      if (isCreatingCountry) {
-        const created = await createCountry({
+      let savedCountry: CountryItem;
+      if (creatingCountry) {
+        savedCountry = await createCountry({
           code,
           name: countryForm.name.trim(),
           continentId: countryForm.continentId || null,
           profile: mergedProfile,
         });
-        setSelectedCountryCode(created.code);
-        setCountrySearch(created.name);
-        setCountryQuery(created.name);
+        setSelectedCountryCode(savedCountry.code);
+        setCountrySearch(savedCountry.name);
+        setCountryQuery(savedCountry.name);
         setCountryPage(1);
         setIsCreatingCountry(false);
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['countries'] }),
+          queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] }),
+        ]);
+        if (countryHeroImageFile || countryFlagImageFile) {
+          try {
+            savedCountry = await updateCountryWithImages(savedCountry.code, {
+              name: countryForm.name.trim(),
+              continentId: countryForm.continentId || null,
+              profile: mergedProfile,
+              heroImage: countryHeroImageFile,
+              flagImage: countryFlagImageFile,
+            });
+          } catch (error) {
+            throw new Error(`Country was created, but its image could not be saved. ${getErrorMessage(error, 'Try again from the country edit form.')}`);
+          }
+        }
       } else if (selectedCountry) {
-        await updateCountry(selectedCountry.code, {
-          name: countryForm.name.trim(),
-          continentId: countryForm.continentId || null,
-          profile: mergedProfile,
-        });
+        savedCountry = countryHeroImageFile || countryFlagImageFile
+          ? await updateCountryWithImages(selectedCountry.code, {
+            name: countryForm.name.trim(),
+            continentId: countryForm.continentId || null,
+            profile: mergedProfile,
+            heroImage: countryHeroImageFile,
+            flagImage: countryFlagImageFile,
+          })
+          : await updateCountry(selectedCountry.code, {
+            name: countryForm.name.trim(),
+            continentId: countryForm.continentId || null,
+            profile: mergedProfile,
+          });
       } else {
         return;
       }
+      const persistedCountry = await getCountry(savedCountry.code);
+      if (persistedCountry.name !== countryForm.name.trim()) {
+        throw new Error('Country changes could not be verified after saving. Refresh and try again.');
+      }
+      const persistedProfile = persistedCountry.profile && typeof persistedCountry.profile === 'object'
+        ? persistedCountry.profile as Record<string, unknown>
+        : {};
+      const savedProfile = savedCountry.profile && typeof savedCountry.profile === 'object'
+        ? savedCountry.profile as Record<string, unknown>
+        : {};
+      for (const [file, field] of [[countryHeroImageFile, 'heroImageUrl'], [countryFlagImageFile, 'flagImageUrl']] as const) {
+        if (file && normalizeImageUrl(String(persistedProfile[field] ?? '')) !== normalizeImageUrl(String(savedProfile[field] ?? ''))) {
+          throw new Error(`The ${field === 'heroImageUrl' ? 'hero' : 'flag'} image was not persisted. The previous image is unchanged.`);
+        }
+      }
+      setCountryForm(readCountryForm(persistedCountry, continents));
+      setCountryProfileData(buildCountryProfileState(persistedCountry));
+      setCountryHeroImageFile(null);
+      setCountryFlagImageFile(null);
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['country'] }),
         queryClient.invalidateQueries({ queryKey: ['countries'] }),
@@ -636,7 +710,7 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-detail', code] }),
       ]);
       setSaveCountryState('saved');
-      setSaveCountryMessage(isCreatingCountry ? 'Country created successfully.' : 'Country updated successfully.');
+      setSaveCountryMessage(creatingCountry ? 'Country created successfully.' : 'Country updated successfully.');
     } catch (error) {
       setSaveCountryState('error');
       setSaveCountryMessage(error instanceof Error ? error.message : 'Unable to save country. Please try again.');
@@ -834,6 +908,8 @@ export default function DashboardPage() {
     }
   };
   const resetCountryForm = () => {
+    setCountryHeroImageFile(null);
+    setCountryFlagImageFile(null);
     if (isCreatingCountry) {
       setCountryForm({ name: '', code: '', continentId: '', heroImageUrl: '', flagImageUrl: '' });
       setCountryProfileData({});
@@ -846,6 +922,21 @@ export default function DashboardPage() {
       setSaveCountryState('idle');
       setSaveCountryMessage('');
     }
+  };
+
+  const handleCountryImageSelection = (event: ChangeEvent<HTMLInputElement>, field: 'hero' | 'flag') => {
+    const file = event.target.files?.[0] ?? null;
+    event.target.value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setSaveCountryState('error');
+      setSaveCountryMessage('Image must be 5 MB or smaller.');
+      return;
+    }
+    if (field === 'hero') setCountryHeroImageFile(file);
+    else setCountryFlagImageFile(file);
+    setSaveCountryState('idle');
+    setSaveCountryMessage('');
   };
 
   useEffect(() => {
@@ -1036,14 +1127,17 @@ export default function DashboardPage() {
                     <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Hero image</span>
                       <input value={countryForm.heroImageUrl} onChange={(event) => setCountryForm((current) => ({ ...current, heroImageUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
-                      <ImagePreview value={countryForm.heroImageUrl} label={`${countryForm.name} country`} />
+                      {countryHeroImageFile
+                        ? <SelectedFilePreview file={countryHeroImageFile} label={`${countryForm.name} country preview`} />
+                        : <ImagePreview value={countryForm.heroImageUrl} label={`${countryForm.name} country`} />}
                     </label>
                     <div className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className="block">Upload new hero image</span>
                       <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                         <span>Choose file</span>
-                        <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
+                        <input type="file" accept="image/*" className="sr-only" onChange={(event) => handleCountryImageSelection(event, 'hero')} />
                       </label>
+                      {countryHeroImageFile ? <span className="block text-xs text-slate-500">Selected: {countryHeroImageFile.name}. Uploads when you save.</span> : null}
                     </div>
                   </div>
 
@@ -1051,14 +1145,17 @@ export default function DashboardPage() {
                     <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Flag image</span>
                       <input value={countryForm.flagImageUrl} onChange={(event) => setCountryForm((current) => ({ ...current, flagImageUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
-                      <ImagePreview value={countryForm.flagImageUrl} label={`${countryForm.name} flag`} />
+                      {countryFlagImageFile
+                        ? <SelectedFilePreview file={countryFlagImageFile} label={`${countryForm.name} flag preview`} />
+                        : <ImagePreview value={countryForm.flagImageUrl} label={`${countryForm.name} flag`} />}
                     </label>
                     <div className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className="block">Upload new flag image</span>
                       <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                         <span>Choose file</span>
-                        <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, flagImageUrl: nextUrl })))} />
+                        <input type="file" accept="image/*" className="sr-only" onChange={(event) => handleCountryImageSelection(event, 'flag')} />
                       </label>
+                      {countryFlagImageFile ? <span className="block text-xs text-slate-500">Selected: {countryFlagImageFile.name}. Uploads when you save.</span> : null}
                     </div>
                   </div>
 

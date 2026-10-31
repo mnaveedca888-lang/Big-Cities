@@ -75,6 +75,22 @@ export async function updateCountry(code: string, payload: { name?: string; cont
   return response.data.data;
 }
 
+export async function updateCountryWithImages(
+  code: string,
+  payload: { name: string; continentId?: string | null; profile: Record<string, unknown>; heroImage?: File | null; flagImage?: File | null },
+) {
+  const formData = new FormData();
+  formData.append('name', payload.name);
+  formData.append('continentId', payload.continentId ?? '');
+  formData.append('profile', JSON.stringify(payload.profile));
+  if (payload.heroImage) formData.append('heroImage', payload.heroImage);
+  if (payload.flagImage) formData.append('flagImage', payload.flagImage);
+  const response = await apiClient.post<ApiResponse<CountryItem>>(`/countries/${code}/images`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data.data;
+}
+
 export async function createCountry(payload: { code: string; name: string; continentId?: string | null; profile?: Record<string, unknown> | null }) {
   const response = await apiClient.post<ApiResponse<CountryItem>>('/countries', payload);
   return response.data.data;

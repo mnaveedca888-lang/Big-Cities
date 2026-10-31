@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   getDashboardOverview: vi.fn(),
   createCountry: vi.fn(),
   updateCountry: vi.fn(),
+  updateCountryWithImages: vi.fn(),
   deleteCountry: vi.fn(),
   createCity: vi.fn(),
   updateCity: vi.fn(),
@@ -35,6 +36,7 @@ vi.mock('@/services/catalog', () => ({
   getCity: mocks.getCity,
   createCountry: mocks.createCountry,
   updateCountry: mocks.updateCountry,
+  updateCountryWithImages: mocks.updateCountryWithImages,
   deleteCountry: mocks.deleteCountry,
   createCity: mocks.createCity,
   updateCity: mocks.updateCity,
@@ -109,6 +111,14 @@ describe('DashboardPage data managers', () => {
       recentActivity: [],
     });
     mocks.updateCountry.mockResolvedValue({});
+    mocks.updateCountryWithImages.mockResolvedValue({
+      code: 'AF',
+      name: 'Afghanistan',
+      profile: {
+        heroImageUrl: '/images/uploads/admin-user/1-hero.png',
+        flagImageUrl: '/images/uploads/admin-user/2-flag.png',
+      },
+    });
     mocks.updateCity.mockResolvedValue({});
     mocks.updateEvent.mockResolvedValue({});
     mocks.createCountry.mockResolvedValue({ code: 'JP', name: 'Japan', profile: {} });
@@ -139,25 +149,99 @@ describe('DashboardPage data managers', () => {
     expect(await screen.findByText('Database writes are disabled.')).toBeInTheDocument();
   });
 
-  it('shows a visible error when an image upload fails', async () => {
-    mocks.upload.mockRejectedValue({ status: 503, message: 'Uploads are disabled in staging.' });
-    const { container } = renderDashboard();
+  it('shows a visible error when a country image update fails', async () => {
+    mocks.updateCountryWithImages.mockRejectedValue(new Error('Uploads are disabled in staging.'));
+    renderDashboard();
     await screen.findByDisplayValue('Afghanistan');
 
-    const fileInput = container.querySelector('input[type="file"]');
-    expect(fileInput).not.toBeNull();
-    fireEvent.change(fileInput as HTMLInputElement, {
+    const heroUploadInput = screen.getByText('Upload new hero image').parentElement?.querySelector('input[type="file"]');
+    if (!(heroUploadInput instanceof HTMLInputElement)) throw new Error('Country hero file input was not rendered.');
+    fireEvent.change(heroUploadInput, {
       target: { files: [new File(['image'], 'audit.png', { type: 'image/png' })] },
     });
-
+    fireEvent.click(screen.getByRole('button', { name: 'Save country' }));
     expect(await screen.findByText('Uploads are disabled in staging.')).toBeInTheDocument();
+  });
+
+  it('saves an uploaded event image as a backend-relative object path', async () => {
+    mocks.upload.mockResolvedValue({
+      data: { success: true, data: [{ url: '/images/uploads/admin-user/audit-image.png' }] },
+    });
+    renderDashboard();
+    fireEvent.click(await screen.findByRole('button', { name: 'Afghanistan Cultural Event AF' }));
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    fireEvent.change(fileInputs[fileInputs.length - 1], {
+      target: { files: [new File(['image'], 'audit-image.png', { type: 'image/png' })] },
+    });
+    await screen.findByText('Image uploaded. Save the record to apply it.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save event' }));
+
+    await waitFor(() => expect(mocks.updateEvent).toHaveBeenCalledWith(
+      'af-cultural-event',
+      expect.objectContaining({ image: '/images/uploads/admin-user/audit-image.png' }),
+    ));
+  });
+
+  it('saves selected country images together and verifies the persisted references before success', async () => {
+    const persistedCountry = {
+      code: 'AF',
+      name: 'Afghanistan',
+      continent: 'Asia',
+      profile: {
+        heroImageUrl: '/images/uploads/admin-user/1-hero.png',
+        flagImageUrl: '/images/uploads/admin-user/2-flag.png',
+      },
+    };
+    mocks.updateCountryWithImages.mockResolvedValue(persistedCountry);
+    mocks.getCountry.mockResolvedValue(persistedCountry);
+    const { container } = renderDashboard();
+    await screen.findByDisplayValue('Afghanistan');
+    const inputs = container.querySelectorAll('input[type="file"]');
+    fireEvent.change(inputs[0], {
+      target: { files: [new File(['hero'], 'hero.png', { type: 'image/png' })] },
+    });
+    fireEvent.change(inputs[1], {
+      target: { files: [new File(['flag'], 'flag.png', { type: 'image/png' })] },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save country' }));
+
+    expect(await screen.findByText('Country updated successfully.')).toBeInTheDocument();
+    expect(mocks.updateCountryWithImages).toHaveBeenCalledWith('AF', expect.objectContaining({
+      heroImage: expect.any(File),
+      flagImage: expect.any(File),
+    }));
+    expect(mocks.updateCountry).not.toHaveBeenCalled();
+  });
+
+  it('does not report a country save as successful when the image update fails', async () => {
+    mocks.updateCountryWithImages.mockRejectedValue(new Error('Country images could not be saved.'));
+    let resolveCities: () => void = () => {};
+    mocks.getCountryCityDirectory.mockReturnValueOnce(new Promise((resolve) => {
+      resolveCities = () => resolve(page([{ slug: 'af-herat', name: 'Herat', countryCode: 'AF' }]));
+    }));
+    const { container } = renderDashboard();
+    await screen.findByDisplayValue('Afghanistan');
+    const input = container.querySelector('input[type="file"]');
+    fireEvent.change(input as HTMLInputElement, {
+      target: { files: [new File(['hero'], 'hero.png', { type: 'image/png' })] },
+    });
+    resolveCities();
+    fireEvent.click(screen.getByRole('button', { name: 'Save country' }));
+
+    await waitFor(() => expect(mocks.updateCountryWithImages).toHaveBeenCalled());
+    expect(await screen.findByText('Country images could not be saved.')).toBeInTheDocument();
+    expect(screen.queryByText('Country updated successfully.')).not.toBeInTheDocument();
   });
 
   it('creates a country through the API and reports success', async () => {
     renderDashboard();
+    await screen.findByDisplayValue('Afghanistan');
+    mocks.getCountry.mockResolvedValueOnce({ code: 'JP', name: 'Japan', continent: 'Asia', profile: {} });
     fireEvent.click(await screen.findByRole('button', { name: 'Create country' }));
     fireEvent.change(screen.getByLabelText('Country name'), { target: { value: 'Japan' } });
-    fireEvent.change(screen.getByLabelText('Country code'), { target: { value: 'JP' } });
+    const countryCodeInput = screen.getAllByLabelText('Country code').find((input) => !(input as HTMLInputElement).readOnly);
+    expect(countryCodeInput).toBeDefined();
+    fireEvent.change(countryCodeInput as HTMLInputElement, { target: { value: 'JP' } });
     fireEvent.change(screen.getByLabelText('Continent'), { target: { value: 'continent-1' } });
     fireEvent.click(screen.getAllByRole('button', { name: 'Create country' }).slice(-1)[0]);
 

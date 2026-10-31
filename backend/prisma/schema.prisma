@@ -227,8 +227,26 @@ model Upload {
   url       String
   type      String?
   size      Int?
+  attachedAt DateTime?
+  expiresAt DateTime?
+  deletedAt DateTime?
   createdAt DateTime @default(now())
   user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([attachedAt, expiresAt, deletedAt, createdAt])
+}
+
+model ImageCleanupJob {
+  id            String    @id @default(uuid())
+  fileKey       String    @unique
+  status        String    @default("pending")
+  attempts      Int       @default(0)
+  nextAttemptAt DateTime  @default(now())
+  lastError     String?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([completedAt, nextAttemptAt, createdAt])
 }
 
 model AuditLog {
