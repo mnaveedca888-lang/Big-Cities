@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 export type UploadStorageDriver = 'local' | 's3' | 'disabled';
 
@@ -16,6 +16,13 @@ export type StoredFileResult = {
   fileKey: string;
   url: string;
   size: number;
+};
+
+export type UploadStorage = {
+  driver: UploadStorageDriver;
+  storeFile(input: StoreFileInput): Promise<StoredFileResult>;
+  readFile(fileKey: string): Promise<{ buffer: Buffer; contentType: string }>;
+  deleteFile(fileKey: string): Promise<void>;
 };
 
 const UPLOADS_ROOT = path.resolve(__dirname, '..', '..', 'public', 'Images', 'uploads');
@@ -100,7 +107,7 @@ const fileContentTypeByExtension: Record<string, string> = {
   '.bmp': 'image/bmp',
 };
 
-export function createUploadStorage() {
+export function createUploadStorage(): UploadStorage {
   const driver = getUploadStorageDriver();
 
   if (driver === 'disabled') {
@@ -110,6 +117,9 @@ export function createUploadStorage() {
         throw new Error('Uploads are disabled. Set UPLOAD_STORAGE_DRIVER=local or s3 and enable uploads explicitly.');
       },
       async readFile() {
+        throw new Error('Uploads are disabled.');
+      },
+      async deleteFile() {
         throw new Error('Uploads are disabled.');
       },
     };
@@ -168,6 +178,10 @@ export function createUploadStorage() {
           contentType: response.ContentType || fileContentTypeByExtension[path.extname(key).toLowerCase()] || 'application/octet-stream',
         };
       },
+      async deleteFile(fileKey: string) {
+        const key = fileKey.replace(/^\/+/, '');
+        await client.send(new DeleteObjectCommand({ Bucket: config.bucket, Key: key }));
+      },
     };
   }
 
@@ -193,6 +207,10 @@ export function createUploadStorage() {
           contentType: fileContentTypeByExtension[path.extname(targetPath).toLowerCase()] || 'application/octet-stream',
         };
       },
+      async deleteFile(fileKey: string) {
+        const targetPath = resolveLocalFilePath(fileKey);
+        await fs.promises.unlink(targetPath);
+      },
     };
   }
 
@@ -202,6 +220,9 @@ export function createUploadStorage() {
       throw new Error('Uploads are disabled. Set UPLOAD_STORAGE_DRIVER=local or s3 and enable uploads explicitly.');
     },
     async readFile() {
+      throw new Error('Uploads are disabled.');
+    },
+    async deleteFile() {
       throw new Error('Uploads are disabled.');
     },
   };

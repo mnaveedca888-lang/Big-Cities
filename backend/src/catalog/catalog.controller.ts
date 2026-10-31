@@ -7,6 +7,8 @@ import { buildCanonicalCountryProfile } from './countryProfile';
 import { buildCanonicalCityProfile } from './cityProfile';
 import { localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
 import { getCatalogImageFileNames, hasCatalogImage } from '../images/catalog-image-index';
+import { databaseWritesEnabled } from '../staging-write-guard';
+import { createUploadStorage, getUploadStorageDriver, isAllowedUploadMimeType } from '../uploads/upload-storage';
 
 const PAKISTAN_IMAGE_FOLDER = 'Pakistan cities images';
 const PAKISTAN_COUNTRY_IMAGE_FILE = 'Pakistan.jpg';
@@ -595,6 +597,151 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       reply.send({ success: true, data: normalizeCountry(updated, cityCount, eventCount, request) });
     } catch (error: any) {
       reply.code(400).send({ success: false, error: { message: error.message } });
+    }
+  });
+
+  app.post('/countries/:code/images', async (request, reply) => {
+    if (!databaseWritesEnabled() || process.env.UPLOADS_ENABLED !== 'true' || getUploadStorageDriver() !== 's3') {
+      return reply.code(403).send({ success: false, error: { code: 'UPLOADS_DISABLED', message: 'Country image uploads are disabled.' } });
+    }
+
+    const token = getBearerToken(request);
+    if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
+
+    try {
+      const ok = await isAdmin(prisma, auth, token);
+      if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      const userId = await auth.verifyAccessToken(token);
+      const { code } = countryParamSchema.parse(request.params || {});
+      const normalizedCode = code.trim().toUpperCase();
+      const existing = await prisma.country.findUnique({ where: { code: normalizedCode }, include: { continent: true } });
+      if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+
+      const fields: Record<string, string> = {};
+      const files = new Map<string, { filename: string; contentType: string; buffer: Buffer }>();
+      for await (const part of (request as any).parts()) {
+        const currentPart = part as any;
+        if (currentPart.file) {
+          if (!['heroImage', 'flagImage'].includes(currentPart.fieldname) || files.has(currentPart.fieldname)) {
+            return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Only one hero image and one flag image may be uploaded.' } });
+          }
+          const chunks: Uint8Array[] = [];
+          try {
+            for await (const chunk of currentPart.file) chunks.push(chunk);
+          } catch (error: any) {
+            if (error?.code === 'FST_REQ_FILE_TOO_LARGE' || currentPart.file.truncated) {
+              return reply.code(413).send({ success: false, error: { code: 'FILE_TOO_LARGE', message: 'Image exceeds the 5 MB limit.' } });
+            }
+            throw error;
+          }
+          if (currentPart.file.truncated) {
+            return reply.code(413).send({ success: false, error: { code: 'FILE_TOO_LARGE', message: 'Image exceeds the 5 MB limit.' } });
+          }
+          files.set(currentPart.fieldname, {
+            filename: currentPart.filename,
+            contentType: currentPart.mimetype,
+            buffer: Buffer.concat(chunks),
+          });
+        } else if (['name', 'profile', 'continentId'].includes(currentPart.fieldname)) {
+          fields[currentPart.fieldname] = String(currentPart.value ?? '');
+        }
+      }
+
+      if (!files.size) return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Select at least one replacement image.' } });
+
+      let submittedProfile: Record<string, unknown>;
+      let continentId = existing.continentId;
+      try {
+        const parsed = countryUpdateSchema.parse({
+          name: fields.name,
+          continentId: fields.continentId === undefined ? undefined : fields.continentId || null,
+          profile: JSON.parse(fields.profile || '{}'),
+        });
+        const existingProfile = existing.profile && typeof existing.profile === 'object'
+          ? existing.profile as Record<string, unknown>
+          : {};
+        submittedProfile = { ...existingProfile, ...(parsed.profile ?? {}) };
+        fields.name = parsed.name ?? existing.name;
+        continentId = parsed.continentId !== undefined ? parsed.continentId : existing.continentId;
+        if (continentId && !await prisma.continent.findUnique({ where: { id: continentId } })) {
+          return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
+        }
+      } catch {
+        return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Country name or profile is invalid.' } });
+      }
+
+      for (const file of files.values()) {
+        if (!file.buffer.length) return reply.code(400).send({ success: false, error: { code: 'INVALID_IMAGE', message: 'Uploaded image is empty.' } });
+        if (file.buffer.length > 5 * 1024 * 1024) return reply.code(413).send({ success: false, error: { code: 'FILE_TOO_LARGE', message: 'Image exceeds the 5 MB limit.' } });
+        if (!isAllowedUploadMimeType(file.contentType)) {
+          return reply.code(400).send({ success: false, error: { code: 'INVALID_IMAGE', message: 'Unsupported image content type.' } });
+        }
+      }
+
+      const storage = createUploadStorage();
+      if (storage.driver !== 's3') {
+        return reply.code(503).send({ success: false, error: { code: 'OBJECT_STORAGE_UNAVAILABLE', message: 'Country image storage is not configured.' } });
+      }
+
+      const uploaded: Array<{ fileKey: string; url: string; size: number; contentType: string }> = [];
+      try {
+        for (const [field, file] of files) {
+          const stored = await storage.storeFile({
+            userId,
+            filename: file.filename,
+            contentType: file.contentType,
+            buffer: file.buffer,
+          });
+          uploaded.push({ ...stored, contentType: file.contentType });
+
+          const readBack = await storage.readFile(stored.fileKey);
+          if (!readBack.buffer.equals(file.buffer) || readBack.contentType !== file.contentType) {
+            throw new Error('Stored image verification failed.');
+          }
+          submittedProfile[field === 'heroImage' ? 'heroImageUrl' : 'flagImageUrl'] = stored.url;
+        }
+
+        const updated = await prisma.$transaction(async (transaction) => {
+          for (const file of uploaded) {
+            await transaction.upload.create({
+              data: { userId, fileKey: file.fileKey, url: file.url, type: file.contentType, size: file.size },
+            });
+          }
+          return transaction.country.update({
+            where: { code: normalizedCode },
+            data: {
+              name: fields.name,
+              continentId,
+              profile: submittedProfile as any,
+            },
+            include: { continent: true },
+          });
+        });
+        const [cityCount, eventCount] = await Promise.all([
+          prisma.city.count({ where: { countryCode: normalizedCode } }),
+          prisma.event.count({ where: { countryCode: normalizedCode } }),
+        ]);
+        return reply.send({ success: true, data: normalizeCountry(updated, cityCount, eventCount, request) });
+      } catch (error: any) {
+        const cleanupFailures: string[] = [];
+        for (const file of uploaded) {
+          try {
+            await storage.deleteFile(file.fileKey);
+          } catch (cleanupError: any) {
+            cleanupFailures.push(file.fileKey);
+            app.log.error({ err: cleanupError, fileKey: file.fileKey }, 'Failed to remove country image after update failure');
+          }
+        }
+        if (cleanupFailures.length) {
+          return reply.code(500).send({ success: false, error: { code: 'IMAGE_CLEANUP_FAILED', message: 'Country update failed and an uploaded image could not be removed.' } });
+        }
+        app.log.error({ err: error, countryCode: normalizedCode }, 'Country image update failed');
+        return reply.code(500).send({ success: false, error: { code: 'COUNTRY_IMAGE_UPDATE_FAILED', message: 'Country images could not be saved.' } });
+      }
+    } catch (error: any) {
+      if (error?.name === 'ZodError') return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Country code is invalid.' } });
+      app.log.error({ err: error }, 'Country image request failed');
+      return reply.code(500).send({ success: false, error: { code: 'COUNTRY_IMAGE_UPDATE_FAILED', message: 'Country images could not be saved.' } });
     }
   });
 
