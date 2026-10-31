@@ -45,6 +45,20 @@ export function isSafePersistentUploadUrl(value: unknown): value is string {
   }
 }
 
+export function normalizePrivateImageUrl(value: unknown, allowedOrigin: string): string | null {
+  if (typeof value !== 'string') return null;
+  const localPath = normalizeLocalImageUrl(value) ?? (isSafePersistentUploadUrl(value) ? value : null);
+  if (localPath) return localPath;
+
+  try {
+    const parsed = new URL(value);
+    if (parsed.origin !== allowedOrigin) return null;
+    return normalizeLocalImageUrl(parsed.pathname) ?? (isSafePersistentUploadUrl(parsed.pathname) ? parsed.pathname : null);
+  } catch {
+    return null;
+  }
+}
+
 export function localImageUrl(...segments: string[]): string | null {
   if (!segments.length) return null;
   return normalizeLocalImageUrl(`/images/${segments.map(encodeURIComponent).join('/')}`);

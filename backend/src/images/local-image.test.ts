@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { isSafePersistentUploadUrl, localImageUrl, localImageWriteMiddleware, normalizeLocalImageUrl } from './local-image';
+import { isSafePersistentUploadUrl, localImageUrl, localImageWriteMiddleware, normalizeLocalImageUrl, normalizePrivateImageUrl } from './local-image';
 const installScriptImageWriteGuard = require('../../scripts/local-image-write-guard.cjs') as (client: { $use: (middleware: (params: any, next: (params: any) => Promise<unknown>) => Promise<unknown>) => void }) => void;
 
 describe('local image resolver', () => {
@@ -35,6 +35,20 @@ describe('local image resolver', () => {
     process.env.UPLOAD_STORAGE_DRIVER = 'r2';
     try {
       expect(isSafePersistentUploadUrl('/images/uploads/user-1/uploads/1000-image.png')).toBe(true);
+    } finally {
+      if (previousDriver === undefined) delete process.env.UPLOAD_STORAGE_DRIVER;
+      else process.env.UPLOAD_STORAGE_DRIVER = previousDriver;
+    }
+  });
+
+  it('canonicalizes same-origin private object URLs without accepting external URLs', () => {
+    const previousDriver = process.env.UPLOAD_STORAGE_DRIVER;
+    process.env.UPLOAD_STORAGE_DRIVER = 'r2';
+    const privateUrl = 'https://big-cities-backend-staging.hostless.app/images/uploads/al/uploads/123-albania.webp';
+
+    try {
+      expect(normalizePrivateImageUrl(privateUrl, 'https://big-cities-backend-staging.hostless.app')).toBe('/images/uploads/al/uploads/123-albania.webp');
+      expect(normalizePrivateImageUrl('https://images.example.com/images/uploads/al/uploads/123-albania.webp', 'https://big-cities-backend-staging.hostless.app')).toBeNull();
     } finally {
       if (previousDriver === undefined) delete process.env.UPLOAD_STORAGE_DRIVER;
       else process.env.UPLOAD_STORAGE_DRIVER = previousDriver;

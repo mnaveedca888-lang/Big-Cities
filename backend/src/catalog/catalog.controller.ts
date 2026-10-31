@@ -8,7 +8,7 @@ import AuthService from '../auth/auth.service';
 import { buildPagination } from '../utils/pagination';
 import { buildCanonicalCountryProfile } from './countryProfile';
 import { buildCanonicalCityProfile } from './cityProfile';
-import { isSafePersistentUploadUrl, localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
+import { isSafePersistentUploadUrl, localImageUrl, normalizeLocalImageUrl, normalizePrivateImageUrl } from '../images/local-image';
 import { databaseWritesEnabled } from '../staging-write-guard';
 import { createUploadStorage, getUploadStorageDriver, isValidImageContent } from '../uploads/upload-storage';
 import { drainImageCleanupQueue, enqueueOwnedImageCleanup } from '../uploads/image-lifecycle';
@@ -465,8 +465,39 @@ function sanitizeProfileImages(profile: any): any {
     } else {
       normalized[key] = value;
     }
+
   }
   return normalized;
+}
+
+function requestOrigin(request: FastifyRequest): string {
+  const protocol = String(request.headers['x-forwarded-proto'] ?? request.protocol).split(',')[0].trim();
+  return `${protocol}://${request.headers.host}`;
+}
+
+function canonicalizePrivateProfileImages(value: unknown, origin: string, key?: string): unknown {
+  if (Array.isArray(value)) return value.map((entry) => canonicalizePrivateProfileImages(entry, origin));
+  if (!value || typeof value !== 'object') {
+    if (key && /(image|thumbnail|avatar|flag|logo)/i.test(key) && typeof value === 'string') {
+      return normalizePrivateImageUrl(value, origin) ?? value;
+    }
+    return value;
+  }
+  return Object.fromEntries(Object.entries(value).map(([entryKey, entry]) => [
+    entryKey,
+    canonicalizePrivateProfileImages(entry, origin, entryKey),
+  ]));
+}
+
+function canonicalizeCountryBody(body: unknown, request: FastifyRequest): unknown {
+  if (!body || typeof body !== 'object') return body;
+  const input = body as Record<string, unknown>;
+  return {
+    ...input,
+    ...(input.profile !== undefined
+      ? { profile: canonicalizePrivateProfileImages(input.profile, requestOrigin(request)) }
+      : {}),
+  };
 }
 
 function normalizeContinent(continent: any) {
@@ -587,7 +618,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
       const ok = await isAdmin(prisma, auth, token);
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
-      const body = countryCreateSchema.parse(request.body || {});
+      const body = countryCreateSchema.parse(canonicalizeCountryBody(request.body || {}, request));
       const normalizedCode = body.code.trim().toUpperCase();
       const exists = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (exists) return reply.code(409).send({ success: false, error: { message: 'Country code already exists' } });
@@ -609,7 +640,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
       const { code } = countryParamSchema.parse(request.params || {});
       const normalizedCode = code.trim().toUpperCase();
-      const body = countryUpdateSchema.parse(request.body || {});
+      const body = countryUpdateSchema.parse(canonicalizeCountryBody(request.body || {}, request));
       const existing = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
       if (body.continentId && !await prisma.continent.findUnique({ where: { id: body.continentId } })) {
@@ -679,11 +710,11 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       let submittedProfile: Record<string, unknown>;
       let continentId = existing.continentId;
       try {
-        const parsed = countryUpdateSchema.parse({
+        const parsed = countryUpdateSchema.parse(canonicalizeCountryBody({
           name: fields.name,
           continentId: fields.continentId === undefined ? undefined : fields.continentId || null,
           profile: JSON.parse(fields.profile || '{}'),
-        });
+        }, request));
         const existingProfile = existing.profile && typeof existing.profile === 'object'
           ? existing.profile as Record<string, unknown>
           : {};
