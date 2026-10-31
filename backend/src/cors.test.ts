@@ -1,7 +1,12 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { afterEach, describe, expect, it } from 'vitest';
-import { DEVELOPMENT_FRONTEND_ORIGIN, getCorsOptions, PRODUCTION_FRONTEND_ORIGIN } from './cors';
+import {
+  DEVELOPMENT_FRONTEND_ORIGIN,
+  getCorsOptions,
+  PRODUCTION_FRONTEND_ORIGIN,
+  STAGING_TEST_FRONTEND_ORIGIN,
+} from './cors';
 
 const apps: ReturnType<typeof Fastify>[] = [];
 
@@ -86,5 +91,28 @@ describe('CORS configuration', () => {
     expect(response.headers['access-control-allow-headers']).toBe('Authorization, Content-Type');
     expect(response.headers['access-control-allow-methods'])
       .toBe('GET, HEAD, POST, PATCH, DELETE');
+  });
+
+  it('allows the staging test frontend only when candidate CORS is enabled', async () => {
+    const previous = process.env.ENABLE_STAGING_CANDIDATE_CORS;
+    process.env.ENABLE_STAGING_CANDIDATE_CORS = 'true';
+    try {
+      const app = await createCorsApp('production');
+      const response = await app.inject({
+        method: 'OPTIONS',
+        url: '/health/live',
+        headers: {
+          origin: STAGING_TEST_FRONTEND_ORIGIN,
+          'access-control-request-method': 'POST',
+          'access-control-request-headers': 'authorization,content-type',
+        },
+      });
+
+      expect(response.statusCode).toBe(204);
+      expect(response.headers['access-control-allow-origin']).toBe(STAGING_TEST_FRONTEND_ORIGIN);
+    } finally {
+      if (previous === undefined) delete process.env.ENABLE_STAGING_CANDIDATE_CORS;
+      else process.env.ENABLE_STAGING_CANDIDATE_CORS = previous;
+    }
   });
 });
