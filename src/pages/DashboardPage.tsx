@@ -9,6 +9,12 @@ import { apiBaseUrl } from '@/config/runtime';
 import { getCategories, getCountries, getCountryCities, updateCountry, updateCity } from '@/services/catalog';
 import { getEvents, updateEvent } from '@/services/events';
 import { getDashboardOverview } from '@/services/dashboard';
+import {
+  deletePreviousImage,
+  getImageUrlForDisplay,
+  verifyImageReplacement,
+  type ImageReplacementTarget,
+} from '@/services/imageReplacements';
 import type { CountryItem, CityItem, EventItem } from '@/types';
 import { formatAreaValue, parseAreaInput } from '@/utils/format';
 
@@ -38,6 +44,10 @@ type EventFormState = {
   enabled: boolean;
   featured: boolean;
   trending: boolean;
+};
+
+type UploadedImageReplacement = ImageReplacementTarget & {
+  key: string;
 };
 
 type ProfileValue = string | number | boolean | null | undefined | Record<string, unknown> | Array<string | number | boolean | Record<string, unknown> | null | undefined>;
@@ -94,6 +104,10 @@ function readEventForm(event: EventItem | null): EventFormState {
     featured: Boolean(event?.featured),
     trending: Boolean(event?.trending),
   };
+}
+
+function getReplacementKey(entity: ImageReplacementTarget['entity'], entityId: string, field: ImageReplacementTarget['field']) {
+  return `${entity}:${entityId}:${field}`;
 }
 
 function getFieldType(key: string, value: unknown): 'text' | 'number' | 'date' | 'url' | 'textarea' | 'boolean' | 'array' | 'object' {
@@ -326,6 +340,10 @@ export default function DashboardPage() {
   const [countryProfileData, setCountryProfileData] = useState<Record<string, unknown>>({});
   const [saveCountryState, setSaveCountryState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveCountryMessage, setSaveCountryMessage] = useState('');
+  const [uploadedImageReplacements, setUploadedImageReplacements] = useState<Record<string, UploadedImageReplacement>>({});
+  const [readyImageDeletions, setReadyImageDeletions] = useState<Record<string, UploadedImageReplacement>>({});
+  const [imageReplacementMessages, setImageReplacementMessages] = useState<Record<string, string>>({});
+  const [deletingImageKey, setDeletingImageKey] = useState<string | null>(null);
 
   const searchCountriesQuery = useQuery({
     queryKey: ['dashboard-countries-search', countrySearch],
@@ -438,8 +456,129 @@ export default function DashboardPage() {
     }
   }, [selectedEvent]);
 
+  const verifySavedImageReplacements = async (replacementKeys: string[], currentValues: Record<string, string>) => {
+    const candidates = replacementKeys
+      .map((key) => uploadedImageReplacements[key])
+      .filter((candidate): candidate is UploadedImageReplacement => (
+        Boolean(candidate) && currentValues[candidate.key] === candidate.replacementUrl
+      ));
+
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      replacementKeys.forEach((key) => delete next[key]);
+      return next;
+    });
+
+    for (const candidate of candidates) {
+      try {
+        const target: ImageReplacementTarget = {
+          entity: candidate.entity,
+          entityId: candidate.entityId,
+          field: candidate.field,
+          previousUrl: candidate.previousUrl,
+          replacementUrl: candidate.replacementUrl,
+        };
+        const verification = await verifyImageReplacement(target);
+        if (verification.canDeletePrevious) {
+          setReadyImageDeletions((current) => ({ ...current, [candidate.key]: candidate }));
+          setImageReplacementMessages((current) => {
+            const next = { ...current };
+            delete next[candidate.key];
+            return next;
+          });
+        } else if (verification.reason) {
+          setImageReplacementMessages((current) => ({ ...current, [candidate.key]: verification.reason! }));
+        }
+      } catch {
+        setImageReplacementMessages((current) => ({
+          ...current,
+          [candidate.key]: 'The replacement was saved, but its image could not be verified. The previous image is not available for deletion.',
+        }));
+      }
+    }
+  };
+
+  const confirmPreviousImageDeletion = async (key: string) => {
+    const candidate = readyImageDeletions[key];
+    if (!candidate) return;
+    const confirmed = window.confirm(
+      'Permanently delete the previous image? This action cannot be undone.',
+    );
+    if (!confirmed) return;
+
+    setDeletingImageKey(key);
+    setImageReplacementMessages((current) => ({ ...current, [key]: '' }));
+    try {
+      const target: ImageReplacementTarget = {
+        entity: candidate.entity,
+        entityId: candidate.entityId,
+        field: candidate.field,
+        previousUrl: candidate.previousUrl,
+        replacementUrl: candidate.replacementUrl,
+      };
+      await deletePreviousImage(target);
+      setReadyImageDeletions((current) => {
+        const next = { ...current };
+        delete next[key];
+        return next;
+      });
+      setUploadedImageReplacements((current) => {
+        const next = { ...current };
+        delete next[key];
+        return next;
+      });
+      setImageReplacementMessages((current) => ({ ...current, [key]: 'Previous image permanently deleted.' }));
+    } catch (error) {
+      setImageReplacementMessages((current) => ({
+        ...current,
+        [key]: error instanceof Error ? error.message : 'The previous image could not be deleted safely.',
+      }));
+    } finally {
+      setDeletingImageKey(null);
+    }
+  };
+
+  const renderPreviousImageAction = (key: string) => {
+    const candidate = readyImageDeletions[key];
+    return (
+      <>
+        {candidate ? (
+          <div className="space-y-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-900 dark:bg-emerald-950/30">
+            <img
+              src={getImageUrlForDisplay(candidate.replacementUrl)}
+              alt="Verified replacement image"
+              className="max-h-32 rounded-lg object-contain"
+            />
+            <button
+              type="button"
+              onClick={() => void confirmPreviousImageDeletion(key)}
+              disabled={deletingImageKey === key}
+              className="rounded-lg border border-rose-300 px-3 py-2 text-sm font-medium text-rose-700 disabled:opacity-60 dark:border-rose-900 dark:text-rose-300"
+            >
+              {deletingImageKey === key ? 'Deleting previous image...' : 'Delete Previous Image Permanently'}
+            </button>
+          </div>
+        ) : null}
+        {imageReplacementMessages[key] ? (
+          <p className="text-sm text-slate-600 dark:text-slate-400" role="status" aria-live="polite">
+            {imageReplacementMessages[key]}
+          </p>
+        ) : null}
+      </>
+    );
+  };
+
   const saveCountry = async () => {
     if (!selectedCountry) return;
+    const replacementKeys = [
+      getReplacementKey('country', selectedCountry.code, 'heroImageUrl'),
+      getReplacementKey('country', selectedCountry.code, 'flagImageUrl'),
+    ];
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      replacementKeys.forEach((key) => delete next[key]);
+      return next;
+    });
     try {
       setSaveCountryState('saving');
       setSaveCountryMessage('');
@@ -448,6 +587,10 @@ export default function DashboardPage() {
       if (countryForm.flagImageUrl.trim()) mergedProfile.flagImageUrl = countryForm.flagImageUrl.trim();
       await updateCountry(selectedCountry.code, { name: countryForm.name, profile: mergedProfile });
       await countriesQuery.refetch();
+      await verifySavedImageReplacements(replacementKeys, {
+        [replacementKeys[0]]: countryForm.heroImageUrl,
+        [replacementKeys[1]]: countryForm.flagImageUrl,
+      });
       setSaveCountryState('saved');
       setSaveCountryMessage('Country updated successfully.');
     } catch (error) {
@@ -459,6 +602,12 @@ export default function DashboardPage() {
 
   const saveCity = async () => {
     if (!selectedCity) return;
+    const replacementKey = getReplacementKey('city', selectedCity.slug, 'heroImageUrl');
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      delete next[replacementKey];
+      return next;
+    });
     try {
       setSaveCityState('saving');
       const mergedProfile = { ...cityProfileData } as Record<string, unknown>;
@@ -469,6 +618,7 @@ export default function DashboardPage() {
         profile: mergedProfile,
       });
       await countryCitiesQuery.refetch();
+      await verifySavedImageReplacements([replacementKey], { [replacementKey]: cityForm.heroImageUrl });
       setSaveCityState('saved');
     } catch (error) {
       console.error(error);
@@ -478,6 +628,12 @@ export default function DashboardPage() {
 
   const saveEvent = async () => {
     if (!selectedEvent) return;
+    const replacementKey = getReplacementKey('event', selectedEvent.slug, 'image');
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      delete next[replacementKey];
+      return next;
+    });
     try {
       setSaveEventState('saving');
       const tags = eventForm.tags
@@ -499,6 +655,7 @@ export default function DashboardPage() {
         trending: eventForm.trending,
       });
       await countryEventsQuery.refetch();
+      await verifySavedImageReplacements([replacementKey], { [replacementKey]: eventForm.image });
       setSaveEventState('saved');
     } catch (error) {
       console.error(error);
@@ -541,14 +698,44 @@ export default function DashboardPage() {
     }
   };
 
-  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>, onApply: (nextUrl: string) => void) => {
+  const handleImageUpload = async (
+    event: ChangeEvent<HTMLInputElement>,
+    key: string,
+    target: Omit<ImageReplacementTarget, 'replacementUrl' | 'previousUrl'>,
+    previousUrl: string,
+    onApply: (nextUrl: string) => void,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    setUploadedImageReplacements((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    setImageReplacementMessages((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
     try {
       const url = await uploadImageFile(file);
       onApply(url);
+      if (previousUrl && previousUrl !== url) {
+        setUploadedImageReplacements((current) => ({
+          ...current,
+          [key]: { ...target, key, previousUrl, replacementUrl: url },
+        }));
+      }
     } catch (error) {
-      console.error(error);
+      setImageReplacementMessages((current) => ({
+        ...current,
+        [key]: error instanceof Error ? error.message : 'Image upload failed. The previous image is not available for deletion.',
+      }));
     } finally {
       event.target.value = '';
     }
@@ -630,8 +817,20 @@ export default function DashboardPage() {
                       <span className="block">Upload new hero image</span>
                       <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                         <span>Choose file</span>
-                        <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(event) => selectedCountry && void handleImageUpload(
+                            event,
+                            getReplacementKey('country', selectedCountry.code, 'heroImageUrl'),
+                            { entity: 'country', entityId: selectedCountry.code, field: 'heroImageUrl' },
+                            readCountryForm(selectedCountry).heroImageUrl,
+                            (nextUrl) => setCountryForm((current) => ({ ...current, heroImageUrl: nextUrl })),
+                          )}
+                        />
                       </label>
+                      {selectedCountry ? renderPreviousImageAction(getReplacementKey('country', selectedCountry.code, 'heroImageUrl')) : null}
                     </div>
                   </div>
 
@@ -644,8 +843,20 @@ export default function DashboardPage() {
                       <span className="block">Upload new flag image</span>
                       <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                         <span>Choose file</span>
-                        <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCountryForm((current) => ({ ...current, flagImageUrl: nextUrl })))} />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(event) => selectedCountry && void handleImageUpload(
+                            event,
+                            getReplacementKey('country', selectedCountry.code, 'flagImageUrl'),
+                            { entity: 'country', entityId: selectedCountry.code, field: 'flagImageUrl' },
+                            readCountryForm(selectedCountry).flagImageUrl,
+                            (nextUrl) => setCountryForm((current) => ({ ...current, flagImageUrl: nextUrl })),
+                          )}
+                        />
                       </label>
+                      {selectedCountry ? renderPreviousImageAction(getReplacementKey('country', selectedCountry.code, 'flagImageUrl')) : null}
                     </div>
                   </div>
 
@@ -717,9 +928,21 @@ export default function DashboardPage() {
                     </label>
                     <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                       <span>Upload new image</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(event) => selectedCity && void handleImageUpload(
+                          event,
+                          getReplacementKey('city', selectedCity.slug, 'heroImageUrl'),
+                          { entity: 'city', entityId: selectedCity.slug, field: 'heroImageUrl' },
+                          readCityForm(selectedCity, selectedCountry?.code ?? '').heroImageUrl,
+                          (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })),
+                        )}
+                      />
                     </label>
                   </div>
+                  {selectedCity ? renderPreviousImageAction(getReplacementKey('city', selectedCity.slug, 'heroImageUrl')) : null}
 
                   <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
                     <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">City profile fields</div>
@@ -781,9 +1004,21 @@ export default function DashboardPage() {
                     <span className="block">Upload new event image</span>
                     <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                       <span>Choose file</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(event) => void handleImageUpload(event, (nextUrl) => setEventForm((current) => ({ ...current, image: nextUrl })))} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(event) => selectedEvent && void handleImageUpload(
+                          event,
+                          getReplacementKey('event', selectedEvent.slug, 'image'),
+                          { entity: 'event', entityId: selectedEvent.slug, field: 'image' },
+                          selectedEvent.image ?? '',
+                          (nextUrl) => setEventForm((current) => ({ ...current, image: nextUrl })),
+                        )}
+                      />
                     </label>
                   </div>
+                  {selectedEvent ? renderPreviousImageAction(getReplacementKey('event', selectedEvent.slug, 'image')) : null}
 
                   <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                     <span>Description</span>
@@ -849,4 +1084,3 @@ export default function DashboardPage() {
     </>
   );
 }
-

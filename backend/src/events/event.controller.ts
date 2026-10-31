@@ -4,6 +4,7 @@ import EventService from './event.service';
 import AuthService from '../auth/auth.service';
 import { z } from 'zod';
 import { normalizeLocalImageUrl } from '../images/local-image';
+import { recordSavedImageReplacement } from '../uploads/image-replacement';
 
 const localImageSchema = z.string().trim().refine(
   (value) => normalizeLocalImageUrl(value) !== null,
@@ -179,6 +180,8 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       const allowed = ['admin', 'organizer'];
       const ok = await hasRole(prisma, auth, token, allowed);
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      if (!token) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      const actorId = await auth.verifyAccessToken(token);
       const body = updateSchema.parse(request.body || {});
       const slug = eventSlugSchema.parse((request.params as any).slug);
       const patch: any = {};
@@ -194,7 +197,22 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (body.trending !== undefined) patch.trending = body.trending;
       if (body.enabled !== undefined) patch.enabled = body.enabled;
       if (body.image !== undefined) patch.image = body.image;
-      const updated = await service.updateBySlug(slug, patch);
+      const updated = await prisma.$transaction(async (transaction) => {
+        const existing = await transaction.event.findUnique({ where: { slug } });
+        if (!existing) return null;
+        const updatedEvent = await new EventService(transaction as any).updateBySlug(slug, patch);
+        if (existing.image && updatedEvent.image && existing.image !== updatedEvent.image) {
+          await recordSavedImageReplacement(transaction, actorId, {
+            entity: 'event',
+            entityId: slug,
+            field: 'image',
+            previousUrl: existing.image,
+            replacementUrl: updatedEvent.image,
+          });
+        }
+        return updatedEvent;
+      });
+      if (!updated) return reply.code(404).send({ success: false, error: { message: 'Not found' } });
       reply.send({ success: true, data: updated });
     } catch (err: any) {
       reply.code(400).send({ success: false, error: { message: err.message } });

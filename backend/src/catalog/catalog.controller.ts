@@ -7,6 +7,7 @@ import { buildCanonicalCountryProfile } from './countryProfile';
 import { buildCanonicalCityProfile } from './cityProfile';
 import { localImageUrl, normalizeLocalImageUrl } from '../images/local-image';
 import { getCatalogImageFileNames, hasCatalogImage } from '../images/catalog-image-index';
+import { recordSavedImageReplacement } from '../uploads/image-replacement';
 
 const PAKISTAN_IMAGE_FOLDER = 'Pakistan cities images';
 const PAKISTAN_COUNTRY_IMAGE_FILE = 'Pakistan.jpg';
@@ -347,6 +348,12 @@ async function isAdmin(prisma: PrismaClient, auth: AuthService, token: string | 
   return user?.role?.name === 'admin';
 }
 
+function getProfileImage(profile: unknown, field: 'heroImageUrl' | 'flagImageUrl') {
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return null;
+  const value = (profile as Record<string, unknown>)[field];
+  return typeof value === 'string' ? value : null;
+}
+
 function normalizeCategory(category: any) {
   return {
     id: category.id,
@@ -587,7 +594,33 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const body = countryUpdateSchema.parse(request.body || {});
       const existing = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
-      const updated = await prisma.country.update({ where: { code: normalizedCode }, data: { name: body.name ?? existing.name, continentId: body.continentId !== undefined ? body.continentId : existing.continentId, profile: body.profile !== undefined ? body.profile : existing.profile } as any });
+      const actorId = await auth.verifyAccessToken(token);
+      const updated = await prisma.$transaction(async (transaction) => {
+        const current = await transaction.country.findUnique({ where: { code: normalizedCode } });
+        if (!current) throw new Error('Country not found');
+        const country = await transaction.country.update({
+          where: { code: normalizedCode },
+          data: {
+            name: body.name ?? current.name,
+            continentId: body.continentId !== undefined ? body.continentId : current.continentId,
+            profile: body.profile !== undefined ? body.profile : current.profile,
+          } as any,
+        });
+        for (const field of ['heroImageUrl', 'flagImageUrl'] as const) {
+          const previousUrl = getProfileImage(current.profile, field);
+          const replacementUrl = getProfileImage(country.profile, field);
+          if (previousUrl && replacementUrl && previousUrl !== replacementUrl) {
+            await recordSavedImageReplacement(transaction, actorId, {
+              entity: 'country',
+              entityId: normalizedCode,
+              field,
+              previousUrl,
+              replacementUrl,
+            });
+          }
+        }
+        return country;
+      });
       const [cityCount, eventCount] = await Promise.all([
         prisma.city.count({ where: { countryCode: normalizedCode } }),
         prisma.event.count({ where: { countryCode: normalizedCode } }),
@@ -648,7 +681,31 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const body = cityUpdateSchema.parse(request.body || {});
       const existing = await prisma.city.findUnique({ where: { slug } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'City not found' } });
-      const updated = await prisma.city.update({ where: { slug }, data: { name: body.name ?? existing.name, countryCode: body.countryCode ?? existing.countryCode, profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (existing.profile as Record<string, unknown> | null)) } as any });
+      const actorId = await auth.verifyAccessToken(token);
+      const updated = await prisma.$transaction(async (transaction) => {
+        const current = await transaction.city.findUnique({ where: { slug } });
+        if (!current) throw new Error('City not found');
+        const city = await transaction.city.update({
+          where: { slug },
+          data: {
+            name: body.name ?? current.name,
+            countryCode: body.countryCode ?? current.countryCode,
+            profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (current.profile as Record<string, unknown> | null)),
+          } as any,
+        });
+        const previousUrl = getProfileImage(current.profile, 'heroImageUrl');
+        const replacementUrl = getProfileImage(city.profile, 'heroImageUrl');
+        if (previousUrl && replacementUrl && previousUrl !== replacementUrl) {
+          await recordSavedImageReplacement(transaction, actorId, {
+            entity: 'city',
+            entityId: slug,
+            field: 'heroImageUrl',
+            previousUrl,
+            replacementUrl,
+          });
+        }
+        return city;
+      });
       reply.send({ success: true, data: normalizeCity(updated, request) });
     } catch (error: any) {
       reply.code(400).send({ success: false, error: { message: error.message } });

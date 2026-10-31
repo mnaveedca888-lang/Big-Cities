@@ -15,6 +15,8 @@ describe('staging country update authorization', () => {
   let app: ReturnType<typeof Fastify>;
   let prisma: any;
   let countryUpdate: ReturnType<typeof vi.fn>;
+  let countryProfile: Record<string, unknown> | null;
+  let auditLogCreate: ReturnType<typeof vi.fn>;
   let adminToken: string;
   let memberToken: string;
 
@@ -24,29 +26,49 @@ describe('staging country update authorization', () => {
     process.env.ENABLE_STAGING_CANDIDATE_CORS = 'true';
     process.env.NODE_ENV = 'production';
     process.env.JWT_ACCESS_TOKEN_SECRET = 'staging-country-update-test-secret';
+    countryProfile = null;
 
     countryUpdate = vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({
       code: 'PK',
       name: 'Pakistan',
       continentId: null,
       continent: null,
-      profile: null,
+      profile: countryProfile,
       ...data,
     }));
+    const countryFindUnique = vi.fn(async () => ({
+      code: 'PK',
+      name: 'Pakistan',
+      continentId: null,
+      continent: null,
+      profile: countryProfile,
+    }));
+    auditLogCreate = vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({ id: 'audit-1', ...data }));
+    const transaction = {
+      country: { findUnique: countryFindUnique, update: countryUpdate },
+      $queryRaw: vi.fn(async (query: { sql: string; values: unknown[] }) => {
+        if (query.sql.includes('pg_advisory_xact_lock')) return [];
+        if (query.sql.includes('"profile" ->>')) return [{ matches: true }];
+        if (query.sql.includes('"image_json_object_keys"')) return [{ referenced: false }];
+        if (query.sql.includes('FROM "Upload"')) {
+          const fileKey = String(query.values[0]);
+          const url = `/images/uploads/${fileKey}`;
+          return [{ userId: 'admin-user', url, deletedAt: null }];
+        }
+        if (query.sql.includes('FROM "ImageCleanupJob"')) return [{ status: 'pending', completedAt: null }];
+        throw new Error(`Unexpected SQL in country update test: ${query.sql}`);
+      }),
+      auditLog: { create: auditLogCreate },
+    };
     prisma = {
+      $transaction: vi.fn(async (callback: (tx: typeof transaction) => unknown) => callback(transaction)),
       user: {
         findUnique: vi.fn(async ({ where }: { where: { id: string } }) => ({
           role: { name: where.id === 'admin-user' ? 'admin' : 'member' },
         })),
       },
       country: {
-        findUnique: vi.fn(async () => ({
-          code: 'PK',
-          name: 'Pakistan',
-          continentId: null,
-          continent: null,
-          profile: null,
-        })),
+        findUnique: countryFindUnique,
         update: countryUpdate,
       },
       city: { count: vi.fn(async () => 0) },
@@ -93,6 +115,34 @@ describe('staging country update authorization', () => {
     expect(countryUpdate).toHaveBeenCalledWith({
       where: { code: 'PK' },
       data: { name: 'Test Name', continentId: null, profile: null },
+    });
+  });
+
+  it('associates the exact old and new private images with the saved country update', async () => {
+    const previousUrl = '/images/uploads/admin-user/uploads/1000-old.png';
+    const replacementUrl = '/images/uploads/admin-user/uploads/2000-new.png';
+    countryProfile = { heroImageUrl: previousUrl };
+
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/countries/PK',
+      headers: { authorization: `Bearer ${adminToken}` },
+      payload: { profile: { heroImageUrl: replacementUrl } },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(auditLogCreate).toHaveBeenCalledWith({
+      data: {
+        userId: 'admin-user',
+        action: 'image-replacement-saved',
+        meta: JSON.stringify({
+          entity: 'country',
+          entityId: 'PK',
+          field: 'heroImageUrl',
+          previousKey: 'admin-user/uploads/1000-old.png',
+          replacementKey: 'admin-user/uploads/2000-new.png',
+        }),
+      },
     });
   });
 

@@ -26,6 +26,14 @@ The staging and deployed application must use `UPLOAD_STORAGE_DRIVER=r2` (normal
 
 The frontend uses [src/utils/imageValidation.ts](../src/utils/imageValidation.ts) to normalize image URLs and reject unsafe or malformed paths. The browser then renders safe images via [src/components/ui/safe-image.tsx](../src/components/ui/safe-image.tsx).
 
+## User-confirmed image replacement deletion
+
+After a Country, City, or Event image replacement is saved, the dashboard asks the backend to verify both the new record reference and a successful read from private object storage. The browser also decodes the replacement image before it can offer **Delete Previous Image Permanently**.
+
+Permanent deletion is a separate, authenticated operation and requires explicit confirmation. The backend accepts only the exact old private `/images/uploads/` object associated with the submitted record replacement, requires matching upload ownership and a pending lifecycle job, checks Country, City, Event, and User references, and serializes the final check/delete using the image lifecycle advisory lock. On successful object-store deletion it marks the matching Upload metadata and cleanup job complete. Failures are surfaced; the global cleanup worker is not enabled or invoked by this operation.
+
+This feature requires the already-deployed `20261031120000_add_image_cleanup_outbox` database objects, including the image-reference functions, locking triggers, and cleanup outbox. It does not add or run a migration. If those objects are unavailable, verification/deletion fails closed.
+
 ## Required private-bucket behavior
 
 When the staging configuration is approved and isolated, the bucket should remain private:
