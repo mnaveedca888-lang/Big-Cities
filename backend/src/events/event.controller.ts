@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { isSafePersistentUploadUrl, normalizeLocalImageUrl } from '../images/local-image';
 import { drainImageCleanupQueue } from '../uploads/image-lifecycle';
 import { sendApiError } from '../utils/api-error';
+import { recordSavedImageReplacement } from '../uploads/image-replacement';
 
 const localImageSchema = z.string().trim().refine(
   (value) => normalizeLocalImageUrl(value) !== null || isSafePersistentUploadUrl(value),
@@ -236,6 +237,8 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       const allowed = ['admin', 'organizer'];
       const ok = await hasRole(prisma, auth, token, allowed);
       if (!ok) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      if (!token) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      const actorId = await auth.verifyAccessToken(token);
       const body = updateSchema.parse(request.body || {});
       const slug = eventSlugSchema.parse((request.params as any).slug);
       const existing = await service.getBySlug(slug);
@@ -274,7 +277,22 @@ export function registerEventRoutes(app: FastifyInstance, prisma: PrismaClient) 
       if (body.primarySourceType !== undefined) patch.primarySourceType = body.primarySourceType;
       if (body.discoverySourceUrl !== undefined) patch.discoverySourceUrl = body.discoverySourceUrl;
       if (body.discoverySourceName !== undefined) patch.discoverySourceName = body.discoverySourceName;
-      const updated = await service.updateBySlug(slug, patch);
+      const updated = await prisma.$transaction(async (transaction) => {
+        const current = await transaction.event.findUnique({ where: { slug } });
+        if (!current) return null;
+        const updatedEvent = await new EventService(transaction as any).updateBySlug(slug, patch);
+        if (current.image && updatedEvent.image && current.image !== updatedEvent.image) {
+          await recordSavedImageReplacement(transaction, actorId, {
+            entity: 'event',
+            entityId: slug,
+            field: 'image',
+            previousUrl: current.image,
+            replacementUrl: updatedEvent.image,
+          });
+        }
+        return updatedEvent;
+      });
+      if (!updated) return reply.code(404).send({ success: false, error: { message: 'Not found' } });
       await drainImageCleanupQueue(prisma, app.log);
       reply.send({ success: true, data: updated });
     } catch (err: any) {

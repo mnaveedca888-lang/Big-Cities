@@ -1,11 +1,13 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
 import { createUploadStorage, hasMatchingImageExtension, isAllowedUploadMimeType, isValidImageContent, type UploadStorage } from './upload-storage';
 import { sendApiError } from '../utils/api-error';
 import { enqueueOwnedImageCleanup, getUnattachedUploadExpiresAt } from './image-lifecycle';
+import { deletePreviousImage, ImageReplacementError, verifyImageReplacement, type ReplacementTarget } from './image-replacement';
 
 function getBearerToken(request: any) {
   const authHeader = (request.headers.authorization || '') as string;
@@ -14,10 +16,38 @@ function getBearerToken(request: any) {
 
 const MAX_UPLOAD_SIZE = 5 * 1024 * 1024;
 
+const imageReplacementSchema = z.object({
+  entity: z.enum(['country', 'city', 'event', 'user']),
+  entityId: z.string().trim().min(1).max(200),
+  field: z.enum(['heroImageUrl', 'flagImageUrl', 'image', 'avatarUrl']),
+  previousUrl: z.string().max(2048).nullable().optional(),
+  replacementUrl: z.string().min(1).max(2048),
+}).strict();
+
 export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient, storage?: UploadStorage) {
   const auth = new AuthService(prisma as any);
 
   const uploadsEnabled = () => databaseWritesEnabled() && process.env.UPLOADS_ENABLED === 'true';
+  const isReplacementAdmin = async (token: string | null, entity: ReplacementTarget['entity'], entityId: string) => {
+    if (!token) return { userId: null, allowed: false };
+    const userId = await auth.verifyAccessToken(token).catch(() => null);
+    if (!userId) return { userId: null, allowed: false };
+    if (entity === 'user' && entityId === userId) return { userId, allowed: true };
+    const user = await prisma.user.findUnique({ where: { id: userId }, include: { role: true } });
+    return { userId, allowed: user?.role?.name === 'admin' };
+  };
+  const replacementErrorResponse = (err: unknown, fallbackCode: string, fallbackMessage: string) => {
+    if (err instanceof ImageReplacementError) {
+      return {
+        statusCode: err.statusCode,
+        body: { success: false, error: { code: err.code, message: err.message } },
+      };
+    }
+    return {
+      statusCode: 503,
+      body: { success: false, error: { code: fallbackCode, message: fallbackMessage } },
+    };
+  };
 
   const verifyAdmin = async (token: string | null) => {
     if (!token) throw Object.assign(new Error('Missing token'), { statusCode: 401 });
@@ -104,6 +134,66 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient,
         return reply.code(413).send({ success: false, error: { message: 'Image exceeds the 5 MB upload limit.' } });
       }
       return sendApiError(reply, app.log, err, 'Upload file request failed');
+    }
+  });
+
+  app.post('/uploads/replacements/verify', async (request, reply) => {
+    try {
+      const token = getBearerToken(request);
+      if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
+      const body = imageReplacementSchema.parse(request.body || {});
+      const access = await isReplacementAdmin(token, body.entity, body.entityId);
+      if (!access.userId) return reply.code(401).send({ success: false, error: { message: 'Invalid token' } });
+      if (!access.allowed) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      const target: ReplacementTarget = body;
+      const result = await verifyImageReplacement(prisma, storage ?? createUploadStorage(), access.userId, target);
+      return reply.send({ success: true, data: result });
+    } catch (err: any) {
+      if (err?.name === 'ZodError') {
+        return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Invalid image replacement request.' } });
+      }
+      const response = replacementErrorResponse(
+        err,
+        'IMAGE_VERIFICATION_UNAVAILABLE',
+        'The image replacement could not be verified. No deletion option is available.',
+      );
+      if (!(err instanceof ImageReplacementError)) app.log.warn('Image replacement verification failed');
+      return reply.code(response.statusCode).send(response.body);
+    }
+  });
+
+  app.post('/uploads/replacements/delete', async (request, reply) => {
+    try {
+      const token = getBearerToken(request);
+      if (!token) return reply.code(401).send({ success: false, error: { message: 'Missing token' } });
+      const body = imageReplacementSchema.parse(request.body || {});
+      const access = await isReplacementAdmin(token, body.entity, body.entityId);
+      if (!access.userId) return reply.code(401).send({ success: false, error: { message: 'Invalid token' } });
+      if (!access.allowed) return reply.code(403).send({ success: false, error: { message: 'Forbidden' } });
+      if (!databaseWritesEnabled()) {
+        return reply.code(503).send({
+          success: false,
+          error: {
+            code: 'STAGING_READ_ONLY',
+            message: 'Permanent image deletion is unavailable while staging database writes are disabled.',
+          },
+        });
+      }
+
+      const target: ReplacementTarget = body;
+      const result = await deletePreviousImage(prisma, storage ?? createUploadStorage(), access.userId, target);
+      return reply.send({ success: true, data: result });
+    } catch (err: any) {
+      if (err?.name === 'ZodError') {
+        return reply.code(400).send({ success: false, error: { code: 'INVALID_INPUT', message: 'Invalid image deletion request.' } });
+      }
+      const response = replacementErrorResponse(
+        err,
+        'IMAGE_DELETE_UNAVAILABLE',
+        'The deletion operation could not be finalized. The object may already have been deleted; repeating this exact request is safe.',
+      );
+      if (!(err instanceof ImageReplacementError)) app.log.warn('Previous image deletion failed');
+      return reply.code(response.statusCode).send(response.body);
     }
   });
 }

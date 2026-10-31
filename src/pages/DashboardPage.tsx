@@ -23,6 +23,12 @@ import {
 } from '@/services/catalog';
 import { createEvent, deleteEvent, getEvent, getEventsPage, updateEvent } from '@/services/events';
 import { getDashboardOverview } from '@/services/dashboard';
+import {
+  deletePreviousImage,
+  getImageUrlForDisplay,
+  verifyImageReplacement,
+  type ImageReplacementTarget,
+} from '@/services/imageReplacements';
 import type { CategoryItem, CountryItem, CityItem, ContinentItem, EventItem } from '@/types';
 import { isApiError } from '@/types/errors';
 import { formatAreaValue, parseAreaInput } from '@/utils/format';
@@ -69,6 +75,10 @@ type EventFormState = {
   trending: boolean;
 };
 
+type UploadedImageReplacement = ImageReplacementTarget & {
+  key: string;
+};
+
 type ProfileValue = string | number | boolean | null | undefined | Record<string, unknown> | Array<string | number | boolean | Record<string, unknown> | null | undefined>;
 
 function formatLabel(value: string) {
@@ -89,6 +99,10 @@ function emptyEventForm(countryCode = ''): EventFormState {
     discoverySourceUrl: '', discoverySourceName: '', dateOnly: false,
     enabled: true, featured: false, trending: false,
   };
+}
+
+function getReplacementKey(entity: ImageReplacementTarget['entity'], entityId: string, field: ImageReplacementTarget['field']) {
+  return `${entity}:${entityId}:${field}`;
 }
 
 const EMPTY_COUNTRIES: CountryItem[] = [];
@@ -466,6 +480,10 @@ export default function DashboardPage() {
   const [saveCityMessage, setSaveCityMessage] = useState('');
   const [saveEventState, setSaveEventState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveEventMessage, setSaveEventMessage] = useState('');
+  const [uploadedImageReplacements, setUploadedImageReplacements] = useState<Record<string, UploadedImageReplacement>>({});
+  const [readyImageDeletions, setReadyImageDeletions] = useState<Record<string, UploadedImageReplacement>>({});
+  const [imageReplacementMessages, setImageReplacementMessages] = useState<Record<string, string>>({});
+  const [deletingImageKey, setDeletingImageKey] = useState<string | null>(null);
   const [countryDeleteMessage, setCountryDeleteMessage] = useState('');
   const [cityDeleteMessage, setCityDeleteMessage] = useState('');
   const [eventDeleteMessage, setEventDeleteMessage] = useState('');
@@ -619,6 +637,123 @@ export default function DashboardPage() {
     }
   }, [selectedEvent, isCreatingEvent]);
 
+  const verifyReplacementCandidates = async (candidates: UploadedImageReplacement[]) => {
+    for (const candidate of candidates) {
+      try {
+        const target: ImageReplacementTarget = {
+          entity: candidate.entity,
+          entityId: candidate.entityId,
+          field: candidate.field,
+          previousUrl: candidate.previousUrl,
+          replacementUrl: candidate.replacementUrl,
+        };
+        const verification = await verifyImageReplacement(target);
+        if (verification.canDeletePrevious) {
+          setReadyImageDeletions((current) => ({ ...current, [candidate.key]: candidate }));
+          setImageReplacementMessages((current) => {
+            const next = { ...current };
+            delete next[candidate.key];
+            return next;
+          });
+        } else if (verification.reason) {
+          setImageReplacementMessages((current) => ({ ...current, [candidate.key]: verification.reason! }));
+        }
+      } catch {
+        setImageReplacementMessages((current) => ({
+          ...current,
+          [candidate.key]: 'The replacement was saved, but its image could not be verified. The previous image is not available for deletion.',
+        }));
+      }
+    }
+  };
+
+  const verifySavedImageReplacements = async (keys: string[], currentValues: Record<string, string>) => {
+    const candidates = keys
+      .map((key) => uploadedImageReplacements[key])
+      .filter((candidate): candidate is UploadedImageReplacement => (
+        Boolean(candidate) && currentValues[candidate.key] === candidate.replacementUrl
+      ));
+
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      keys.forEach((key) => delete next[key]);
+      return next;
+    });
+    await verifyReplacementCandidates(candidates);
+  };
+
+  const clearImageReplacementAction = (key: string) => {
+    setReadyImageDeletions((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    setUploadedImageReplacements((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    setImageReplacementMessages((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+  };
+
+  const confirmPreviousImageDeletion = async (key: string) => {
+    const candidate = readyImageDeletions[key];
+    if (!candidate || !window.confirm('Permanently delete the previous image? This action cannot be undone.')) return;
+
+    setDeletingImageKey(key);
+    setImageReplacementMessages((current) => ({ ...current, [key]: '' }));
+    try {
+      const target: ImageReplacementTarget = {
+        entity: candidate.entity,
+        entityId: candidate.entityId,
+        field: candidate.field,
+        previousUrl: candidate.previousUrl,
+        replacementUrl: candidate.replacementUrl,
+      };
+      await deletePreviousImage(target);
+      setReadyImageDeletions((current) => {
+        const next = { ...current };
+        delete next[key];
+        return next;
+      });
+      setUploadedImageReplacements((current) => {
+        const next = { ...current };
+        delete next[key];
+        return next;
+      });
+      setImageReplacementMessages((current) => ({ ...current, [key]: 'Previous image permanently deleted.' }));
+    } catch (error) {
+      setImageReplacementMessages((current) => ({
+        ...current,
+        [key]: error instanceof Error ? error.message : 'The previous image could not be deleted safely.',
+      }));
+    } finally {
+      setDeletingImageKey(null);
+    }
+  };
+
+  const renderPreviousImageAction = (key: string) => {
+    const candidate = readyImageDeletions[key];
+    return (
+      <>
+        {candidate ? (
+          <div className="space-y-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-900 dark:bg-emerald-950/30">
+            <img src={getImageUrlForDisplay(candidate.replacementUrl)} alt="Verified replacement image" className="max-h-32 rounded-lg object-contain" />
+            <p className="text-sm text-emerald-800 dark:text-emerald-200">Replacement saved and verified.</p>
+            <button type="button" onClick={() => void confirmPreviousImageDeletion(key)} disabled={deletingImageKey === key} className="rounded-lg border border-rose-300 px-3 py-2 text-sm font-medium text-rose-700 disabled:opacity-50 dark:border-rose-900 dark:text-rose-300">
+              {deletingImageKey === key ? 'Deleting…' : 'Delete Previous Image Permanently'}
+            </button>
+          </div>
+        ) : null}
+        {imageReplacementMessages[key] ? <p role="status" aria-live="polite" className="text-sm text-rose-600">{imageReplacementMessages[key]}</p> : null}
+      </>
+    );
+  };
+
   const saveCountry = async () => {
     const creatingCountry = isCreatingCountry;
     const code = countryForm.code.trim().toUpperCase();
@@ -695,6 +830,26 @@ export default function DashboardPage() {
           throw new Error(`The ${field === 'heroImageUrl' ? 'hero' : 'flag'} image was not persisted. The previous image is unchanged.`);
         }
       }
+      const previousCountryProfile = selectedCountry?.profile && typeof selectedCountry.profile === 'object'
+        ? selectedCountry.profile as Record<string, unknown>
+        : {};
+      const countryImageCandidates = ([
+        ['heroImageUrl', countryHeroImageFile],
+        ['flagImageUrl', countryFlagImageFile],
+      ] as const).flatMap(([field, file]) => {
+        const previousUrl = String(previousCountryProfile[field] ?? '');
+        const replacementUrl = String(persistedProfile[field] ?? '');
+        if (!file || !previousUrl || !replacementUrl || previousUrl === replacementUrl) return [];
+        const key = getReplacementKey('country', savedCountry.code, field);
+        return [{
+          entity: 'country' as const,
+          entityId: savedCountry.code,
+          field,
+          previousUrl,
+          replacementUrl,
+          key,
+        }];
+      });
       setCountryForm(readCountryForm(persistedCountry, continents));
       setCountryProfileData(buildCountryProfileState(persistedCountry));
       setCountryHeroImageFile(null);
@@ -709,6 +864,7 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-detail', code] }),
       ]);
+      await verifyReplacementCandidates(countryImageCandidates);
       setSaveCountryState('saved');
       setSaveCountryMessage(creatingCountry ? 'Country created successfully.' : 'Country updated successfully.');
     } catch (error) {
@@ -779,6 +935,12 @@ export default function DashboardPage() {
         ...(selectedCity ? [queryClient.invalidateQueries({ queryKey: ['dashboard-city-detail', selectedCity.slug] })] : []),
         queryClient.invalidateQueries({ queryKey: ['search'] }),
       ]);
+      if (selectedCity) {
+        await verifySavedImageReplacements(
+          [getReplacementKey('city', selectedCity.slug, 'heroImageUrl')],
+          { [getReplacementKey('city', selectedCity.slug, 'heroImageUrl')]: String(mergedProfile.heroImageUrl ?? '') },
+        );
+      }
       setSaveCityState('saved');
       setSaveCityMessage(isCreatingCity ? 'City created successfully.' : 'City updated successfully.');
     } catch (error) {
@@ -881,6 +1043,12 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['dashboard-overview'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-events'] }),
       ]);
+      if (selectedEvent) {
+        await verifySavedImageReplacements(
+          [getReplacementKey('event', selectedEvent.slug, 'image')],
+          { [getReplacementKey('event', selectedEvent.slug, 'image')]: eventForm.image },
+        );
+      }
       setSaveEventState('saved');
       setSaveEventMessage(creating ? 'Event created successfully.' : 'Event updated successfully.');
     } catch (error) {
@@ -933,6 +1101,13 @@ export default function DashboardPage() {
       setSaveCountryMessage('Image must be 5 MB or smaller.');
       return;
     }
+    if (selectedCountry) {
+      clearImageReplacementAction(getReplacementKey(
+        'country',
+        selectedCountry.code,
+        field === 'hero' ? 'heroImageUrl' : 'flagImageUrl',
+      ));
+    }
     if (field === 'hero') setCountryHeroImageFile(file);
     else setCountryFlagImageFile(file);
     setSaveCountryState('idle');
@@ -977,15 +1152,28 @@ export default function DashboardPage() {
     }
   };
 
-  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>, onApply: (nextUrl: string) => void) => {
+  const handleImageUpload = async (
+    event: ChangeEvent<HTMLInputElement>,
+    key: string,
+    target: Omit<ImageReplacementTarget, 'replacementUrl' | 'previousUrl'>,
+    previousUrl: string,
+    onApply: (nextUrl: string) => void,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    clearImageReplacementAction(key);
     try {
       setImageUploadState('uploading');
       setImageUploadProgress(0);
       setImageUploadMessage('Uploading image…');
       const url = await uploadImageFile(file, setImageUploadProgress);
       onApply(url);
+      if (previousUrl && previousUrl !== url) {
+        setUploadedImageReplacements((current) => ({
+          ...current,
+          [key]: { ...target, key, previousUrl, replacementUrl: url },
+        }));
+      }
       setImageUploadState('success');
       setImageUploadMessage('Image uploaded. Save the record to apply it.');
     } catch (error) {
@@ -1126,7 +1314,10 @@ export default function DashboardPage() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Hero image</span>
-                      <input value={countryForm.heroImageUrl} onChange={(event) => setCountryForm((current) => ({ ...current, heroImageUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <input value={countryForm.heroImageUrl} onChange={(event) => {
+                        if (selectedCountry) clearImageReplacementAction(getReplacementKey('country', selectedCountry.code, 'heroImageUrl'));
+                        setCountryForm((current) => ({ ...current, heroImageUrl: event.target.value }));
+                      }} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
                       {countryHeroImageFile
                         ? <SelectedFilePreview file={countryHeroImageFile} label={`${countryForm.name} country preview`} />
                         : <ImagePreview value={countryForm.heroImageUrl} label={`${countryForm.name} country`} />}
@@ -1138,13 +1329,17 @@ export default function DashboardPage() {
                         <input type="file" accept="image/*" className="sr-only" onChange={(event) => handleCountryImageSelection(event, 'hero')} />
                       </label>
                       {countryHeroImageFile ? <span className="block text-xs text-slate-500">Selected: {countryHeroImageFile.name}. Uploads when you save.</span> : null}
+                      {selectedCountry ? renderPreviousImageAction(getReplacementKey('country', selectedCountry.code, 'heroImageUrl')) : null}
                     </div>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
                     <label className="block space-y-2 text-sm text-slate-700 dark:text-slate-300">
                       <span>Flag image</span>
-                      <input value={countryForm.flagImageUrl} onChange={(event) => setCountryForm((current) => ({ ...current, flagImageUrl: event.target.value }))} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
+                      <input value={countryForm.flagImageUrl} onChange={(event) => {
+                        if (selectedCountry) clearImageReplacementAction(getReplacementKey('country', selectedCountry.code, 'flagImageUrl'));
+                        setCountryForm((current) => ({ ...current, flagImageUrl: event.target.value }));
+                      }} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900" />
                       {countryFlagImageFile
                         ? <SelectedFilePreview file={countryFlagImageFile} label={`${countryForm.name} flag preview`} />
                         : <ImagePreview value={countryForm.flagImageUrl} label={`${countryForm.name} flag`} />}
@@ -1156,6 +1351,7 @@ export default function DashboardPage() {
                         <input type="file" accept="image/*" className="sr-only" onChange={(event) => handleCountryImageSelection(event, 'flag')} />
                       </label>
                       {countryFlagImageFile ? <span className="block text-xs text-slate-500">Selected: {countryFlagImageFile.name}. Uploads when you save.</span> : null}
+                      {selectedCountry ? renderPreviousImageAction(getReplacementKey('country', selectedCountry.code, 'flagImageUrl')) : null}
                     </div>
                   </div>
 
@@ -1263,8 +1459,26 @@ export default function DashboardPage() {
                     </label>
                     <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                       <span>Upload new image</span>
-                      <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })))} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(event) => {
+                          const key = selectedCity ? getReplacementKey('city', selectedCity.slug, 'heroImageUrl') : '';
+                          const profile = selectedCity?.profile && typeof selectedCity.profile === 'object'
+                            ? selectedCity.profile as Record<string, unknown>
+                            : {};
+                          void handleImageUpload(
+                            event,
+                            key,
+                            { entity: 'city', entityId: selectedCity?.slug ?? '', field: 'heroImageUrl' },
+                            String(profile.heroImageUrl ?? ''),
+                            (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })),
+                          );
+                        }}
+                      />
                     </label>
+                    {selectedCity ? renderPreviousImageAction(getReplacementKey('city', selectedCity.slug, 'heroImageUrl')) : null}
                   </div>
 
                   <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
@@ -1390,9 +1604,24 @@ export default function DashboardPage() {
                     <span className="block">Upload new event image</span>
                     <label className="inline-flex cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 hover:border-cyan-500 focus-within:ring-2 focus-within:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900">
                       <span>Choose file</span>
-                      <input type="file" accept="image/*" className="sr-only" onChange={(event) => void handleImageUpload(event, (nextUrl) => setEventForm((current) => ({ ...current, image: nextUrl })))} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(event) => {
+                          const key = selectedEvent ? getReplacementKey('event', selectedEvent.slug, 'image') : '';
+                          void handleImageUpload(
+                            event,
+                            key,
+                            { entity: 'event', entityId: selectedEvent?.slug ?? '', field: 'image' },
+                            selectedEvent?.image ?? '',
+                            (nextUrl) => setEventForm((current) => ({ ...current, image: nextUrl })),
+                          );
+                        }}
+                      />
                     </label>
                   </div>
+                  {selectedEvent ? renderPreviousImageAction(getReplacementKey('event', selectedEvent.slug, 'image')) : null}
 
                   <label className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
                     <span>Description</span>

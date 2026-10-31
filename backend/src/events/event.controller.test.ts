@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EVENT_SLUG_MAX_LENGTH, registerEventRoutes, resolveCategoryId } from './event.controller';
 
 const apps: FastifyInstance[] = [];
+const originalUploadStorageDriver = process.env.UPLOAD_STORAGE_DRIVER;
 
 async function createEventApi(
   events: Map<string, Record<string, unknown>>,
@@ -38,6 +39,8 @@ async function createEventApi(
 
 afterEach(async () => {
   await Promise.all(apps.splice(0).map((app) => app.close()));
+  if (originalUploadStorageDriver === undefined) delete process.env.UPLOAD_STORAGE_DRIVER;
+  else process.env.UPLOAD_STORAGE_DRIVER = originalUploadStorageDriver;
 });
 
 describe('event category API selector', () => {
@@ -253,5 +256,65 @@ describe('event image writes', () => {
 
     expect(response.statusCode).toBe(400);
     expect(eventCreate).not.toHaveBeenCalled();
+  });
+
+  it('associates the exact old and new private images with the saved event update', async () => {
+    process.env.JWT_ACCESS_TOKEN_SECRET = 'test-access-secret';
+    process.env.UPLOAD_STORAGE_DRIVER = 'r2';
+    const previousUrl = '/images/uploads/admin-user/uploads/1000-old.png';
+    const replacementUrl = '/images/uploads/admin-user/uploads/2000-new.png';
+    const event = { id: 'event-1', slug: 'image-replacement-event', image: previousUrl };
+    const auditLogCreate = vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({ id: 'audit-1', ...data }));
+    const transaction = {
+      event: {
+        findUnique: vi.fn(async () => event),
+        update: vi.fn(async ({ data }: { data: Record<string, unknown> }) => ({ ...event, ...data })),
+      },
+      $queryRaw: vi.fn(async (query: { sql: string; values: unknown[] }) => {
+        if (query.sql.includes('pg_advisory_xact_lock')) return [];
+        if (query.sql.includes('"image" =')) return [{ matches: true }];
+        if (query.sql.includes('"image_json_object_keys"')) return [{ referenced: false }];
+        if (query.sql.includes('FROM "Upload"')) {
+          const fileKey = String(query.values[0]);
+          return [{ userId: 'admin-user', url: `/images/uploads/${fileKey}`, deletedAt: null }];
+        }
+        if (query.sql.includes('FROM "ImageCleanupJob"')) return [{ status: 'pending', completedAt: null }];
+        throw new Error(`Unexpected SQL in event update test: ${query.sql}`);
+      }),
+      auditLog: { create: auditLogCreate },
+    };
+    const prisma = {
+      $transaction: vi.fn(async (callback: (tx: typeof transaction) => unknown) => callback(transaction)),
+      event: transaction.event,
+      category: { findFirst: vi.fn() },
+      user: { findUnique: vi.fn().mockResolvedValue({ id: 'admin-user', role: { name: 'admin' } }) },
+    } as any;
+    const app = Fastify({ maxParamLength: EVENT_SLUG_MAX_LENGTH });
+    apps.push(app);
+    registerEventRoutes(app, prisma);
+    await app.ready();
+    const token = jwt.sign({ sub: 'admin-user' }, 'test-access-secret');
+
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/events/image-replacement-event',
+      headers: { authorization: `Bearer ${token}` },
+      payload: { image: replacementUrl },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(auditLogCreate).toHaveBeenCalledWith({
+      data: {
+        userId: 'admin-user',
+        action: 'image-replacement-saved',
+        meta: JSON.stringify({
+          entity: 'event',
+          entityId: 'image-replacement-event',
+          field: 'image',
+          previousKey: 'admin-user/uploads/1000-old.png',
+          replacementKey: 'admin-user/uploads/2000-new.png',
+        }),
+      },
+    });
   });
 });

@@ -13,6 +13,7 @@ import { databaseWritesEnabled } from '../staging-write-guard';
 import { createUploadStorage, getUploadStorageDriver, isValidImageContent } from '../uploads/upload-storage';
 import { drainImageCleanupQueue, enqueueOwnedImageCleanup } from '../uploads/image-lifecycle';
 import { sendApiError } from '../utils/api-error';
+import { recordSavedImageReplacement } from '../uploads/image-replacement';
 
 const PAKISTAN_IMAGE_FOLDER = 'Pakistan cities images';
 const PAKISTAN_COUNTRY_IMAGE_FILE = 'Pakistan.jpg';
@@ -369,6 +370,12 @@ async function isAdmin(prisma: PrismaClient, auth: AuthService, token: string | 
   return user?.role?.name === 'admin';
 }
 
+function getProfileImage(profile: unknown, field: 'heroImageUrl' | 'flagImageUrl') {
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return null;
+  const value = (profile as Record<string, unknown>)[field];
+  return typeof value === 'string' ? value : null;
+}
+
 function normalizeCategory(category: any) {
   return {
     id: category.id,
@@ -646,7 +653,33 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       if (body.continentId && !await prisma.continent.findUnique({ where: { id: body.continentId } })) {
         return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
       }
-      const updated = await prisma.country.update({ where: { code: normalizedCode }, data: { name: body.name ?? existing.name, continentId: body.continentId !== undefined ? body.continentId : existing.continentId, profile: body.profile !== undefined ? body.profile : existing.profile } as any });
+      const actorId = await auth.verifyAccessToken(token);
+      const updated = await prisma.$transaction(async (transaction) => {
+        const current = await transaction.country.findUnique({ where: { code: normalizedCode } });
+        if (!current) throw new Error('Country not found');
+        const country = await transaction.country.update({
+          where: { code: normalizedCode },
+          data: {
+            name: body.name ?? current.name,
+            continentId: body.continentId !== undefined ? body.continentId : current.continentId,
+            profile: body.profile !== undefined ? body.profile : current.profile,
+          } as any,
+        });
+        for (const field of ['heroImageUrl', 'flagImageUrl'] as const) {
+          const previousUrl = getProfileImage(current.profile, field);
+          const replacementUrl = getProfileImage(country.profile, field);
+          if (previousUrl && replacementUrl && previousUrl !== replacementUrl) {
+            await recordSavedImageReplacement(transaction, actorId, {
+              entity: 'country',
+              entityId: normalizedCode,
+              field,
+              previousUrl,
+              replacementUrl,
+            });
+          }
+        }
+        return country;
+      });
       await drainImageCleanupQueue(prisma, app.log);
       const [cityCount, eventCount] = await Promise.all([
         prisma.city.count({ where: { countryCode: normalizedCode } }),
@@ -741,7 +774,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
         return reply.code(503).send({ success: false, error: { code: 'OBJECT_STORAGE_UNAVAILABLE', message: 'Country image storage is not configured.' } });
       }
 
-      const uploaded: Array<{ fileKey: string; url: string; size: number; contentType: string }> = [];
+      const uploaded: Array<{ fileKey: string; url: string; size: number; contentType: string; field: string }> = [];
       let databaseCommitted = false;
       try {
         for (const [field, file] of files) {
@@ -751,7 +784,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
             contentType: file.contentType,
             buffer: file.buffer,
           });
-          uploaded.push({ ...stored, contentType: file.contentType });
+          uploaded.push({ ...stored, contentType: file.contentType, field });
 
           const readBack = await storage.readFile(stored.fileKey);
           if (!readBack.buffer.equals(file.buffer) || readBack.contentType !== file.contentType) {
@@ -775,7 +808,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
               },
             });
           }
-          return transaction.country.update({
+          const country = await transaction.country.update({
             where: { code: normalizedCode },
             data: {
               name: fields.name,
@@ -784,6 +817,21 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
             },
             include: { continent: true },
           });
+          for (const file of uploaded) {
+            const field = file.field === 'heroImage' ? 'heroImageUrl' : 'flagImageUrl';
+            const previousUrl = getProfileImage(existing.profile, field);
+            const replacementUrl = getProfileImage(country.profile, field);
+            if (previousUrl && replacementUrl && previousUrl !== replacementUrl) {
+              await recordSavedImageReplacement(transaction, userId, {
+                entity: 'country',
+                entityId: normalizedCode,
+                field,
+                previousUrl,
+                replacementUrl,
+              });
+            }
+          }
+          return country;
         });
         databaseCommitted = true;
         await drainImageCleanupQueue(prisma, app.log);
@@ -897,7 +945,31 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
           return reply.code(409).send({ success: false, error: { message: 'City country cannot be changed while events are associated with it.' } });
         }
       }
-      const updated = await prisma.city.update({ where: { slug }, data: { name: body.name ?? existing.name, countryCode: nextCountryCode, profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (existing.profile as Record<string, unknown> | null)) } as any });
+      const actorId = await auth.verifyAccessToken(token);
+      const updated = await prisma.$transaction(async (transaction) => {
+        const current = await transaction.city.findUnique({ where: { slug } });
+        if (!current) throw new Error('City not found');
+        const city = await transaction.city.update({
+          where: { slug },
+          data: {
+            name: body.name ?? current.name,
+            countryCode: nextCountryCode,
+            profile: buildCanonicalCityProfile(body.profile !== undefined ? body.profile : (current.profile as Record<string, unknown> | null)),
+          } as any,
+        });
+        const previousUrl = getProfileImage(current.profile, 'heroImageUrl');
+        const replacementUrl = getProfileImage(city.profile, 'heroImageUrl');
+        if (previousUrl && replacementUrl && previousUrl !== replacementUrl) {
+          await recordSavedImageReplacement(transaction, actorId, {
+            entity: 'city',
+            entityId: slug,
+            field: 'heroImageUrl',
+            previousUrl,
+            replacementUrl,
+          });
+        }
+        return city;
+      });
       await drainImageCleanupQueue(prisma, app.log);
       reply.send({ success: true, data: normalizeCity(updated, request) });
     } catch (error: any) {
