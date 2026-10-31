@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import AuthService from '../auth/auth.service';
 import { databaseWritesEnabled } from '../staging-write-guard';
 import { createUploadStorage, hasMatchingImageExtension, isAllowedUploadMimeType, isValidImageContent, type UploadStorage } from './upload-storage';
@@ -72,6 +73,7 @@ export function registerUploadRoutes(app: FastifyInstance, prisma: PrismaClient,
       try {
         await prisma.upload.create({
           data: {
+            id: randomUUID(),
             userId,
             fileKey: stored.fileKey,
             url: stored.url,

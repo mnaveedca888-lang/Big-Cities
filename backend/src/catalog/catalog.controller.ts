@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { PrismaClient } from '@prisma/client';
+import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import AuthService from '../auth/auth.service';
 import { buildPagination } from '../utils/pagination';
@@ -733,6 +734,7 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
           for (const file of uploaded) {
             await transaction.upload.create({
               data: {
+                id: randomUUID(),
                 userId,
                 fileKey: file.fileKey,
                 url: file.url,
