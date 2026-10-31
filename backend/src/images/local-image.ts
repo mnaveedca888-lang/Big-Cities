@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { getUploadStorageDriver } from '../uploads/upload-storage';
 
 const IMAGE_ROOT = path.resolve(__dirname, '..', '..', 'public', 'Images');
 const IMAGE_EXTENSION = /\.(jpg|jpeg|png|webp|gif|svg|avif|bmp|ico)$/i;
@@ -30,7 +31,7 @@ export function normalizeLocalImageUrl(value: unknown): string | null {
 }
 
 export function isSafePersistentUploadUrl(value: unknown): value is string {
-  if (process.env.UPLOAD_STORAGE_DRIVER !== 's3' || typeof value !== 'string') return false;
+  if (getUploadStorageDriver() !== 's3' || typeof value !== 'string') return false;
   const prefix = '/images/uploads/';
   if (!value.startsWith(prefix)) return false;
   const objectKey = value.slice(prefix.length);

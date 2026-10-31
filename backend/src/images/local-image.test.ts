@@ -30,6 +30,17 @@ describe('local image resolver', () => {
     }
   });
 
+  it('accepts persistent upload keys when the driver is configured as r2', () => {
+    const previousDriver = process.env.UPLOAD_STORAGE_DRIVER;
+    process.env.UPLOAD_STORAGE_DRIVER = 'r2';
+    try {
+      expect(isSafePersistentUploadUrl('/images/uploads/user-1/uploads/1000-image.png')).toBe(true);
+    } finally {
+      if (previousDriver === undefined) delete process.env.UPLOAD_STORAGE_DRIVER;
+      else process.env.UPLOAD_STORAGE_DRIVER = previousDriver;
+    }
+  });
+
   it('rejects external or missing image writes before Prisma continues', async () => {
     const next = vi.fn().mockResolvedValue({});
 
