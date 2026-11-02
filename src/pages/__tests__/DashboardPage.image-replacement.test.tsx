@@ -262,6 +262,55 @@ describe('DashboardPage image replacement deletion affordance', () => {
     expect(await screen.findByText('Previous image permanently deleted.')).toBeInTheDocument();
   });
 
+  it('prevents saving a city while its replacement image is still uploading', async () => {
+    let completeUpload!: () => void;
+    mocks.apiPost.mockImplementationOnce(() => new Promise((resolve) => {
+      completeUpload = () => resolve({ data: { success: true, data: [{ url: newUrl }] } });
+    }));
+    renderDashboard();
+    await screen.findByRole('button', { name: /Tirana/ });
+    fireEvent.click(screen.getByRole('button', { name: /Tirana/ }));
+    await screen.findAllByDisplayValue(cityOldUrl);
+    const cityInput = document.querySelectorAll<HTMLInputElement>('input[type="file"]')[2];
+    fireEvent.change(cityInput, { target: { files: [new File(['image'], 'city.png', { type: 'image/png' })] } });
+
+    const waitingButtons = screen.getAllByRole('button', { name: 'Waiting for image...' });
+    const saveButton = waitingButtons[waitingButtons.length - 1];
+    expect(saveButton).toBeDisabled();
+    fireEvent.click(saveButton);
+    expect(mocks.updateCity).not.toHaveBeenCalled();
+
+    completeUpload();
+    await screen.findAllByDisplayValue(newUrl);
+    expect(await screen.findByRole('button', { name: 'Save city' })).toBeEnabled();
+  });
+
+  it('uses the legacy city image as the previous image when the profile field is absent', async () => {
+    mocks.getCity.mockResolvedValueOnce({
+      slug: 'city-al',
+      name: 'Tirana',
+      countryCode: 'AL',
+      image: cityOldUrl,
+      profile: {},
+    });
+    renderDashboard();
+    await screen.findByRole('button', { name: /Tirana/ });
+    fireEvent.click(screen.getByRole('button', { name: /Tirana/ }));
+    await screen.findAllByDisplayValue(cityOldUrl);
+    const cityInput = document.querySelectorAll<HTMLInputElement>('input[type="file"]')[2];
+    fireEvent.change(cityInput, { target: { files: [new File(['image'], 'city.png', { type: 'image/png' })] } });
+    await screen.findAllByDisplayValue(newUrl);
+    fireEvent.click(screen.getByRole('button', { name: 'Save city' }));
+
+    await screen.findByRole('button', { name: 'Delete Previous Image Permanently' });
+    expect(mocks.verifyImageReplacement).toHaveBeenCalledWith(expect.objectContaining({
+      previousUrl: cityOldUrl,
+      replacementUrl: newUrl,
+      entity: 'city',
+      entityId: 'city-al',
+    }));
+  });
+
   it('verifies a saved event replacement before allowing confirmed deletion', async () => {
     const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
     let resolveVerification!: (value: { verified: boolean; canDeletePrevious: boolean; reason: string | null }) => void;
@@ -300,6 +349,28 @@ describe('DashboardPage image replacement deletion affordance', () => {
       replacementUrl: newUrl,
     })));
     expect(await screen.findByText('Previous image permanently deleted.')).toBeInTheDocument();
+  });
+
+  it('prevents saving an event while its replacement image is still uploading', async () => {
+    let completeUpload!: () => void;
+    mocks.apiPost.mockImplementationOnce(() => new Promise((resolve) => {
+      completeUpload = () => resolve({ data: { success: true, data: [{ url: newUrl }] } });
+    }));
+    renderDashboard();
+    fireEvent.click(await screen.findByRole('button', { name: /Annual event/ }));
+    await screen.findAllByDisplayValue(eventOldUrl);
+    const eventInput = document.querySelectorAll<HTMLInputElement>('input[type="file"]')[3];
+    fireEvent.change(eventInput, { target: { files: [new File(['image'], 'event.png', { type: 'image/png' })] } });
+
+    const waitingButtons = screen.getAllByRole('button', { name: 'Waiting for image...' });
+    const saveButton = waitingButtons[waitingButtons.length - 1];
+    expect(saveButton).toBeDisabled();
+    fireEvent.click(saveButton);
+    expect(mocks.updateEvent).not.toHaveBeenCalled();
+
+    completeUpload();
+    await screen.findAllByDisplayValue(newUrl);
+    expect(await screen.findByRole('button', { name: 'Save event' })).toBeEnabled();
   });
 
   it('surfaces the backend verification failure reason in the city manager', async () => {

@@ -914,6 +914,10 @@ export default function DashboardPage() {
   };
 
   const saveCity = async () => {
+    if (imageUploadState === 'uploading') {
+      setSaveCityMessage('Wait for the image upload to finish before saving the city.');
+      return;
+    }
     const slug = cityForm.slug.trim().toLowerCase();
     const countryCode = cityForm.countryCode.trim().toUpperCase();
     if (!cityForm.name.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || !/^[A-Z]{2}$/.test(countryCode) || countryCode !== selectedCountryCode || (!isCreatingCity && selectedCity && countryCode !== selectedCity.countryCode)) {
@@ -988,6 +992,10 @@ export default function DashboardPage() {
   };
 
   const saveEvent = async () => {
+    if (imageUploadState === 'uploading') {
+      setSaveEventMessage('Wait for the image upload to finish before saving the event.');
+      return;
+    }
     const startAt = new Date(eventForm.startAt);
     const endAt = new Date(eventForm.endAt);
     if (!eventForm.title.trim() || !eventForm.startAt || !eventForm.endAt || Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime()) || startAt > endAt) {
@@ -1487,11 +1495,12 @@ export default function DashboardPage() {
                           const profile = selectedCity?.profile && typeof selectedCity.profile === 'object'
                             ? selectedCity.profile as Record<string, unknown>
                             : {};
+                          const previousUrl = String(profile.heroImageUrl || selectedCity?.image || '');
                           void handleImageUpload(
                             event,
                             key,
                             { entity: 'city', entityId: selectedCity?.slug ?? '', field: 'heroImageUrl' },
-                            String(profile.heroImageUrl ?? ''),
+                            previousUrl,
                             (nextUrl) => setCityForm((current) => ({ ...current, heroImageUrl: nextUrl })),
                           );
                         }}
@@ -1506,8 +1515,8 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex gap-3">
-                    <button type="button" onClick={saveCity} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveCityState === 'saving'}>
-                      {saveCityState === 'saving' ? 'Saving...' : isCreatingCity ? 'Create city' : 'Save city'}
+                    <button type="button" onClick={saveCity} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveCityState === 'saving' || imageUploadState === 'uploading'}>
+                      {saveCityState === 'saving' ? 'Saving...' : imageUploadState === 'uploading' ? 'Waiting for image...' : isCreatingCity ? 'Create city' : 'Save city'}
                     </button>
                     <button type="button" onClick={resetCityForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
                     {selectedCity && !isCreatingCity ? <button type="button" onClick={() => void removeCity()} disabled={saveCityState === 'saving'} className="rounded-xl border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 dark:border-rose-900 dark:text-rose-300">Delete city</button> : null}
@@ -1753,8 +1762,8 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex gap-3">
-                    <button type="button" onClick={saveEvent} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveEventState === 'saving'}>
-                      {saveEventState === 'saving' ? 'Saving...' : isCreatingEvent ? 'Create event' : 'Save event'}
+                    <button type="button" onClick={saveEvent} className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700" disabled={saveEventState === 'saving' || imageUploadState === 'uploading'}>
+                      {saveEventState === 'saving' ? 'Saving...' : imageUploadState === 'uploading' ? 'Waiting for image...' : isCreatingEvent ? 'Create event' : 'Save event'}
                     </button>
                     <button type="button" onClick={resetEventForm} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:text-slate-300">Reset</button>
                     {selectedEvent && !isCreatingEvent ? <button type="button" onClick={() => void removeEvent()} disabled={saveEventState === 'saving'} className="rounded-xl border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 dark:border-rose-900 dark:text-rose-300">Delete event</button> : null}
