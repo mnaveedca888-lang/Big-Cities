@@ -253,7 +253,7 @@ describe('DashboardPage data managers', () => {
     expect(await screen.findByText('Country created successfully.')).toBeInTheDocument();
   });
 
-  it('keeps the saved-country total independent of search results', async () => {
+  it('shows the country total matching the active search and continent filters', async () => {
     mocks.getCountries.mockImplementation(async ({ q }: { q?: string }) => (
       q
         ? page([{ code: 'JP', name: 'Japan', profile: {}, cities: 0, events: 0 }], 1)
@@ -261,17 +261,25 @@ describe('DashboardPage data managers', () => {
     ));
     renderDashboard();
 
-    await waitFor(() => expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197'));
+    await waitFor(() => expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('197'));
     fireEvent.change(screen.getByPlaceholderText('Search country'), { target: { value: 'Japan' } });
 
     await screen.findByRole('button', { name: /Japan/ });
-    expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197');
+    expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('1');
+    fireEvent.change(screen.getByLabelText('Filter countries by continent'), { target: { value: 'Asia' } });
+    await waitFor(() => expect(mocks.getCountries).toHaveBeenLastCalledWith(expect.objectContaining({
+      q: 'Japan',
+      continent: 'Asia',
+    })));
+    await waitFor(() => expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('1'));
   });
 
-  it('keeps the saved-country total unchanged on a failed create and refreshes it after persistence', async () => {
+  it('keeps the filtered country count unchanged on a failed create and refreshes it after persistence', async () => {
     let total = 197;
-    mocks.getCountries.mockImplementation(async () => (
-      page([{ code: 'AF', name: 'Afghanistan', profile: {}, cities: 1, events: 1 }], total)
+    mocks.getCountries.mockImplementation(async ({ q }: { q?: string }) => (
+      q === 'Japan'
+        ? page([{ code: 'JP', name: 'Japan', profile: {}, cities: 0, events: 0 }], 1)
+        : page([{ code: 'AF', name: 'Afghanistan', profile: {}, cities: 1, events: 1 }], total)
     ));
     mocks.createCountry
       .mockRejectedValueOnce({ status: 409, message: 'Country code already exists' })
@@ -286,20 +294,22 @@ describe('DashboardPage data managers', () => {
     ));
     renderDashboard();
 
-    await waitFor(() => expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197'));
+    await waitFor(() => expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('197'));
     fireEvent.click(screen.getByRole('button', { name: 'Create country' }));
     fireEvent.change(screen.getByLabelText('Country name'), { target: { value: 'Japan' } });
     fireEvent.change(screen.getAllByLabelText('Country code').find((input) => !(input as HTMLInputElement).readOnly) as HTMLInputElement, { target: { value: 'JP' } });
-    expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197');
+    expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('197');
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Create country' }).slice(-1)[0]);
     expect(await screen.findByText('Country code already exists')).toBeInTheDocument();
     expect(screen.queryByText('Country created successfully.')).not.toBeInTheDocument();
-    expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197');
+    expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('197');
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Create country' }).slice(-1)[0]);
     expect(await screen.findByText('Country created successfully.')).toBeInTheDocument();
-    await waitFor(() => expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('198'));
+    await waitFor(() => expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('1'));
+    fireEvent.change(screen.getByPlaceholderText('Search country'), { target: { value: '' } });
+    await waitFor(() => expect(screen.getByLabelText('Countries matching filters')).toHaveTextContent('198'));
   });
 
   it('creates a city under the selected country', async () => {
