@@ -73,7 +73,8 @@ function isOwnedKey(fileKey: string, actorId: string) {
 
 async function acquireImageLifecycleLock(transaction: Prisma.TransactionClient) {
   await transaction.$queryRaw(Prisma.sql`
-    SELECT pg_advisory_xact_lock(${IMAGE_LIFECYCLE_LOCK_ID}::bigint)
+    SELECT TRUE
+    FROM (SELECT pg_advisory_xact_lock(${IMAGE_LIFECYCLE_LOCK_ID}::bigint)) AS lifecycle_lock
   `);
 }
 

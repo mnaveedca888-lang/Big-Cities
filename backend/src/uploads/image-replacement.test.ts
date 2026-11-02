@@ -139,6 +139,12 @@ describe('image replacement lifecycle', () => {
     const fixture = createFixture();
     await expect(associateReplacement(fixture)).resolves.toBe(true);
 
+    const lockQuery = fixture.queryRaw.mock.calls
+      .map(([query]) => query)
+      .find((query) => query.sql.includes('pg_advisory_xact_lock'));
+    expect(lockQuery?.sql).toContain('SELECT TRUE');
+    expect(lockQuery?.sql).toContain('FROM (SELECT pg_advisory_xact_lock');
+
     await expect(verifyImageReplacement(fixture.prisma, fixture.storage, actorId, fixture.target))
       .resolves.toEqual({ verified: true, canDeletePrevious: true, reason: null });
     expect(fixture.storage.readFile).toHaveBeenCalledWith(replacementKey);
