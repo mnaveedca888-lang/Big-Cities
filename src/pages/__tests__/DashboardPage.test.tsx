@@ -274,7 +274,7 @@ describe('DashboardPage data managers', () => {
       page([{ code: 'AF', name: 'Afghanistan', profile: {}, cities: 1, events: 1 }], total)
     ));
     mocks.createCountry
-      .mockRejectedValueOnce(new Error('Country code already exists'))
+      .mockRejectedValueOnce({ status: 409, message: 'Country code already exists' })
       .mockImplementationOnce(async () => {
         total = 198;
         return { code: 'JP', name: 'Japan', profile: {} };

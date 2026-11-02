@@ -894,7 +894,7 @@ export default function DashboardPage() {
       setSaveCountryMessage(creatingCountry ? 'Country created successfully.' : 'Country updated successfully.');
     } catch (error) {
       setSaveCountryState('error');
-      setSaveCountryMessage(error instanceof Error ? error.message : 'Unable to save country. Please try again.');
+      setSaveCountryMessage(getErrorMessage(error, 'Unable to save country. Please try again.'));
     }
   };
 
