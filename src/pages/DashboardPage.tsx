@@ -639,6 +639,10 @@ export default function DashboardPage() {
 
   const verifyReplacementCandidates = async (candidates: UploadedImageReplacement[]) => {
     for (const candidate of candidates) {
+      setImageReplacementMessages((current) => ({
+        ...current,
+        [candidate.key]: 'Verifying replacement image and checking previous-image safety...',
+      }));
       try {
         const target: ImageReplacementTarget = {
           entity: candidate.entity,
@@ -655,24 +659,39 @@ export default function DashboardPage() {
             delete next[candidate.key];
             return next;
           });
-        } else if (verification.reason) {
-          setImageReplacementMessages((current) => ({ ...current, [candidate.key]: verification.reason! }));
+        } else {
+          setImageReplacementMessages((current) => ({
+            ...current,
+            [candidate.key]: verification.reason
+              ?? 'The replacement image is verified, but the previous image is not eligible for permanent deletion.',
+          }));
         }
-      } catch {
+      } catch (error) {
         setImageReplacementMessages((current) => ({
           ...current,
-          [candidate.key]: 'The replacement was saved, but its image could not be verified. The previous image is not available for deletion.',
+          [candidate.key]: getErrorMessage(
+            error,
+            'The replacement was saved, but its image could not be verified. The previous image is not available for deletion.',
+          ),
         }));
       }
     }
   };
 
   const verifySavedImageReplacements = async (keys: string[], currentValues: Record<string, string>) => {
-    const candidates = keys
-      .map((key) => uploadedImageReplacements[key])
-      .filter((candidate): candidate is UploadedImageReplacement => (
-        Boolean(candidate) && currentValues[candidate.key] === candidate.replacementUrl
-      ));
+    const candidates: UploadedImageReplacement[] = [];
+    for (const key of keys) {
+      const candidate = uploadedImageReplacements[key];
+      if (!candidate) continue;
+      if (currentValues[key] !== candidate.replacementUrl) {
+        setImageReplacementMessages((current) => ({
+          ...current,
+          [key]: 'The uploaded replacement changed before saving, so deletion eligibility was not verified.',
+        }));
+        continue;
+      }
+      candidates.push(candidate);
+    }
 
     setReadyImageDeletions((current) => {
       const next = { ...current };
@@ -925,6 +944,12 @@ export default function DashboardPage() {
       } else {
         return;
       }
+      if (selectedCity) {
+        await verifySavedImageReplacements(
+          [getReplacementKey('city', selectedCity.slug, 'heroImageUrl')],
+          { [getReplacementKey('city', selectedCity.slug, 'heroImageUrl')]: String(mergedProfile.heroImageUrl ?? '') },
+        );
+      }
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['city'] }),
         queryClient.invalidateQueries({ queryKey: ['cities'] }),
@@ -935,12 +960,6 @@ export default function DashboardPage() {
         ...(selectedCity ? [queryClient.invalidateQueries({ queryKey: ['dashboard-city-detail', selectedCity.slug] })] : []),
         queryClient.invalidateQueries({ queryKey: ['search'] }),
       ]);
-      if (selectedCity) {
-        await verifySavedImageReplacements(
-          [getReplacementKey('city', selectedCity.slug, 'heroImageUrl')],
-          { [getReplacementKey('city', selectedCity.slug, 'heroImageUrl')]: String(mergedProfile.heroImageUrl ?? '') },
-        );
-      }
       setSaveCityState('saved');
       setSaveCityMessage(isCreatingCity ? 'City created successfully.' : 'City updated successfully.');
     } catch (error) {
@@ -1027,6 +1046,12 @@ export default function DashboardPage() {
       } else {
         return;
       }
+      if (selectedEvent) {
+        await verifySavedImageReplacements(
+          [getReplacementKey('event', selectedEvent.slug, 'image')],
+          { [getReplacementKey('event', selectedEvent.slug, 'image')]: eventForm.image },
+        );
+      }
       await Promise.all([
         ...(selectedEvent ? [queryClient.invalidateQueries({ queryKey: ['event', selectedEvent.slug] })] : []),
         ...(selectedEvent ? [queryClient.invalidateQueries({ queryKey: ['dashboard-event-detail', selectedEvent.slug] })] : []),
@@ -1043,12 +1068,6 @@ export default function DashboardPage() {
         queryClient.invalidateQueries({ queryKey: ['dashboard-overview'] }),
         queryClient.invalidateQueries({ queryKey: ['dashboard-country-events'] }),
       ]);
-      if (selectedEvent) {
-        await verifySavedImageReplacements(
-          [getReplacementKey('event', selectedEvent.slug, 'image')],
-          { [getReplacementKey('event', selectedEvent.slug, 'image')]: eventForm.image },
-        );
-      }
       setSaveEventState('saved');
       setSaveEventMessage(creating ? 'Event created successfully.' : 'Event updated successfully.');
     } catch (error) {

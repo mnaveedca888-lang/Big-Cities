@@ -188,7 +188,7 @@ describe('DashboardPage image replacement deletion affordance', () => {
     await screen.findAllByDisplayValue(oldUrl);
     await saveCountryReplacement();
 
-    expect(await screen.findByText(/replacement was saved, but its image could not be verified/i)).toBeInTheDocument();
+    expect(await screen.findByText('image could not be read')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Delete Previous Image Permanently' })).not.toBeInTheDocument();
   });
 
@@ -219,7 +219,12 @@ describe('DashboardPage image replacement deletion affordance', () => {
     expect(await screen.findByText('Previous image permanently deleted.')).toBeInTheDocument();
   });
 
-  it('wires the verified deletion flow to city image replacement', async () => {
+  it('verifies a saved city replacement before allowing confirmed deletion', async () => {
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
+    let resolveVerification!: (value: { verified: boolean; canDeletePrevious: boolean; reason: string | null }) => void;
+    mocks.verifyImageReplacement.mockReturnValueOnce(new Promise((resolve) => {
+      resolveVerification = resolve;
+    }));
     renderDashboard();
     await screen.findByRole('button', { name: /Tirana/ });
     fireEvent.click(screen.getByRole('button', { name: /Tirana/ }));
@@ -233,6 +238,9 @@ describe('DashboardPage image replacement deletion affordance', () => {
       onTimeout: (error) => new Error(`${error.message}\nStatus messages: ${screen.getAllByRole('status').map((item) => item.textContent).join(' | ')}`),
     });
     await waitFor(() => expect(mocks.verifyImageReplacement).toHaveBeenCalled());
+    expect(await screen.findByText('Verifying replacement image and checking previous-image safety...')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Delete Previous Image Permanently' })).not.toBeInTheDocument();
+    resolveVerification({ verified: true, canDeletePrevious: true, reason: null });
     await screen.findByRole('button', { name: 'Delete Previous Image Permanently' });
     expect(mocks.verifyImageReplacement).toHaveBeenCalledWith(expect.objectContaining({
       entity: 'city',
@@ -241,9 +249,25 @@ describe('DashboardPage image replacement deletion affordance', () => {
       previousUrl: cityOldUrl,
       replacementUrl: newUrl,
     }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Previous Image Permanently' }));
+    expect(confirm).toHaveBeenCalledWith('Permanently delete the previous image? This action cannot be undone.');
+    await waitFor(() => expect(mocks.deletePreviousImage).toHaveBeenCalledWith(expect.objectContaining({
+      entity: 'city',
+      entityId: 'city-al',
+      field: 'heroImageUrl',
+      previousUrl: cityOldUrl,
+      replacementUrl: newUrl,
+    })));
+    expect(await screen.findByText('Previous image permanently deleted.')).toBeInTheDocument();
   });
 
-  it('wires the verified deletion flow to event image replacement', async () => {
+  it('verifies a saved event replacement before allowing confirmed deletion', async () => {
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
+    let resolveVerification!: (value: { verified: boolean; canDeletePrevious: boolean; reason: string | null }) => void;
+    mocks.verifyImageReplacement.mockReturnValueOnce(new Promise((resolve) => {
+      resolveVerification = resolve;
+    }));
     renderDashboard();
     fireEvent.click(await screen.findByRole('button', { name: /Annual event/ }));
     await screen.findAllByDisplayValue(eventOldUrl);
@@ -253,6 +277,10 @@ describe('DashboardPage image replacement deletion affordance', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save event' }));
 
     await waitFor(() => expect(mocks.updateEvent).toHaveBeenCalled());
+    await waitFor(() => expect(mocks.verifyImageReplacement).toHaveBeenCalled());
+    expect(await screen.findByText('Verifying replacement image and checking previous-image safety...')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Delete Previous Image Permanently' })).not.toBeInTheDocument();
+    resolveVerification({ verified: true, canDeletePrevious: true, reason: null });
     await screen.findByRole('button', { name: 'Delete Previous Image Permanently' });
     expect(mocks.verifyImageReplacement).toHaveBeenCalledWith(expect.objectContaining({
       entity: 'event',
@@ -261,5 +289,31 @@ describe('DashboardPage image replacement deletion affordance', () => {
       previousUrl: eventOldUrl,
       replacementUrl: newUrl,
     }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Previous Image Permanently' }));
+    expect(confirm).toHaveBeenCalledWith('Permanently delete the previous image? This action cannot be undone.');
+    await waitFor(() => expect(mocks.deletePreviousImage).toHaveBeenCalledWith(expect.objectContaining({
+      entity: 'event',
+      entityId: 'event-al',
+      field: 'image',
+      previousUrl: eventOldUrl,
+      replacementUrl: newUrl,
+    })));
+    expect(await screen.findByText('Previous image permanently deleted.')).toBeInTheDocument();
+  });
+
+  it('surfaces the backend verification failure reason in the city manager', async () => {
+    mocks.verifyImageReplacement.mockRejectedValueOnce(new Error('Private R2 object read failed.'));
+    renderDashboard();
+    await screen.findByRole('button', { name: /Tirana/ });
+    fireEvent.click(screen.getByRole('button', { name: /Tirana/ }));
+    await screen.findAllByDisplayValue(cityOldUrl);
+    const cityInput = document.querySelectorAll<HTMLInputElement>('input[type="file"]')[2];
+    fireEvent.change(cityInput, { target: { files: [new File(['image'], 'city.png', { type: 'image/png' })] } });
+    await screen.findAllByDisplayValue(newUrl);
+    fireEvent.click(screen.getByRole('button', { name: 'Save city' }));
+
+    expect(await screen.findByText('Private R2 object read failed.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Delete Previous Image Permanently' })).not.toBeInTheDocument();
   });
 });
