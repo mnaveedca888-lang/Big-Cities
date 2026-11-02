@@ -629,6 +629,10 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const normalizedCode = body.code.trim().toUpperCase();
       const exists = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (exists) return reply.code(409).send({ success: false, error: { message: 'Country code already exists' } });
+      const existingName = await prisma.country.findFirst({
+        where: { name: { equals: body.name, mode: 'insensitive' } },
+      });
+      if (existingName) return reply.code(409).send({ success: false, error: { message: 'Country name already exists' } });
       if (body.continentId && !await prisma.continent.findUnique({ where: { id: body.continentId } })) {
         return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
       }
@@ -650,6 +654,15 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
       const body = countryUpdateSchema.parse(canonicalizeCountryBody(request.body || {}, request));
       const existing = await prisma.country.findUnique({ where: { code: normalizedCode } });
       if (!existing) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
+      if (body.name) {
+        const conflictingName = await prisma.country.findFirst({
+          where: {
+            code: { not: normalizedCode },
+            name: { equals: body.name, mode: 'insensitive' },
+          },
+        });
+        if (conflictingName) return reply.code(409).send({ success: false, error: { message: 'Country name already exists' } });
+      }
       if (body.continentId && !await prisma.continent.findUnique({ where: { id: body.continentId } })) {
         return reply.code(404).send({ success: false, error: { message: 'Continent not found' } });
       }

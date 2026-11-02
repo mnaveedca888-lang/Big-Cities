@@ -8,6 +8,7 @@ describe('catalog mutation validation and relationship safeguards', () => {
   let app: ReturnType<typeof Fastify>;
   let token: string;
   let countryFindUnique: ReturnType<typeof vi.fn>;
+  let countryFindFirst: ReturnType<typeof vi.fn>;
   let countryDelete: ReturnType<typeof vi.fn>;
   let countryCreate: ReturnType<typeof vi.fn>;
   let cityFindUnique: ReturnType<typeof vi.fn>;
@@ -21,6 +22,7 @@ describe('catalog mutation validation and relationship safeguards', () => {
     process.env.JWT_ACCESS_TOKEN_SECRET = 'catalog-mutation-test-secret';
     token = jwt.sign({ sub: 'admin-user' }, process.env.JWT_ACCESS_TOKEN_SECRET);
     countryFindUnique = vi.fn().mockResolvedValue(null);
+    countryFindFirst = vi.fn().mockResolvedValue(null);
     countryDelete = vi.fn();
     countryCreate = vi.fn();
     cityFindUnique = vi.fn().mockResolvedValue(null);
@@ -33,6 +35,7 @@ describe('catalog mutation validation and relationship safeguards', () => {
       user: { findUnique: vi.fn().mockResolvedValue({ id: 'admin-user', role: { name: 'admin' } }) },
       country: {
         findUnique: countryFindUnique,
+        findFirst: countryFindFirst,
         create: countryCreate,
         delete: countryDelete,
         count: vi.fn().mockResolvedValue(0),
@@ -70,6 +73,47 @@ describe('catalog mutation validation and relationship safeguards', () => {
     expect(response.statusCode).toBe(409);
     expect(response.json()).toMatchObject({ error: { message: 'Country code already exists' } });
     expect(countryCreate).not.toHaveBeenCalled();
+  });
+
+  it('rejects duplicate country names case-insensitively before creating a record', async () => {
+    countryFindFirst.mockResolvedValueOnce({ code: 'JP', name: 'Japan' });
+    const response = await app.inject({
+      method: 'POST',
+      url: '/countries',
+      headers: { authorization: `Bearer ${token}` },
+      payload: { code: 'QY', name: 'jApAn' },
+    });
+
+    expect(response.statusCode).toBe(409);
+    expect(response.json()).toMatchObject({ error: { message: 'Country name already exists' } });
+    expect(countryCreate).not.toHaveBeenCalled();
+  });
+
+  it('rejects country codes that are not two letters', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/countries',
+      headers: { authorization: `Bearer ${token}` },
+      payload: { code: 'JPN', name: 'Japan' },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toMatchObject({ error: { message: 'Country code must be a two-letter ISO code' } });
+    expect(countryCreate).not.toHaveBeenCalled();
+  });
+
+  it('rejects renaming a country to another country name', async () => {
+    countryFindUnique.mockResolvedValueOnce({ code: 'JP', name: 'Japan', profile: {} });
+    countryFindFirst.mockResolvedValueOnce({ code: 'US', name: 'United States' });
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/countries/JP',
+      headers: { authorization: `Bearer ${token}` },
+      payload: { name: 'United States' },
+    });
+
+    expect(response.statusCode).toBe(409);
+    expect(response.json()).toMatchObject({ error: { message: 'Country name already exists' } });
   });
 
   it('rejects a city whose country code differs from the route country', async () => {

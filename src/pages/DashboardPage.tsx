@@ -523,6 +523,11 @@ export default function DashboardPage() {
     }),
     staleTime: 30_000,
   });
+  const countryCountQuery = useQuery({
+    queryKey: ['dashboard-country-count'],
+    queryFn: () => getCountries({ page: 1, perPage: 1, sort: 'name' }),
+    staleTime: 30_000,
+  });
   const continentsQuery = useQuery({ queryKey: ['dashboard-continents'], queryFn: getContinents, staleTime: 60_000 });
   const categoriesQuery = useQuery({
     queryKey: ['dashboard-categories'],
@@ -795,6 +800,7 @@ export default function DashboardPage() {
           continentId: countryForm.continentId || null,
           profile: mergedProfile,
         });
+        await queryClient.invalidateQueries({ queryKey: ['dashboard-country-count'] });
         setSelectedCountryCode(savedCountry.code);
         setCountrySearch(savedCountry.name);
         setCountryQuery(savedCountry.name);
@@ -904,7 +910,10 @@ export default function DashboardPage() {
       setCountrySearch('');
       setCountryQuery('');
       setCountryPage(1);
-      await queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['dashboard-countries'] }),
+        queryClient.invalidateQueries({ queryKey: ['dashboard-country-count'] }),
+      ]);
       setSaveCountryState('saved');
       setCountryDeleteMessage('Country deleted successfully.');
     } catch (error) {
@@ -1250,7 +1259,9 @@ export default function DashboardPage() {
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Country data manager</h2>
             <div className="flex items-center gap-3">
-              <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{countryPagination?.total ?? 0}</span>
+              <span aria-label="Total saved countries" className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+                {countryCountQuery.data?.pagination.total ?? (countryCountQuery.isError ? '—' : '…')}
+              </span>
               <button type="button" onClick={() => {
                 setIsCreatingCountry(true);
                 setSelectedCountryCode('');
@@ -1261,6 +1272,11 @@ export default function DashboardPage() {
               }} className="rounded-xl bg-cyan-600 px-3 py-2 text-sm font-medium text-white hover:bg-cyan-700">Create country</button>
             </div>
           </div>
+          {countryCountQuery.isError ? (
+            <p className="mb-4 text-sm text-rose-600" role="status" aria-live="polite">
+              Country total could not be loaded. <button type="button" onClick={() => void countryCountQuery.refetch()} className="underline">Retry</button>
+            </p>
+          ) : null}
           <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <div>
               <input value={countrySearch} onChange={(event) => setCountrySearch(event.target.value)} placeholder="Search country" className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-0 placeholder:text-slate-400 focus:border-cyan-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white" />

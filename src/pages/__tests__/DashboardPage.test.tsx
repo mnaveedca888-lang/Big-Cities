@@ -253,6 +253,55 @@ describe('DashboardPage data managers', () => {
     expect(await screen.findByText('Country created successfully.')).toBeInTheDocument();
   });
 
+  it('keeps the saved-country total independent of search results', async () => {
+    mocks.getCountries.mockImplementation(async ({ q }: { q?: string }) => (
+      q
+        ? page([{ code: 'JP', name: 'Japan', profile: {}, cities: 0, events: 0 }], 1)
+        : page([{ code: 'AF', name: 'Afghanistan', profile: {}, cities: 1, events: 1 }], 197)
+    ));
+    renderDashboard();
+
+    await waitFor(() => expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197'));
+    fireEvent.change(screen.getByPlaceholderText('Search country'), { target: { value: 'Japan' } });
+
+    await screen.findByRole('button', { name: /Japan/ });
+    expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197');
+  });
+
+  it('keeps the saved-country total unchanged on a failed create and refreshes it after persistence', async () => {
+    let total = 197;
+    mocks.getCountries.mockImplementation(async () => (
+      page([{ code: 'AF', name: 'Afghanistan', profile: {}, cities: 1, events: 1 }], total)
+    ));
+    mocks.createCountry
+      .mockRejectedValueOnce(new Error('Country code already exists'))
+      .mockImplementationOnce(async () => {
+        total = 198;
+        return { code: 'JP', name: 'Japan', profile: {} };
+      });
+    mocks.getCountry.mockImplementation(async (code: string) => (
+      code === 'JP'
+        ? { code: 'JP', name: 'Japan', continent: 'Asia', profile: {}, cities: 0, events: 0 }
+        : { code: 'AF', name: 'Afghanistan', continent: 'Asia', profile: {}, cities: 1, events: 1 }
+    ));
+    renderDashboard();
+
+    await waitFor(() => expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197'));
+    fireEvent.click(screen.getByRole('button', { name: 'Create country' }));
+    fireEvent.change(screen.getByLabelText('Country name'), { target: { value: 'Japan' } });
+    fireEvent.change(screen.getAllByLabelText('Country code').find((input) => !(input as HTMLInputElement).readOnly) as HTMLInputElement, { target: { value: 'JP' } });
+    expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197');
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Create country' }).slice(-1)[0]);
+    expect(await screen.findByText('Country code already exists')).toBeInTheDocument();
+    expect(screen.queryByText('Country created successfully.')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('197');
+
+    fireEvent.click(screen.getAllByRole('button', { name: 'Create country' }).slice(-1)[0]);
+    expect(await screen.findByText('Country created successfully.')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByLabelText('Total saved countries')).toHaveTextContent('198'));
+  });
+
   it('creates a city under the selected country', async () => {
     renderDashboard();
     await screen.findByRole('button', { name: /Afghanistan/ });
