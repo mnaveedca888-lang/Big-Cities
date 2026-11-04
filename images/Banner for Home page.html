@@ -661,6 +661,12 @@ body{
         const BUFFER_TIMEOUT =
             8000;
 
+        const VIDEO_LOAD_TIMEOUT =
+            30000;
+
+        const VIDEO_PRELOAD_TIMEOUT =
+            30000;
+
 
         /*
          * City name appears after
@@ -797,7 +803,8 @@ body{
         function loadCityVideo(
             target,
             place,
-            timeoutMs = 15000
+            timeoutMs = VIDEO_LOAD_TIMEOUT,
+            metadataOnly = false
         ){
 
             return new Promise(
@@ -805,6 +812,24 @@ body{
 
                     let settled =
                         false;
+                    const readyEvent =
+                        metadataOnly ?
+                            "loadedmetadata" :
+                            "loadeddata";
+                    const requiredReadyState =
+                        metadataOnly ?
+                            HTMLMediaElement.HAVE_METADATA :
+                            HTMLMediaElement.HAVE_CURRENT_DATA;
+                    const reuseExistingSource =
+                        target.getAttribute("src") ===
+                            place.video &&
+                        (
+                            target.networkState ===
+                                HTMLMediaElement.NETWORK_LOADING ||
+                            target.readyState >=
+                                HTMLMediaElement.HAVE_METADATA
+                        ) &&
+                        !target.error;
 
                     const timeout =
                         setTimeout(
@@ -860,7 +885,7 @@ body{
                         clearTimeout(timeout);
 
                         target.removeEventListener(
-                            "loadeddata",
+                            readyEvent,
                             success
                         );
 
@@ -871,7 +896,9 @@ body{
                     }
 
 
-                    clearVideoSource(target);
+                    if(!reuseExistingSource){
+                        clearVideoSource(target);
+                    }
 
                     target.classList.toggle(
                         "is-reduced-brightness",
@@ -879,7 +906,7 @@ body{
                     );
 
                     target.addEventListener(
-                        "loadeddata",
+                        readyEvent,
                         success,
                         { once:true }
                     );
@@ -894,11 +921,28 @@ body{
                     target.muted = true;
                     target.playsInline = true;
                     target.autoplay = false;
-                    target.preload = "auto";
-                    target.src =
-                        place.video;
+                    target.preload =
+                        metadataOnly ?
+                            "metadata" :
+                            "auto";
 
-                    target.load();
+                    if(reuseExistingSource){
+                        if(
+                            target.readyState >=
+                            requiredReadyState
+                        ){
+                            success();
+                        }
+                        else if(!metadataOnly){
+                            target.load();
+                        }
+                    }
+                    else{
+                        target.src =
+                            place.video;
+
+                        target.load();
+                    }
 
                 }
             );
@@ -916,7 +960,8 @@ body{
                 loadCityVideo(
                     standbyVideo,
                     cities[nextIndex],
-                    NEXT_VIDEO_LEAD_TIME
+                    VIDEO_PRELOAD_TIMEOUT,
+                    true
                 ).catch(
                     function(error){
                         console.warn(
@@ -1103,10 +1148,8 @@ body{
             );
 
 
-            hideLocation();
-
-
-            statusText.textContent = "";
+            statusText.textContent =
+                "Loading next video...";
 
             const previousVideo =
                 video;
@@ -1122,14 +1165,10 @@ body{
                     nextLoadIndex === placeIndex &&
                     nextLoadPromise
                 ){
-                    const preparedVideo =
-                        await nextLoadPromise;
-
-                    if(!preparedVideo){
-                        throw new Error(
-                            "Prepared video unavailable"
-                        );
-                    }
+                    await loadCityVideo(
+                        nextVideo,
+                        place
+                    );
                 }
                 else{
                     await loadCityVideo(
@@ -1140,6 +1179,9 @@ body{
 
                 nextLoadPromise = null;
                 nextLoadIndex = -1;
+
+                hideLocation();
+                statusText.textContent = "";
 
 
                 /*
