@@ -597,6 +597,7 @@ body{
                 country:"Japan",
 
                 reducedBrightness:true,
+                duration:4000,
                 video:
                 "https://videos.pexels.com/video-files/10329842/10329842-hd_1920_1080_30fps.mp4"
             }
@@ -692,6 +693,7 @@ body{
         let nextLoadIndex = -1;
         let isSwitching = false;
         let isRecovering = false;
+        let currentPlaybackId = 0;
 
 
         /* =================================================
@@ -727,7 +729,7 @@ body{
            PROGRESS
         ================================================= */
 
-        function startProgress(){
+        function startProgress(duration = CITY_TIME){
 
             clearInterval(
                 progressTimer
@@ -752,7 +754,7 @@ body{
                         const percent =
                             Math.min(
                                 (elapsed /
-                                CITY_TIME) *
+                                duration) *
                                 100,
                                 100
                             );
@@ -940,6 +942,7 @@ body{
             }
 
             isRecovering = true;
+            currentPlaybackId += 1;
 
             clearTimeout(timer);
             clearTimeout(preloadTimer);
@@ -963,6 +966,27 @@ body{
                     },
                     1000
                 );
+        }
+
+        function advanceCity(playbackId){
+            if(
+                playbackId !== currentPlaybackId ||
+                isSwitching ||
+                isRecovering
+            ){
+                return;
+            }
+
+            currentPlaybackId += 1;
+
+            clearTimeout(timer);
+            clearTimeout(preloadTimer);
+
+            index =
+                (index + 1) %
+                cities.length;
+
+            playCity();
         }
 
 
@@ -1023,6 +1047,18 @@ body{
                     }
                 }
             );
+
+            target.addEventListener(
+                "ended",
+                function(){
+                    if(
+                        target === video &&
+                        target.classList.contains("is-visible")
+                    ){
+                        advanceCity(currentPlaybackId);
+                    }
+                }
+            );
         }
 
 
@@ -1035,12 +1071,20 @@ body{
         ================================================= */
 
         async function playCity(){
+            if(
+                isSwitching ||
+                isRecovering
+            ){
+                return;
+            }
 
             const place =
                 cities[index];
 
             const placeIndex =
                 index;
+            const cityDuration =
+                place.duration ?? CITY_TIME;
 
             clearTimeout(
                 timer
@@ -1130,6 +1174,8 @@ body{
                 video = nextVideo;
                 standbyVideo = previousVideo;
                 isSwitching = false;
+                const playbackId =
+                    ++currentPlaybackId;
 
                 setTimeout(
                     function(){
@@ -1140,7 +1186,7 @@ body{
                     1400
                 );
 
-                startProgress();
+                startProgress(cityDuration);
 
 
                 /*
@@ -1188,7 +1234,7 @@ body{
                 preloadTimer =
                     setTimeout(
                         preloadNextCity,
-                        CITY_TIME -
+                        cityDuration -
                         NEXT_VIDEO_LEAD_TIME
                     );
 
@@ -1199,14 +1245,10 @@ body{
                             video.classList.remove(
                                 "is-moving"
                             );
-                            index =
-                                (index + 1) %
-                                cities.length;
-
-                            playCity();
+                            advanceCity(playbackId);
 
                         },
-                        CITY_TIME
+                        cityDuration
                     );
 
 
