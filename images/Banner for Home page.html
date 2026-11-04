@@ -24,7 +24,8 @@ body{
    VIDEO
 --------------------------------------------------------- */
 
-#bci-drone-video{
+#bci-drone-video,
+.bci-drone-video-buffer{
     position:absolute;
     inset:0;
     width:100%;
@@ -38,7 +39,7 @@ body{
     transform:scale(1.025);
 
     filter:
-        brightness(.68)
+        brightness(1.3)
         contrast(1.06)
         saturate(1.05);
 
@@ -49,13 +50,23 @@ body{
     z-index:1;
 }
 
-#bci-drone-video.is-visible{
+#bci-drone-video.is-visible,
+.bci-drone-video-buffer.is-visible{
     opacity:1;
     transform:scale(1);
 }
 
+#bci-drone-video.is-reduced-brightness,
+.bci-drone-video-buffer.is-reduced-brightness{
+    filter:
+        brightness(1.1)
+        contrast(1.06)
+        saturate(1.05);
+}
+
 /* subtle cinematic movement */
-#bci-drone-video.is-moving{
+#bci-drone-video.is-moving,
+.bci-drone-video-buffer.is-moving{
     transform:scale(1.045);
 }
 
@@ -182,94 +193,6 @@ body{
     font-size:17px;
 
     line-height:1.7;
-}
-
-/* ---------------------------------------------------------
-   CITY INFORMATION
---------------------------------------------------------- */
-
-.bci-drone-location{
-    position:absolute;
-
-    z-index:20;
-
-    top:35px;
-    right:40px;
-
-    min-width:225px;
-
-    padding:
-        16px 19px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.22);
-
-    border-radius:12px;
-
-    background:
-        rgba(0,0,0,.42);
-
-    backdrop-filter:
-        blur(12px);
-
-    -webkit-backdrop-filter:
-        blur(12px);
-
-    color:#fff;
-
-    opacity:0;
-
-    transform:
-        translateY(-10px);
-
-    transition:
-        opacity .75s ease,
-        transform .75s cubic-bezier(.22,1,.36,1);
-
-    pointer-events:none;
-}
-
-.bci-drone-location.show{
-    opacity:1;
-
-    transform:
-        translateY(0);
-}
-
-.bci-location-small{
-    display:block;
-    min-height:10px;
-
-    margin-bottom:5px;
-
-    color:
-        rgba(255,255,255,.55);
-
-    font-size:9px;
-
-    font-weight:700;
-
-    letter-spacing:1.8px;
-
-    text-transform:uppercase;
-}
-
-.bci-location-city{
-    font-size:22px;
-
-    line-height:1.1;
-
-    font-weight:800;
-}
-
-.bci-location-country{
-    margin-top:4px;
-
-    color:
-        rgba(255,255,255,.72);
-
-    font-size:12px;
 }
 
 /* ---------------------------------------------------------
@@ -451,24 +374,6 @@ body{
         line-height:1.35;
     }
 
-    .bci-drone-location{
-        top:18px;
-        right:17px;
-
-        min-width:180px;
-
-        padding:
-            12px 14px;
-    }
-
-    .bci-location-city{
-        font-size:17px;
-    }
-
-    .bci-location-country{
-        font-size:11px;
-    }
-
     .bci-drone-center{
         bottom:12%;
     }
@@ -496,17 +401,14 @@ body{
 
 <section id="bci-drone-hero">
 
-    <!--
-      ONE VIDEO ONLY.
-      This is the main performance improvement.
-    -->
+    <!-- The second layer is created on demand for the next clip. -->
 
     <video
         id="bci-drone-video"
         muted
         playsinline
         autoplay
-        preload="metadata">
+        preload="none">
     </video>
 
 
@@ -528,28 +430,6 @@ body{
                 <span>Big Cities.</span>
             </h1>
 
-        </div>
-
-    </div>
-
-
-    <!-- TOP LOCATION -->
-
-    <div
-        id="bci-drone-location"
-        class="bci-drone-location">
-
-        <span class="bci-location-small">
-        </span>
-
-        <div
-            id="bci-location-city"
-            class="bci-location-city">
-        </div>
-
-        <div
-            id="bci-location-country"
-            class="bci-location-country">
         </div>
 
     </div>
@@ -631,10 +511,24 @@ body{
            VIDEO
         ================================================= */
 
-        const video =
+        let video =
             document.getElementById(
                 "bci-drone-video"
             );
+
+        let standbyVideo =
+            video.cloneNode(false);
+
+        standbyVideo.removeAttribute("id");
+        standbyVideo.classList.add(
+            "bci-drone-video-buffer"
+        );
+        standbyVideo.removeAttribute("src");
+        standbyVideo.preload = "none";
+        video.parentNode.insertBefore(
+            standbyVideo,
+            video.nextSibling
+        );
 
 
         /* =================================================
@@ -643,7 +537,8 @@ body{
            These are city-specific aerial/
            drone clips selected from Pexels.
            
-           Only ONE video is requested at a time.
+           The active clip and, near rotation, one next clip
+           are requested at a time.
         ================================================= */
 
         const cities = [
@@ -655,6 +550,7 @@ body{
                 /*
                  * Lahore aerial / Badshahi Mosque
                  */
+                reducedBrightness:true,
                 video:
                 "https://videos.pexels.com/video-files/9004010/9004010-hd_1920_1080_25fps.mp4"
             },
@@ -664,7 +560,7 @@ body{
                 country:"Türkiye",
 
                 video:
-                "https://videos.pexels.com/video-files/12762156/12762156-uhd_3840_2160_25fps.mp4"
+                "https://videos.pexels.com/video-files/13385855/13385855-hd_1920_1080_30fps.mp4"
             },
 
             {
@@ -675,8 +571,9 @@ body{
                  * Dubai clip from the previously
                  * selected aerial source.
                  */
+                reducedBrightness:true,
                 video:
-                "https://videos.pexels.com/video-files/31942008/13606726_3840_2160_30fps.mp4"
+                "https://videos.pexels.com/video-files/18637270/18637270-hd_1920_1080_30fps.mp4"
             },
 
             {
@@ -684,7 +581,7 @@ body{
                 country:"United Kingdom",
 
                 video:
-                "https://videos.pexels.com/video-files/5236101/5236101-uhd_3840_2160_30fps.mp4"
+                "https://videos.pexels.com/video-files/7197885/7197885-hd_1920_1080_25fps.mp4"
             },
 
             {
@@ -692,15 +589,16 @@ body{
                 country:"United States",
 
                 video:
-                "https://videos.pexels.com/video-files/5796436/5796436-uhd_3840_2160_30fps.mp4"
+                "https://videos.pexels.com/video-files/13701181/13701181-uhd_3840_1620_24fps.mp4"
             },
 
             {
                 city:"Tokyo",
                 country:"Japan",
 
+                reducedBrightness:true,
                 video:
-                "https://videos.pexels.com/video-files/4511374/4511374-uhd_2560_1440_30fps.mp4"
+                "https://videos.pexels.com/video-files/10329842/10329842-hd_1920_1080_30fps.mp4"
             }
 
         ];
@@ -717,21 +615,6 @@ body{
         /* =================================================
            UI
         ================================================= */
-
-        const locationBox =
-            document.getElementById(
-                "bci-drone-location"
-            );
-
-        const locationCity =
-            document.getElementById(
-                "bci-location-city"
-            );
-
-        const locationCountry =
-            document.getElementById(
-                "bci-location-country"
-            );
 
         const centerBox =
             document.getElementById(
@@ -771,6 +654,12 @@ body{
         const CITY_TIME =
             7000;
 
+        const NEXT_VIDEO_LEAD_TIME =
+            3500;
+
+        const BUFFER_TIMEOUT =
+            8000;
+
 
         /*
          * City name appears after
@@ -797,6 +686,12 @@ body{
         let progressTimer = null;
 
         let labelTimer = null;
+        let preloadTimer = null;
+        let bufferTimer = null;
+        let nextLoadPromise = null;
+        let nextLoadIndex = -1;
+        let isSwitching = false;
+        let isRecovering = false;
 
 
         /* =================================================
@@ -804,11 +699,6 @@ body{
         ================================================= */
 
         function hideLocation(){
-
-            locationBox.classList.remove(
-                "show"
-            );
-
             centerBox.classList.remove(
                 "show"
             );
@@ -820,23 +710,12 @@ body{
         ================================================= */
 
         function showLocation(place){
-
-            locationCity.textContent =
-                place.city;
-
-            locationCountry.textContent =
-                place.country;
-
             centerCity.textContent =
                 place.city;
 
             centerCountry.textContent =
                 place.country;
 
-
-            locationBox.classList.add(
-                "show"
-            );
 
             centerBox.classList.add(
                 "show"
@@ -899,17 +778,43 @@ body{
         }
 
 
-        /* =================================================
-           LOAD ONE VIDEO
-        ================================================= */
+        function clearVideoSource(target){
+            target.pause();
+            target.ontimeupdate = null;
+            target.autoplay = false;
+            target.removeAttribute("src");
+            target.load();
+            target.classList.remove(
+                "is-visible",
+                "is-moving",
+                "is-reduced-brightness"
+            );
+        }
 
-        function loadCityVideo(place){
+
+        function loadCityVideo(
+            target,
+            place,
+            timeoutMs = 15000
+        ){
 
             return new Promise(
                 function(resolve,reject){
 
                     let settled =
                         false;
+
+                    const timeout =
+                        setTimeout(
+                            function(){
+                                failure(
+                                    new Error(
+                                        "Video load timed out"
+                                    )
+                                );
+                            },
+                            timeoutMs
+                        );
 
 
                     function success(){
@@ -922,11 +827,11 @@ body{
 
                         cleanup();
 
-                        resolve();
+                        resolve(target);
                     }
 
 
-                    function failure(){
+                    function failure(error){
 
                         if(settled){
                             return;
@@ -936,72 +841,193 @@ body{
 
                         cleanup();
 
-                        reject();
+                        reject(error);
+                    }
+
+                    function onError(){
+                        failure(
+                            new Error(
+                                "Video failed to load"
+                            )
+                        );
                     }
 
 
                     function cleanup(){
 
-                        video.removeEventListener(
+                        clearTimeout(timeout);
+
+                        target.removeEventListener(
                             "loadeddata",
                             success
                         );
 
-                        video.removeEventListener(
+                        target.removeEventListener(
                             "error",
-                            failure
+                            onError
                         );
                     }
 
 
-                    video.pause();
+                    clearVideoSource(target);
 
-                    video.removeAttribute(
-                        "src"
+                    target.classList.toggle(
+                        "is-reduced-brightness",
+                        place.reducedBrightness === true
                     );
 
-                    video.load();
-
-
-                    video.addEventListener(
+                    target.addEventListener(
                         "loadeddata",
                         success,
                         { once:true }
                     );
 
-                    video.addEventListener(
+                    target.addEventListener(
                         "error",
-                        failure,
+                        onError,
                         { once:true }
                     );
 
 
-                    video.src =
+                    target.muted = true;
+                    target.playsInline = true;
+                    target.autoplay = false;
+                    target.preload = "auto";
+                    target.src =
                         place.video;
 
-
-                    /*
-                     * IMPORTANT:
-                     *
-                     * metadata only.
-                     * We do NOT preload
-                     * the next city.
-                     */
-
-                    video.preload =
-                        "metadata";
-
-                    video.muted =
-                        true;
-
-                    video.playsInline =
-                        true;
-
-                    video.load();
+                    target.load();
 
                 }
             );
         }
+
+
+        function preloadNextCity(){
+            const nextIndex =
+                (index + 1) % cities.length;
+
+            nextLoadIndex =
+                nextIndex;
+
+            nextLoadPromise =
+                loadCityVideo(
+                    standbyVideo,
+                    cities[nextIndex],
+                    NEXT_VIDEO_LEAD_TIME
+                ).catch(
+                    function(error){
+                        console.warn(
+                            "BCI next video unavailable:",
+                            cities[nextIndex].city,
+                            error
+                        );
+
+                        return null;
+                    }
+                );
+        }
+
+
+        function handlePlaybackFailure(target, message){
+            if(
+                target !== video ||
+                !target.classList.contains("is-visible") ||
+                isSwitching ||
+                isRecovering
+            ){
+                return;
+            }
+
+            isRecovering = true;
+
+            clearTimeout(timer);
+            clearTimeout(preloadTimer);
+            clearTimeout(bufferTimer);
+            clearTimeout(labelTimer);
+            clearInterval(progressTimer);
+            hideLocation();
+
+            statusText.textContent =
+                message;
+
+            index =
+                (index + 1) %
+                cities.length;
+
+            timer =
+                setTimeout(
+                    function(){
+                        isRecovering = false;
+                        playCity();
+                    },
+                    1000
+                );
+        }
+
+
+        function monitorVideo(target){
+            target.addEventListener(
+                "error",
+                function(){
+                    handlePlaybackFailure(
+                        target,
+                        "Video playback failed; skipping this clip."
+                    );
+                }
+            );
+
+            target.addEventListener(
+                "waiting",
+                function(){
+                    if(
+                        target !== video ||
+                        isSwitching ||
+                        isRecovering
+                    ){
+                        return;
+                    }
+
+                    statusText.textContent =
+                        "Buffering video...";
+
+                    clearTimeout(bufferTimer);
+
+                    bufferTimer =
+                        setTimeout(
+                            function(){
+                                handlePlaybackFailure(
+                                    target,
+                                    "Video connection is slow; skipping this clip."
+                                );
+                            },
+                            BUFFER_TIMEOUT
+                        );
+                }
+            );
+
+            target.addEventListener(
+                "playing",
+                function(){
+                    if(target !== video){
+                        return;
+                    }
+
+                    clearTimeout(bufferTimer);
+
+                    if(
+                        statusText.textContent ===
+                        "Buffering video..."
+                    ){
+                        statusText.textContent = "";
+                    }
+                }
+            );
+        }
+
+
+        monitorVideo(video);
+        monitorVideo(standbyVideo);
 
 
         /* =================================================
@@ -1013,9 +1039,19 @@ body{
             const place =
                 cities[index];
 
+            const placeIndex =
+                index;
 
             clearTimeout(
                 timer
+            );
+
+            clearTimeout(
+                preloadTimer
+            );
+
+            clearTimeout(
+                bufferTimer
             );
 
             clearTimeout(
@@ -1028,54 +1064,81 @@ body{
 
             statusText.textContent = "";
 
+            const previousVideo =
+                video;
+
+            const nextVideo =
+                standbyVideo;
+
+            isSwitching = true;
 
             try{
 
-                await loadCityVideo(
-                    place
-                );
+                if(
+                    nextLoadIndex === placeIndex &&
+                    nextLoadPromise
+                ){
+                    const preparedVideo =
+                        await nextLoadPromise;
+
+                    if(!preparedVideo){
+                        throw new Error(
+                            "Prepared video unavailable"
+                        );
+                    }
+                }
+                else{
+                    await loadCityVideo(
+                        nextVideo,
+                        place
+                    );
+                }
+
+                nextLoadPromise = null;
+                nextLoadIndex = -1;
 
 
                 /*
                  * Start immediately.
                  */
 
-                video.currentTime =
+                nextVideo.currentTime =
                     0;
 
+                nextVideo.autoplay = true;
+                await nextVideo.play();
 
-                video.classList.remove(
-                    "is-visible"
-                );
-
-
-                video.classList.remove(
+                nextVideo.classList.add(
                     "is-moving"
                 );
 
-
-                /*
-                 * Browser paints first,
-                 * then fade video in.
-                 */
+                const activeVideo =
+                    nextVideo;
 
                 requestAnimationFrame(
                     function(){
-
-                        video.classList.add(
+                        nextVideo.classList.add(
                             "is-visible"
                         );
 
-                        video.classList.add(
-                            "is-moving"
+                        previousVideo.classList.remove(
+                            "is-visible"
                         );
-
                     }
                 );
 
+                video = nextVideo;
+                standbyVideo = previousVideo;
+                isSwitching = false;
 
-                await video.play();
-
+                setTimeout(
+                    function(){
+                        clearVideoSource(
+                            standbyVideo
+                        );
+                    },
+                    1400
+                );
 
                 startProgress();
 
@@ -1103,15 +1166,15 @@ body{
                  * lightweight.
                  */
 
-                video.ontimeupdate =
+                activeVideo.ontimeupdate =
                     function(){
 
                         if(
-                            video.currentTime >=
+                            activeVideo.currentTime >=
                             MAX_PLAY_SECONDS
                         ){
 
-                            video.pause();
+                            activeVideo.pause();
 
                         }
 
@@ -1122,6 +1185,13 @@ body{
                  * Move to next city.
                  */
 
+                preloadTimer =
+                    setTimeout(
+                        preloadNextCity,
+                        CITY_TIME -
+                        NEXT_VIDEO_LEAD_TIME
+                    );
+
                 timer =
                     setTimeout(
                         function(){
@@ -1129,33 +1199,11 @@ body{
                             video.classList.remove(
                                 "is-moving"
                             );
+                            index =
+                                (index + 1) %
+                                cities.length;
 
-
-                            video.classList.remove(
-                                "is-visible"
-                            );
-
-
-                            setTimeout(
-                                function(){
-
-                                    index++;
-
-                                    if(
-                                        index >=
-                                        cities.length
-                                    ){
-
-                                        index = 0;
-
-                                    }
-
-
-                                    playCity();
-
-                                },
-                                900
-                            );
+                            playCity();
 
                         },
                         CITY_TIME
@@ -1164,11 +1212,23 @@ body{
 
             }
             catch(error){
+                isSwitching = false;
 
                 console.warn(
                     "BCI video unavailable:",
-                    place.city
+                    place.city,
+                    error
                 );
+
+                clearVideoSource(
+                    nextVideo
+                );
+
+                nextLoadPromise = null;
+                nextLoadIndex = -1;
+
+                statusText.textContent =
+                    "Video temporarily unavailable";
 
 
                 /*
@@ -1177,17 +1237,15 @@ body{
                  * the whole hero.
                  */
 
-                index++;
+                index =
+                    (index + 1) %
+                    cities.length;
 
-                if(
-                    index >=
-                    cities.length
-                ){
-                    index = 0;
-                }
-
-
-                playCity();
+                timer =
+                    setTimeout(
+                        playCity,
+                        1000
+                    );
 
             }
 
