@@ -81,3 +81,20 @@ export function getBigCityDisplayName(slug: string, name: string) {
   const override = airportDisplayOverrides[slug];
   return override?.originalName === name ? override.displayName : name;
 }
+
+export function getBigCityDisplayNameSearchAliases(query: string) {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  if (!normalizedQuery) return [];
+  return Object.entries(airportDisplayOverrides)
+    .filter(([, override]) => override.displayName.toLocaleLowerCase().includes(normalizedQuery))
+    .map(([slug]) => slug);
+}
+
+export function getBigCityDisplayNameSearchExclusions(query: string) {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  if (!normalizedQuery) return [];
+  return Object.entries(airportDisplayOverrides)
+    .filter(([, override]) => override.originalName.toLocaleLowerCase().includes(normalizedQuery)
+      && !override.displayName.toLocaleLowerCase().includes(normalizedQuery))
+    .map(([slug]) => slug);
+}

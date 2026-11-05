@@ -59,6 +59,11 @@ export async function getCountries(params?: { q?: string; continent?: string; pa
   return response.data.data;
 }
 
+export async function getCountryDirectory(params?: { q?: string; continent?: string; page?: number; perPage?: number; includeEventCounts?: boolean }) {
+  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CountryItem, 'code' | 'name' | 'continent' | 'events'>>>>('/countries/directory', { params });
+  return response.data.data;
+}
+
 export async function getCountry(code: string) {
   const response = await apiClient.get<ApiResponse<CountryItem>>(`/countries/${code}`);
   return response.data.data;
@@ -86,5 +91,27 @@ export async function updateCity(slug: string, payload: { name?: string; country
 
 export async function getCities() {
   const response = await apiClient.get<ApiResponse<CityItem[]>>('/cities');
+  return response.data.data;
+}
+
+export async function getCityDirectory(params: {
+  q?: string;
+  page: number;
+  perPage: number;
+  aliasSlugs?: string[];
+  excludeSlugs?: string[];
+}) {
+  const response = await apiClient.get<ApiResponse<CatalogListResponse<Pick<CityItem, 'slug' | 'name'>>>>('/cities/directory', {
+    params: {
+      ...params,
+      aliasSlugs: params.aliasSlugs?.length ? params.aliasSlugs.join(',') : undefined,
+      excludeSlugs: params.excludeSlugs?.length ? params.excludeSlugs.join(',') : undefined,
+    },
+  });
+  return response.data.data;
+}
+
+export async function getVerifiedCityCount() {
+  const response = await apiClient.get<ApiResponse<number>>('/cities/count');
   return response.data.data;
 }

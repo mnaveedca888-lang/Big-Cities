@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
@@ -6,9 +6,27 @@ import BigCitiesPage from '../BigCitiesPage';
 
 const mockGetCities = vi.fn();
 
-vi.mock('@/services/catalog', () => ({
-  getCities: (...args: unknown[]) => mockGetCities(...args),
-}));
+vi.mock('@/services/catalog', async () => {
+  const { getBigCityDisplayName } = await import('@/data/bigCitiesAirportDisplayNames');
+  return {
+    getCities: (...args: unknown[]) => mockGetCities(...args),
+    getCityDirectory: async (...args: unknown[]) => {
+      const cities = await mockGetCities(...args);
+      const params = args[0] as { page?: number; perPage?: number; q?: string };
+      const page = params.page ?? 1;
+      const perPage = params.perPage ?? 12;
+      const query = params.q?.trim().toLocaleLowerCase() ?? '';
+      const filtered = query
+        ? cities.filter((city: { slug: string; name: string }) => getBigCityDisplayName(city.slug, city.name).toLocaleLowerCase().includes(query))
+        : cities;
+      const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+      return {
+        items: filtered.slice((page - 1) * perPage, page * perPage),
+        pagination: { page, perPage, total: filtered.length, totalPages },
+      };
+    },
+  };
+});
 
 describe('BigCitiesPage', () => {
   it('searches cities case-insensitively, paginates results, and opens the existing detail route', async () => {
@@ -47,7 +65,7 @@ describe('BigCitiesPage', () => {
     const lahoreLink = await screen.findByRole('link', { name: /Lahore/ });
     expect(lahoreLink).toHaveAttribute('href', '/city/pk-lahore');
   expect(lahoreLink).toHaveTextContent(/^Lahore$/);
-    expect(screen.queryByRole('link', { name: /Islamabad/ })).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole('link', { name: /Islamabad/ })).not.toBeInTheDocument());
   expect(screen.queryByRole('img')).not.toBeInTheDocument();
   expect(screen.queryByText('PK')).not.toBeInTheDocument();
   expect(screen.queryByText('Population: 11,000,000')).not.toBeInTheDocument();

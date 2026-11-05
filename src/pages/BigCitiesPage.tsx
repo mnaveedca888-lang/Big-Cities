@@ -1,27 +1,38 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { Input } from '@/components/ui/input';
-import { getBigCityDisplayName } from '@/data/bigCitiesAirportDisplayNames';
-import { getCities } from '@/services/catalog';
+import { getBigCityDisplayName, getBigCityDisplayNameSearchAliases, getBigCityDisplayNameSearchExclusions } from '@/data/bigCitiesAirportDisplayNames';
+import { getCityDirectory } from '@/services/catalog';
 
 const PAGE_SIZE = 12;
 
 export default function BigCitiesPage() {
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [page, setPage] = useState(1);
-  const cities = useQuery({ queryKey: ['cities'], queryFn: getCities, keepPreviousData: true });
-  const allCities = cities.data ?? [];
-  const filteredCities = useMemo(() => {
-    const search = query.trim().toLocaleLowerCase();
-    return search ? allCities.filter((city) => getBigCityDisplayName(city.slug, city.name).toLocaleLowerCase().includes(search)) : allCities;
-  }, [allCities, query]);
-  const totalPages = Math.ceil(filteredCities.length / PAGE_SIZE);
-  const visibleCities = filteredCities.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const totalCitiesLabel = `${allCities.length.toLocaleString()} cities`;
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedQuery(query.trim()), 250);
+    return () => window.clearTimeout(timeout);
+  }, [query]);
+  const cityDirectoryQuery = useQuery({
+    queryKey: ['city-directory', debouncedQuery, page],
+    queryFn: () => getCityDirectory({
+      q: debouncedQuery || undefined,
+      page,
+      perPage: PAGE_SIZE,
+      aliasSlugs: getBigCityDisplayNameSearchAliases(debouncedQuery),
+      excludeSlugs: getBigCityDisplayNameSearchExclusions(debouncedQuery),
+    }),
+    placeholderData: keepPreviousData,
+  });
+  const cities = cityDirectoryQuery.data?.items ?? [];
+  const pagination = cityDirectoryQuery.data?.pagination;
+  const totalPages = pagination?.totalPages ?? 1;
+  const totalCitiesLabel = `${(pagination?.total ?? 0).toLocaleString()} cities`;
 
   return (
     <>
@@ -46,15 +57,15 @@ export default function BigCitiesPage() {
           />
         </div>
         <DataState
-          isLoading={cities.isLoading}
-          error={cities.error ? `Cities are unavailable right now. ${cities.error?.message ?? ''}` : undefined}
-          onRetry={() => void cities.refetch()}
-          isEmpty={!cities.isLoading && filteredCities.length === 0}
+          isLoading={cityDirectoryQuery.isLoading}
+          error={cityDirectoryQuery.error ? `Cities are unavailable right now. ${cityDirectoryQuery.error.message}` : undefined}
+          onRetry={() => void cityDirectoryQuery.refetch()}
+          isEmpty={!cityDirectoryQuery.isLoading && cities.length === 0}
           emptyTitle="No cities found"
           emptyDescription="Try another city name or check back when more cities are available."
         >
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {visibleCities.map((city) => (
+            {cities.map((city) => (
               <li key={city.slug} className="h-full">
                 <Link to={`/city/${city.slug}`} className="block h-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
                   {getBigCityDisplayName(city.slug, city.name)}
