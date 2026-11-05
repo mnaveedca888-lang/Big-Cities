@@ -8,6 +8,7 @@ export const siteConfig = {
     { label: 'Continents', href: '/continents' },
     { label: 'Countries', href: '/countries' },
     { label: 'Big Cities', href: '/cities' },
+    { label: 'Events', href: '/events' },
     { label: 'About', href: '/about' },
   ],
 };

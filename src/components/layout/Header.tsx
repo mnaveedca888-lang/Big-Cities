@@ -95,9 +95,9 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden flex-nowrap items-center gap-6 lg:flex">
           {siteConfig.navItems.map((item) => (
-            <NavLink key={item.href} to={item.href} className={({ isActive }) => `text-sm font-medium transition hover:text-slate-950 dark:hover:text-white ${isActive ? 'text-cyan-800 dark:text-cyan-300' : 'text-slate-600 dark:text-slate-300'}`}>
+            <NavLink key={item.href} to={item.href} className={({ isActive }) => `whitespace-nowrap text-sm font-medium transition hover:text-slate-950 dark:hover:text-white ${isActive ? 'text-cyan-800 dark:text-cyan-300' : 'text-slate-600 dark:text-slate-300'}`}>
               {item.label}
             </NavLink>
           ))}

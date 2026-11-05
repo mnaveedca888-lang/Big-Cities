@@ -37,6 +37,7 @@ describe('Header mobile navigation', () => {
       ['Continents', '/continents'],
       ['Countries', '/countries'],
       ['Big Cities', '/cities'],
+      ['Events', '/events'],
       ['About', '/about'],
     ];
     const desktopNavigation = container.querySelector('header nav') as HTMLElement;
@@ -100,6 +101,18 @@ describe('Header mobile navigation', () => {
     const mobileAbout = within(screen.getByRole('navigation', { name: 'Mobile navigation' })).getByRole('link', { name: 'About' });
     expect(mobileAbout).toHaveAttribute('aria-current', 'page');
     expect(mobileAbout).toHaveClass('bg-cyan-50');
+  });
+
+  it('marks Events as the active route in desktop and mobile navigation', () => {
+    const { container } = render(<MemoryRouter initialEntries={['/events']}><Header /></MemoryRouter>);
+    const desktopEvents = container.querySelector('header nav.hidden a[href="/events"]');
+    expect(desktopEvents).toHaveAttribute('aria-current', 'page');
+    expect(desktopEvents).toHaveClass('text-cyan-800');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    const mobileEvents = within(screen.getByRole('navigation', { name: 'Mobile navigation' })).getByRole('link', { name: 'Events' });
+    expect(mobileEvents).toHaveAttribute('aria-current', 'page');
+    expect(mobileEvents).toHaveClass('bg-cyan-50');
   });
 
   it('does not show a Dashboard shortcut in the authenticated public header', () => {
