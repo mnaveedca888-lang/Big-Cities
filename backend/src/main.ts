@@ -23,12 +23,15 @@ import { databaseWritesEnabled, registerStagingWriteGuard } from './staging-writ
 import { installLocalImageWriteGuard } from './images/local-image';
 import { getCorsOptions } from './cors';
 import { registerHealthRoutes } from './health';
+import { instrumentPrismaPerformance, registerRequestPerformanceMetrics } from './performance/request-metrics';
 
 const prisma = new PrismaClient();
+instrumentPrismaPerformance(prisma);
 installLocalImageWriteGuard(prisma);
 
 async function start() {
   const app = Fastify({ logger: true, maxParamLength: EVENT_SLUG_MAX_LENGTH });
+  registerRequestPerformanceMetrics(app);
 
   await app.register(helmet as any, {
     crossOriginResourcePolicy: { policy: 'cross-origin' },

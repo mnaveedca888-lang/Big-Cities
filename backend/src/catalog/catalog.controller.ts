@@ -1109,12 +1109,13 @@ export function registerCatalogRoutes(app: FastifyInstance, prisma: PrismaClient
     try {
       const { code } = countryParamSchema.parse(request.params || {});
       const normalizedCode = code.trim().toUpperCase();
-      const country = await prisma.country.findUnique({ where: { code: normalizedCode }, include: { continent: true } });
-      if (!country) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
-      const [cityCount, eventCount] = await Promise.all([
+      const countryQuery = prisma.country.findUnique({ where: { code: normalizedCode }, include: { continent: true } });
+      const countsQuery = Promise.all([
         prisma.city.count({ where: { countryCode: normalizedCode } }),
         prisma.event.count({ where: { countryCode: normalizedCode } }),
       ]);
+      const [country, [cityCount, eventCount]] = await Promise.all([countryQuery, countsQuery]);
+      if (!country) return reply.code(404).send({ success: false, error: { message: 'Country not found' } });
       reply.send({ success: true, data: normalizeCountry(country, cityCount, eventCount, request) });
     } catch (error: any) {
       return sendApiError(reply, app.log, error, 'Catalog request failed.');
