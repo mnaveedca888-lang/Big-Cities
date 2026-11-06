@@ -22,6 +22,12 @@ const mockGetCountryCities = vi.fn();
 const mockGetEvents = vi.fn();
 const mockGetCategories = vi.fn();
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((res) => { resolve = res; });
+  return { promise, resolve };
+}
+
 vi.mock('@/services/catalog', () => ({
   getCountry: (...args: unknown[]) => mockGetCountry(...args),
   getCountryCities: (...args: unknown[]) => mockGetCountryCities(...args),
@@ -79,6 +85,42 @@ describe('CountryDetailPage', () => {
     expect(screen.getAllByText('881,913 sq km')).toHaveLength(2);
     expect(screen.getAllByText('Karachi').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Pakistan').length).toBeGreaterThan(0);
+    expect(queryClient.getQueryData(['city', 'pk-islamabad'])).toEqual(expect.objectContaining({ name: 'Islamabad' }));
+  });
+
+  it('renders the country profile while city and event sections load independently', async () => {
+    const pendingCities = deferred<Array<{ slug: string; name: string; countryCode: string }>>();
+    const pendingEvents = deferred<unknown[]>();
+    mockGetCountry.mockResolvedValue({
+      code: 'AR',
+      name: 'Argentina',
+      continent: 'South America',
+      profile: { capital: 'Buenos Aires', shortDescription: 'Argentina profile.' },
+    });
+    mockGetCountryCities.mockReturnValue(pendingCities.promise);
+    mockGetEvents.mockReturnValue(pendingEvents.promise);
+
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/country/AR']}>
+          <Routes>
+            <Route path="/country/:code" element={<CountryDetailPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Argentina profile.')).toBeInTheDocument();
+    expect(screen.getByText('Loading country cities…')).toBeInTheDocument();
+    expect(screen.getByText('Loading country events…')).toBeInTheDocument();
+    expect(screen.queryByText('No cities are currently linked to this country.')).not.toBeInTheDocument();
+
+    pendingCities.resolve([]);
+    pendingEvents.resolve([]);
+
+    expect(await screen.findByText('No cities are currently linked to this country.')).toBeInTheDocument();
+    expect(await screen.findByText('No live events are currently linked to this country.')).toBeInTheDocument();
   });
 
   it('shows only linked names for cities and historical events on non-Pakistan country pages', async () => {

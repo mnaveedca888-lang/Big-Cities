@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { Globe2, CalendarDays, Users, ShieldCheck, Building2, Tags, Plane } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Section } from '@/components/ui/section';
 import { DataState } from '@/components/ui/data-state';
@@ -11,11 +11,13 @@ import { EventCard } from '@/components/features/EventCard';
 import { apiClient } from '@/api/client';
 import { getCategories, getContinents, getCountryCities, getCountryDirectory, getVerifiedCityCount } from '@/services/catalog';
 import { getEvents, getFeaturedEvents } from '@/services/events';
+import { prefetchCountryDetail, primeCityDetail } from '@/services/detail-prefetch';
 import type { EventItem } from '@/types';
 import type { CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
 import heroBannerHtml from '../../images/Banner for Home page.html?url';
 
 export default function HomePage() {
+  const queryClient = useQueryClient();
   const [continent, setContinent] = useState('');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
@@ -160,7 +162,7 @@ export default function HomePage() {
                     ) : countries.length ? (
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         {countries.map((item: CountryItem) => (
-                          <Link key={item.code} to={`/country/${item.code}`} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
+                          <Link key={item.code} to={`/country/${item.code}`} onMouseEnter={() => { void prefetchCountryDetail(queryClient, item.code); }} onFocus={() => { void prefetchCountryDetail(queryClient, item.code); }} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
                             {item.name}
                           </Link>
                         ))}
@@ -178,7 +180,7 @@ export default function HomePage() {
                     ) : cities.length ? (
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         {cities.map((item: CityItem) => (
-                          <Link key={item.slug} to={`/city/${item.slug}`} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
+                          <Link key={item.slug} to={`/city/${item.slug}`} onMouseEnter={() => { primeCityDetail(queryClient, item); }} onFocus={() => { primeCityDetail(queryClient, item); }} className="rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
                             {item.name}
                           </Link>
                         ))}

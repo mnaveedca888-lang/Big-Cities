@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { Input } from '@/components/ui/input';
 import { getBigCityDisplayName, getBigCityDisplayNameSearchAliases, getBigCityDisplayNameSearchExclusions } from '@/data/bigCitiesAirportDisplayNames';
 import { getCityDirectory } from '@/services/catalog';
+import { prefetchCityDetail } from '@/services/detail-prefetch';
 
 const PAGE_SIZE = 12;
 
 export default function BigCitiesPage() {
+  const queryClient = useQueryClient();
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -67,7 +69,7 @@ export default function BigCitiesPage() {
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {cities.map((city) => (
               <li key={city.slug} className="h-full">
-                <Link to={`/city/${city.slug}`} className="block h-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
+                <Link to={`/city/${city.slug}`} onMouseEnter={() => { void prefetchCityDetail(queryClient, city.slug); }} onFocus={() => { void prefetchCityDetail(queryClient, city.slug); }} className="block h-full rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-500 hover:text-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300">
                   {getBigCityDisplayName(city.slug, city.name)}
                 </Link>
               </li>

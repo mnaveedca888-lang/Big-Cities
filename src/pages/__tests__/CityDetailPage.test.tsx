@@ -7,6 +7,12 @@ import CityDetailPage from '../CityDetailPage';
 const mockGetCity = vi.fn();
 const mockGetEvents = vi.fn();
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((res) => { resolve = res; });
+  return { promise, resolve };
+}
+
 vi.mock('@/services/catalog', () => ({
   getCity: (...args: unknown[]) => mockGetCity(...args),
 }));
@@ -83,5 +89,35 @@ describe('CityDetailPage', () => {
     expect(screen.getByText('Humid subtropical')).toBeInTheDocument();
     expect(screen.getByText('Empanadas')).toBeInTheDocument();
     expect(screen.getByText('Buenos Aires Underground')).toBeInTheDocument();
+  });
+
+  it('renders city profile sections while the noncritical events request is still loading', async () => {
+    const pendingEvents = deferred<unknown[]>();
+    mockGetCity.mockResolvedValue({
+      slug: 'ar-buenos-aires',
+      name: 'Buenos Aires',
+      countryCode: 'AR',
+      profile: { overview: 'Buenos Aires overview' },
+    });
+    mockGetEvents.mockReturnValue(pendingEvents.promise);
+
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/city/ar-buenos-aires']}>
+          <Routes>
+            <Route path="/city/:slug" element={<CityDetailPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Buenos Aires overview')).toBeInTheDocument();
+    expect(screen.getByText('Loading city events…')).toBeInTheDocument();
+    expect(screen.queryByText('No events are linked to this city yet.')).not.toBeInTheDocument();
+
+    pendingEvents.resolve([]);
+
+    expect(await screen.findByText('No events are linked to this city yet.')).toBeInTheDocument();
   });
 });

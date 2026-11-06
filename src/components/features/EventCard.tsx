@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SafeImage } from '@/components/ui/safe-image';
 import type { EventItem } from '@/types';
+import { prefetchEventDetail } from '@/services/detail-prefetch';
 
 interface EventCardProps {
   event: EventItem;
@@ -30,10 +32,11 @@ function formatEventDate(event: EventItem) {
 }
 
 export function EventCard({ event }: EventCardProps) {
+  const queryClient = useQueryClient();
   const location = [event.city || event.citySlug, event.country || event.countryCode].filter(Boolean).join(', ');
 
   return (
-    <Link to={`/event/${event.slug}`} className="group block">
+    <Link to={`/event/${event.slug}`} onMouseEnter={() => { void prefetchEventDetail(queryClient, event.slug); }} onFocus={() => { void prefetchEventDetail(queryClient, event.slug); }} className="group block">
       <Card className="overflow-hidden p-0 transition hover:-translate-y-1">
         <div className="h-44 w-full overflow-hidden bg-slate-100">
           <SafeImage src={event.image} alt={event.title} className="h-full w-full object-cover" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />

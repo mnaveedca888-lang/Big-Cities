@@ -7,14 +7,16 @@ type SafeImageProps = {
   className?: string;
   fallbackClassName?: string;
   fallbackSrc?: string | null;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'async' | 'sync' | 'auto';
+  fetchPriority?: 'high' | 'low' | 'auto';
 };
 
-export function SafeImage({ src, alt, className, fallbackClassName, fallbackSrc }: SafeImageProps) {
-  const [currentSrc, setCurrentSrc] = useState<string | null>(null);
-  const [errorCount, setErrorCount] = useState(0);
-
+export function SafeImage({ src, alt, className, fallbackClassName, fallbackSrc, loading, decoding, fetchPriority }: SafeImageProps) {
   const normalizedSrc = useMemo(() => normalizeImageUrl(src), [src]);
   const normalizedFallbackSrc = useMemo(() => normalizeImageUrl(fallbackSrc), [fallbackSrc]);
+  const [currentSrc, setCurrentSrc] = useState<string | null>(normalizedSrc ?? normalizedFallbackSrc);
+  const [errorCount, setErrorCount] = useState(0);
 
   if (import.meta.env.DEV) {
     console.log('[SafeImage] props', { src, normalizedSrc, fallbackSrc, normalizedFallbackSrc });
@@ -43,6 +45,9 @@ export function SafeImage({ src, alt, className, fallbackClassName, fallbackSrc 
     <img
       src={currentSrc}
       alt={alt}
+      loading={loading}
+      decoding={decoding}
+      fetchPriority={fetchPriority}
       className={['block object-cover object-center', className].filter(Boolean).join(' ')}
       onError={() => {
         if (errorCount > 0) return;

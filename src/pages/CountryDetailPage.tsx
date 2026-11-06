@@ -1,15 +1,16 @@
 ﻿import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { getBigCityDisplayName } from '@/data/bigCitiesAirportDisplayNames';
 import { getCategories, getCountry, getCountryCities } from '@/services/catalog';
 import { getEvents } from '@/services/events';import { buildCanonicalCountryProfile } from '@/utils/countryProfile';import { pakistanCountryImage } from '@/utils/pakistanImages';
+import { prefetchCityDetail, prefetchEventDetail } from '@/services/detail-prefetch';
 import { formatAreaValue } from '@/utils/format';
 import { SafeImage } from '@/components/ui/safe-image';
 import { DailyEventsSection, isHistoricalCatalogEvent } from '@/components/features/DailyEventsSection';
-import type { EventItem } from '@/types';
+import type { CityItem, EventItem } from '@/types';
 
 function formatValue(value: unknown) {
   if (Array.isArray(value)) {
@@ -91,20 +92,32 @@ function filterCountryEvents(events: Array<{ countryCode?: string | null } | und
 export default function CountryDetailPage() {
   const { code = '' } = useParams();
   const normalizedCode = code.trim().toUpperCase();
-  const country = useQuery({ queryKey: ['country', normalizedCode], queryFn: () => getCountry(normalizedCode), enabled: Boolean(normalizedCode), refetchOnMount: 'always' });
-  const cities = useQuery({ queryKey: ['country-cities', normalizedCode], queryFn: () => getCountryCities(normalizedCode), enabled: Boolean(normalizedCode), refetchOnMount: 'always' });
-  const events = useQuery({ queryKey: ['country-events', normalizedCode], queryFn: () => getEvents({ country: normalizedCode, perPage: 100 }), enabled: Boolean(normalizedCode), refetchOnMount: 'always' });
+  const queryClient = useQueryClient();
+  const country = useQuery({ queryKey: ['country', normalizedCode], queryFn: () => getCountry(normalizedCode), enabled: Boolean(normalizedCode) });
+  const cities = useQuery({
+    queryKey: ['country-cities', normalizedCode],
+    queryFn: async () => {
+      const countryCities: CityItem[] = await getCountryCities(normalizedCode);
+      countryCities.forEach((city) => {
+        if (city.slug && !queryClient.getQueryData(['city', city.slug])) {
+          queryClient.setQueryData(['city', city.slug], city);
+        }
+      });
+      return countryCities;
+    },
+    enabled: Boolean(normalizedCode),
+  });
+  const events = useQuery({ queryKey: ['country-events', normalizedCode], queryFn: () => getEvents({ country: normalizedCode, perPage: 100 }), enabled: Boolean(normalizedCode) });
   const isPakistanDailyEventsQuery = normalizedCode === 'PK';
   const dailyEvents = useQuery({
     queryKey: ['country-daily-events', normalizedCode],
     queryFn: () => getEvents({ country: normalizedCode, perPage: 100, dailyOnly: true }),
     enabled: isPakistanDailyEventsQuery,
-    refetchOnMount: 'always',
     refetchInterval: isPakistanDailyEventsQuery ? 30_000 : false,
     refetchIntervalInBackground: false,
     staleTime: 15_000,
   });
-  const categories = useQuery({ queryKey: ['event-categories'], queryFn: () => getCategories({ perPage: 100 }), enabled: normalizedCode === 'PK', refetchOnMount: 'always' });
+  const categories = useQuery({ queryKey: ['event-categories'], queryFn: () => getCategories({ perPage: 100 }), enabled: normalizedCode === 'PK' });
   const profile = (country.data?.profile as Record<string, unknown> | null | undefined) ?? null;
   const canonicalProfile = buildCanonicalCountryProfile(profile);
   const countryName = (country.data?.name ?? normalizedCode) || 'Country';
@@ -190,7 +203,7 @@ export default function CountryDetailPage() {
       <div className="space-y-8">
         <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white/80 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
           <div className="h-72 w-full overflow-hidden bg-slate-100 sm:h-80 lg:h-96 dark:bg-slate-950">
-            <SafeImage src={heroImage} fallbackSrc={isPakistanCountry ? pakistanCountryImage : null} alt={country.data?.name ?? 'Country'} className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
+            <SafeImage src={heroImage} fallbackSrc={isPakistanCountry ? pakistanCountryImage : null} alt={country.data?.name ?? 'Country'} loading="eager" decoding="async" fetchPriority="high" className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
           </div>
           <div className="p-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -217,11 +230,11 @@ export default function CountryDetailPage() {
             </div>
           </div>
         </div>
-        <DataState isLoading={country.isLoading || cities.isLoading || events.isLoading} error={country.error || cities.error || events.error ? 'Country details are unavailable right now.' : undefined} onRetry={() => { void country.refetch(); void cities.refetch(); void events.refetch(); }} isEmpty={!country.isLoading && !country.data && !cities.isLoading && !events.isLoading} emptyTitle="Country not found" emptyDescription="This country is not present in the current catalog.">
+        <DataState isLoading={country.isLoading} error={country.error ? 'Country details are unavailable right now.' : undefined} onRetry={() => { void country.refetch(); void cities.refetch(); void events.refetch(); }} isEmpty={!country.isLoading && !country.data} emptyTitle="Country not found" emptyDescription="This country is not present in the current catalog.">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
               { label: 'Continent', value: country.data?.continent ?? 'Global', accent: 'from-cyan-500/15 to-cyan-500/5' },
-              { label: 'Big Cities', value: cities.data?.length ?? 0, accent: 'from-emerald-500/15 to-emerald-500/5' },
+              { label: 'Big Cities', value: cities.isLoading ? 'Loading…' : cities.error ? 'Unavailable' : cities.data?.length ?? 0, accent: 'from-emerald-500/15 to-emerald-500/5' },
               { label: 'Area', value: formatAreaValue(canonicalProfile.area), accent: 'from-violet-500/15 to-violet-500/5' },
               { label: 'Currency', value: formatValue(canonicalProfile.currency), accent: 'from-amber-500/15 to-amber-500/5' },
             ].map((item, index) => (
@@ -276,7 +289,14 @@ export default function CountryDetailPage() {
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Big Cities in {countryName}</h2>
             </div>
-            {cityList.length > 0 ? (
+            {cities.isLoading ? (
+              <p className="mt-4 text-sm text-slate-600 dark:text-slate-400" role="status">Loading country cities…</p>
+            ) : cities.error ? (
+              <p className="mt-4 text-sm text-rose-700 dark:text-rose-300" role="alert">
+                City information is unavailable right now.{' '}
+                <button type="button" className="font-semibold underline" onClick={() => { void cities.refetch(); }}>Retry</button>
+              </p>
+            ) : cityList.length > 0 ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {cityList.map((city: { slug?: string; name?: string }) => {
                   const slug = city.slug ?? '';
@@ -284,7 +304,7 @@ export default function CountryDetailPage() {
                     ? getBigCityDisplayName(slug, city.name ?? '')
                     : city.name;
                   return (
-                    <Link key={slug || city.name} to={`/city/${slug}`} className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white">
+                    <Link key={slug || city.name} to={`/city/${slug}`} onMouseEnter={() => { void prefetchCityDetail(queryClient, slug); }} onFocus={() => { void prefetchCityDetail(queryClient, slug); }} className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white">
                       {displayName}
                     </Link>
                   );
@@ -303,10 +323,17 @@ export default function CountryDetailPage() {
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Historical events in {countryName}</h2>
             </div>
-            {dedupedEvents.length > 0 ? (
+            {events.isLoading ? (
+              <p className="mt-4 text-sm text-slate-600 dark:text-slate-400" role="status">Loading country events…</p>
+            ) : events.error ? (
+              <p className="mt-4 text-sm text-rose-700 dark:text-rose-300" role="alert">
+                Country events are unavailable right now.{' '}
+                <button type="button" className="font-semibold underline" onClick={() => { void events.refetch(); }}>Retry</button>
+              </p>
+            ) : dedupedEvents.length > 0 ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {dedupedEvents.map((event: any) => (
-                  <Link key={event.id} to={`/event/${event.slug}`} className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white">
+                  <Link key={event.id} to={`/event/${event.slug}`} onMouseEnter={() => { void prefetchEventDetail(queryClient, event.slug); }} onFocus={() => { void prefetchEventDetail(queryClient, event.slug); }} className="group flex min-h-[72px] items-center rounded-3xl border border-slate-200 bg-white/70 p-4 text-lg font-semibold text-slate-950 shadow-sm transition hover:-translate-y-1 hover:border-cyan-500 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70 dark:text-white">
                     {event.title}
                   </Link>
                 ))}
@@ -336,7 +363,11 @@ export default function CountryDetailPage() {
               <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white/80 to-transparent dark:from-slate-950/80" />
               <div className="flex min-w-0 items-center gap-3 text-sm font-medium text-slate-700 dark:text-slate-300">
                 <span className="shrink-0 rounded-full bg-cyan-600 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white">Live</span>
-                {upcomingEvent ? (
+                {events.isLoading ? (
+                  <span className="text-slate-600 dark:text-slate-400">Loading upcoming events…</span>
+                ) : events.error ? (
+                  <span className="text-slate-600 dark:text-slate-400">Upcoming event information is unavailable right now.</span>
+                ) : upcomingEvent ? (
                   <div className="marquee-container flex-1 min-w-0 overflow-hidden">
                     <div
                       className="marquee-track"
@@ -357,4 +388,3 @@ export default function CountryDetailPage() {
     </>
   );
 }
-

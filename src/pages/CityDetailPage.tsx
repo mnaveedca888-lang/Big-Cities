@@ -1,5 +1,5 @@
 ﻿import { Helmet } from 'react-helmet-async';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { SafeImage } from '@/components/ui/safe-image';
 import { getBigCityDisplayName } from '@/data/bigCitiesAirportDisplayNames';
 import { getCity } from '@/services/catalog';
 import { getEvents } from '@/services/events';
+import { prefetchEventDetail } from '@/services/detail-prefetch';
 import { buildCanonicalCityProfile } from '@/utils/cityProfile';
 import { formatAreaValue } from '@/utils/format';
 import { getPakistanCityImage } from '@/utils/pakistanImages';
@@ -45,8 +46,9 @@ function formatHistoricalDateLabel(event: { description?: string | null; date?: 
 export default function CityDetailPage() {
   const { slug = '' } = useParams();
   const normalizedSlug = slug.trim();
-  const city = useQuery({ queryKey: ['city', normalizedSlug], queryFn: () => getCity(normalizedSlug), enabled: Boolean(normalizedSlug), refetchOnMount: 'always' });
-  const events = useQuery({ queryKey: ['events', normalizedSlug], queryFn: () => getEvents({ city: normalizedSlug }), enabled: Boolean(normalizedSlug), refetchOnMount: 'always' });
+  const queryClient = useQueryClient();
+  const city = useQuery({ queryKey: ['city', normalizedSlug], queryFn: () => getCity(normalizedSlug), enabled: Boolean(normalizedSlug) });
+  const events = useQuery({ queryKey: ['events', normalizedSlug], queryFn: () => getEvents({ city: normalizedSlug }), enabled: Boolean(normalizedSlug) });
   const profile = buildCanonicalCityProfile((city.data?.profile as Record<string, unknown> | null | undefined) ?? null);
   const localPakistanCityImage = getPakistanCityImage(normalizedSlug);
   const heroImage = getCityImage(city.data) ?? localPakistanCityImage;
@@ -92,7 +94,7 @@ export default function CityDetailPage() {
       <div className="space-y-8">
         <div className="overflow-hidden rounded-4xl border border-slate-200 bg-white/80 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
           <div className="h-72 w-full overflow-hidden bg-slate-100 sm:h-80 lg:h-96 dark:bg-slate-950">
-            <SafeImage src={heroImage} alt={cityName} className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
+            <SafeImage src={heroImage} alt={cityName} loading="eager" decoding="async" fetchPriority="high" className="h-full w-full" fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-sm text-slate-500" />
           </div>
           <div className="p-8">
             <h1 className="text-3xl font-semibold text-slate-950 dark:text-white">{cityName}</h1>
@@ -104,7 +106,7 @@ export default function CityDetailPage() {
             </div>
           </div>
         </div>
-        <DataState isLoading={city.isLoading || events.isLoading} error={city.error || events.error ? 'City details are unavailable right now.' : undefined} onRetry={() => { void city.refetch(); void events.refetch(); }} isEmpty={!city.isLoading && !city.data && !events.isLoading} emptyTitle="City not found" emptyDescription="This city is not present in the current catalog.">
+        <DataState isLoading={city.isLoading} error={city.error ? 'City details are unavailable right now.' : undefined} onRetry={() => { void city.refetch(); void events.refetch(); }} isEmpty={!city.isLoading && !city.data} emptyTitle="City not found" emptyDescription="This city is not present in the current catalog.">
           {!hasProfile ? (
             <Card>
               <h2 className="text-xl font-semibold text-slate-950 dark:text-white">City profile coming soon</h2>
@@ -231,13 +233,20 @@ export default function CityDetailPage() {
               <h2 className="text-xl font-semibold text-slate-950 dark:text-white">Events for {cityName}</h2>
               <span className="rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">{cityEvents.length}</span>
             </div>
-            {cityEvents.length > 0 ? (
+            {events.isLoading ? (
+              <p className="mt-4 text-sm text-slate-600 dark:text-slate-400" role="status">Loading city events…</p>
+            ) : events.error ? (
+              <p className="mt-4 text-sm text-rose-700 dark:text-rose-300" role="alert">
+                City events are unavailable right now.{' '}
+                <button type="button" className="font-semibold underline" onClick={() => { void events.refetch(); }}>Retry</button>
+              </p>
+            ) : cityEvents.length > 0 ? (
               <div className="mt-4 grid gap-3 md:grid-cols-2">
                 {cityEvents.map((event: any) => {
                   const eventDate = new Date(event.startAt ?? event.date ?? '').getTime();
                   const isUpcoming = Number.isFinite(eventDate) && eventDate >= Date.now();
                   return (
-                    <Link key={event.id} to={`/event/${event.slug}`} className="rounded-2xl border border-slate-200 p-3 text-sm text-slate-600 transition hover:border-cyan-500 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-950">
+                    <Link key={event.id} to={`/event/${event.slug}`} onMouseEnter={() => { void prefetchEventDetail(queryClient, event.slug); }} onFocus={() => { void prefetchEventDetail(queryClient, event.slug); }} className="rounded-2xl border border-slate-200 p-3 text-sm text-slate-600 transition hover:border-cyan-500 hover:bg-slate-50 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-950">
                       <div className="font-semibold text-slate-950 dark:text-white">{event.title}</div>
                       <div className="mt-2">{formatHistoricalDateLabel(event)}</div>
                       <div className="mt-2 text-xs uppercase tracking-[0.24em] text-cyan-600">{isUpcoming ? 'Upcoming' : 'Scheduled'}</div>
@@ -256,4 +265,3 @@ export default function CityDetailPage() {
     </>
   );
 }
-
