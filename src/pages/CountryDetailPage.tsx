@@ -113,6 +113,7 @@ export default function CountryDetailPage() {
     queryKey: ['country-daily-events', normalizedCode],
     queryFn: () => getEvents({ country: normalizedCode, perPage: 100, dailyOnly: true }),
     enabled: isPakistanDailyEventsQuery,
+    refetchOnMount: 'always',
     refetchInterval: isPakistanDailyEventsQuery ? 30_000 : false,
     refetchIntervalInBackground: false,
     staleTime: 15_000,
