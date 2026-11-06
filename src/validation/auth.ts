@@ -23,7 +23,9 @@ export const resetPasswordSchema = z.object({
   message: 'Passwords do not match.',
 });
 
-export type LoginFormValues = z.infer<typeof loginSchema>;
-export type RegisterFormValues = z.infer<typeof registerSchema>;
+export type LoginFormInput = z.input<typeof loginSchema>;
+export type LoginFormValues = z.output<typeof loginSchema>;
+export type RegisterFormInput = z.input<typeof registerSchema>;
+export type RegisterFormValues = z.output<typeof registerSchema>;
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;

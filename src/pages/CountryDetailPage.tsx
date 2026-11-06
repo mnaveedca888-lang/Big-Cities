@@ -64,9 +64,9 @@ function normalizeTitle(value: string) {
   return String(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
 }
 
-function dedupeEvents(events: Array<any>) {
+function dedupeEvents(events: EventItem[]) {
   const seen = new Set<string>();
-  return events.filter((event) => {
+  return events.filter((event): event is EventItem => {
     const title = String(event?.title ?? '');
     const normalizedTitle = normalizeTitle(title);
     if (excludedEventTitles.has(normalizedTitle)) return false;
@@ -80,11 +80,12 @@ function dedupeEvents(events: Array<any>) {
   });
 }
 
-function filterCountryEvents(events: Array<{ countryCode?: string | null } | undefined | null> | undefined, countryCode: string) {
+function filterCountryEvents(events: Array<EventItem | undefined | null> | undefined, countryCode: string): EventItem[] {
   if (!Array.isArray(events)) return [];
   const normalizedCountryCode = countryCode.trim().toUpperCase();
-  return events.filter((event) => {
-    const eventCountryCode = typeof event?.countryCode === 'string' ? event.countryCode.trim().toUpperCase() : '';
+  return events.filter((event): event is EventItem => {
+    if (!event) return false;
+    const eventCountryCode = typeof event.countryCode === 'string' ? event.countryCode.trim().toUpperCase() : '';
     return eventCountryCode === normalizedCountryCode;
   });
 }
@@ -154,15 +155,15 @@ export default function CountryDetailPage() {
       countryData: country.data,
     });
   }
-  const countryEvents = filterCountryEvents((events.data as Array<{ title?: string | null; description?: string | null; sourceName?: string | null; sourceUrl?: string | null; startAt?: string | null; endAt?: string | null; date?: string | null; countryCode?: string | null }> | undefined) ?? [], normalizedCode);
+  const countryEvents = filterCountryEvents(events.data, normalizedCode);
   const now = new Date();
   const historicalEvents = countryEvents.filter((event) => {
     const date = getEventDateValue(event);
-    return isHistoricalCatalogEvent(event as EventItem) || (date ? date < now : false);
+    return isHistoricalCatalogEvent(event) || (date ? date < now : false);
   });
   const currentOrUpcomingEvents = countryEvents.filter((event) => {
     const date = getEventDateValue(event);
-    return !isHistoricalCatalogEvent(event as EventItem) && (date ? date >= now : false);
+    return !isHistoricalCatalogEvent(event) && (date ? date >= now : false);
   });
   const dedupedEvents = dedupeEvents(historicalEvents);
   const introDescription = isPakistanCountry && profile?.shortDescription === 'Pakistan is a South Asian country with an estimated population of 259.5 million and Islamabad as its capital.'

@@ -117,7 +117,7 @@ describe('BigCitiesPage', () => {
       const link = await screen.findByRole('link', { name: city.displayName });
       expect(link).toHaveAttribute('href', `/city/${city.slug}`);
       if (city.name !== city.displayName) {
-        expect(screen.queryByRole('link', { name: city.name, exact: true })).not.toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: city.name })).not.toBeInTheDocument();
       }
     }
     expect(await screen.findAllByRole('link')).toHaveLength(9);

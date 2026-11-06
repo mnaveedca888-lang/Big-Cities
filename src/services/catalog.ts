@@ -1,5 +1,6 @@
 import { apiClient } from '@/api/client';
-import type { ApiResponse, CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
+import type { CategoryItem, CityItem, ContinentItem, CountryItem } from '@/types';
+import type { ApiResponse } from '@/types/api';
 
 const HIDDEN_UI_CATEGORY_NAMES = new Set(['Memorial Day', 'Live Performances', 'Historical Commemoration', 'Traditional Festival', 'National Holiday']);
 

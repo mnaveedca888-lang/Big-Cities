@@ -36,7 +36,6 @@ export interface EventItem {
   verifiedAt?: string | null;
   lastCheckedAt?: string | null;
   externalEventId?: string;
-  venue?: string;
   featured?: boolean;
   trending?: boolean;
   enabled?: boolean;

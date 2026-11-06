@@ -279,16 +279,20 @@ export class EventService {
       if (allowed.includes(field)) orderBy = { [field]: dir === 'asc' ? 'asc' : 'desc' };
     }
 
-    const total = await this.prisma.event.count({ where });
-    const rawItems = await this.prisma.event.findMany({ where, orderBy, skip: (page - 1) * perPage, take: perPage });
+    const [total, rawItems] = await Promise.all([
+      this.prisma.event.count({ where }),
+      this.prisma.event.findMany({ where, orderBy, skip: (page - 1) * perPage, take: perPage }),
+    ]);
     const citySlugs = [...new Set(rawItems.map((event: any) => event.citySlug).filter(Boolean))];
     const categoryIds = [...new Set(rawItems.map((event: any) => event.categoryId).filter(Boolean))];
-    const cities = citySlugs.length
-      ? await this.prisma.city.findMany({ where: { slug: { in: citySlugs } }, select: { slug: true, name: true } })
-      : [];
-    const categories = categoryIds.length
-      ? await this.prisma.category.findMany({ where: { id: { in: categoryIds } }, select: { id: true, name: true } })
-      : [];
+    const [cities, categories] = await Promise.all([
+      citySlugs.length
+        ? this.prisma.city.findMany({ where: { slug: { in: citySlugs } }, select: { slug: true, name: true } })
+        : [],
+      categoryIds.length
+        ? this.prisma.category.findMany({ where: { id: { in: categoryIds } }, select: { id: true, name: true } })
+        : [],
+    ]);
     const cityNames = new Map(cities.map((city: { slug: string; name: string }) => [city.slug, city.name]));
     const categoryNames = new Map(categories.map((category: { id: string; name: string }) => [category.id, category.name]));
     const items = rawItems.map((event: any) => this.mapEvent({

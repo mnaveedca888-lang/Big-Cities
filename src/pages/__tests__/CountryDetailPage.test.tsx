@@ -200,15 +200,15 @@ describe('CountryDetailPage', () => {
 
     expect(await screen.findByRole('heading', { name: 'Big Cities in Azerbaijan' })).toBeInTheDocument();
     for (const city of cities) {
-      const link = await screen.findByRole('link', { name: city.displayName, exact: true });
+      const link = await screen.findByRole('link', { name: city.displayName });
       expect(link).toHaveAttribute('href', `/city/${city.slug}`);
       if (city.name !== city.displayName) {
-        expect(screen.queryByRole('link', { name: city.name, exact: true })).not.toBeInTheDocument();
+        expect(screen.queryByRole('link', { name: city.name })).not.toBeInTheDocument();
       }
     }
     expect(screen.getAllByRole('link').filter((link) => link.getAttribute('href')?.startsWith('/city/az-'))).toHaveLength(9);
 
-    fireEvent.click(screen.getByRole('link', { name: 'Fuzuli', exact: true }));
+    fireEvent.click(screen.getByRole('link', { name: 'Fuzuli' }));
     expect(await screen.findByRole('heading', { name: 'Existing city detail route' })).toBeInTheDocument();
   });
 

@@ -13,7 +13,7 @@ export function formatDate(value: string | Date, locale = 'en-US') {
 const AREA_UNIT_PATTERN = /(?:\bsq\.?\s*km\b|\bkm(?:\s*\^?2|²|\b)|\bsquare\s+kilomet(?:er|re)s?\b|\bacres?\b|\bhectares?\b|\bha\b|\bsq\.?\s*mi\b|\bmi(?:\s*\^?2|²|\b))/i;
 const NUMERIC_AREA_PATTERN = /^\s*(?:(?:about|around|approximately|approx\.?|circa)\s*)?[~≈]?\s*[\d,]+(?:\.\d+)?(?:\s*(?:-|–|to)\s*[\d,]+(?:\.\d+)?)?(?:\s*\([^)]*\))?\s*$/i;
 
-export function formatAreaValue(value: unknown) {
+export function formatAreaValue(value: unknown): string {
   if (Array.isArray(value)) {
     const items = value.filter((item) => item !== null && item !== undefined && String(item).trim() !== '');
     return items.length ? items.map(formatAreaValue).join(', ') : '—';

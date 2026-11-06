@@ -1,105 +1,68 @@
+import type { ComponentType } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router-dom';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import { AuthLayout } from '@/layouts/AuthLayout';
-import HomePage from '@/pages/HomePage';
-import AboutPage from '@/pages/AboutPage';
-import EventsPage from '@/pages/EventsPage';
-import EventDetailPage from '@/pages/EventDetailPage';
-import CategoriesPage from '@/pages/CategoriesPage';
-import CountriesPage from '@/pages/CountriesPage';
-import BigCitiesPage from '@/pages/BigCitiesPage';
-import ContinentsPage from '@/pages/ContinentsPage';
-import CountryDetailPage from '@/pages/CountryDetailPage';
-import CityDetailPage from '@/pages/CityDetailPage';
-import CalendarPage from '@/pages/CalendarPage';
-import SearchPage from '@/pages/SearchPage';
-import GolfCourseDetailPage from '@/pages/GolfCourseDetailPage';
-import DashboardPage from '@/pages/DashboardPage';
-import AnalyticsPage from '@/pages/AnalyticsPage';
-import NotificationsPage from '@/pages/NotificationsPage';
-import CategoryDetailPage from '@/pages/CategoryDetailPage';
-import LoginPage from '@/pages/LoginPage';
-import RegisterPage from '@/pages/RegisterPage';
-import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
-import ResetPasswordPage from '@/pages/ResetPasswordPage';
-import VerifyEmailPage from '@/pages/VerifyEmailPage';
-import ProfilePage from '@/pages/ProfilePage';
-import SettingsPage from '@/pages/SettingsPage';
-import ContactPage from '@/pages/ContactPage';
-import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
-import TermsPage from '@/pages/TermsPage';
-import LoadingPage from '@/pages/LoadingPage';
 import ErrorPage from '@/pages/ErrorPage';
-import OfflinePage from '@/pages/OfflinePage';
-import UnauthorizedPage from '@/pages/UnauthorizedPage';
-import ForbiddenPage from '@/pages/ForbiddenPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import BlogPage from '@/pages/BlogPage';
-import CareersPage from '@/pages/CareersPage';
-import DocsPage from '@/pages/DocsPage';
-import FAQPage from '@/pages/FAQPage';
-import GalleryPage from '@/pages/GalleryPage';
-import IntegrationsPage from '@/pages/IntegrationsPage';
-import LandingPage from '@/pages/LandingPage';
-import MapPage from '@/pages/MapPage';
-import NewsletterPage from '@/pages/NewsletterPage';
-import PricingPage from '@/pages/PricingPage';
-import SecurityPage from '@/pages/SecurityPage';
-import StatusPage from '@/pages/StatusPage';
-import SupportPage from '@/pages/SupportPage';
-import AdminAnalyticsPage from '@/pages/AdminAnalyticsPage';
-import AdminCalendarPage from '@/pages/AdminCalendarPage';
-import AdminSettingsPage from '@/pages/AdminSettingsPage';
-import AdminUsersPage from '@/pages/AdminUsersPage';
 import { ProtectedRoute, AdminRoute } from '@/routes/guards';
 import { AdminLayout } from '@/layouts/AdminLayout';
 
+function lazyPage(load: () => Promise<{ default: ComponentType }>) {
+  return async () => ({ Component: (await load()).default });
+}
+
+function RouteLoadingFallback() {
+  return <div className="flex min-h-[50vh] items-center justify-center text-sm text-slate-500" role="status">Loading page…</div>;
+}
+
 const routes: RouteObject[] = [
   {
+    HydrateFallback: RouteLoadingFallback,
     element: <PublicLayout />,
     errorElement: <ErrorPage />, 
     children: [
-      { path: '/', element: <HomePage /> },
-      { path: '/about', element: <AboutPage /> },
-      { path: '/landing', element: <LandingPage /> },
-      { path: '/blog', element: <BlogPage /> },
-      { path: '/careers', element: <CareersPage /> },
-      { path: '/docs', element: <DocsPage /> },
-      { path: '/faq', element: <FAQPage /> },
-      { path: '/gallery', element: <GalleryPage /> },
-      { path: '/integrations', element: <IntegrationsPage /> },
-      { path: '/map', element: <MapPage /> },
-      { path: '/newsletter', element: <NewsletterPage /> },
-      { path: '/pricing', element: <PricingPage /> },
-      { path: '/security', element: <SecurityPage /> },
-      { path: '/status', element: <StatusPage /> },
-      { path: '/support', element: <SupportPage /> },
-      { path: '/events', element: <EventsPage /> },
-      { path: '/event/:slug', element: <EventDetailPage /> },
-      { path: '/categories', element: <CategoriesPage /> },
-      { path: '/category/:slug', element: <CategoryDetailPage /> },
-      { path: '/continents', element: <ContinentsPage /> },
-      { path: '/cities', element: <BigCitiesPage /> },
-      { path: '/countries', element: <CountriesPage /> },
-      { path: '/countries/:code', element: <CountryDetailPage /> },
-      { path: '/country/:code', element: <CountryDetailPage /> },
-      { path: '/cities/:slug', element: <CityDetailPage /> },
-      { path: '/city/:slug', element: <CityDetailPage /> },
-      { path: '/calendar', element: <CalendarPage /> },
-      { path: '/search', element: <SearchPage /> },
-      { path: '/golf-courses/:slug', element: <GolfCourseDetailPage /> },
-      { path: '/contact', element: <ContactPage /> },
-      { path: '/privacy-policy', element: <PrivacyPolicyPage /> },
-      { path: '/terms', element: <TermsPage /> },
-      { path: '/loading', element: <LoadingPage /> },
+      { path: '/', lazy: lazyPage(() => import('@/pages/HomePage')) },
+      { path: '/about', lazy: lazyPage(() => import('@/pages/AboutPage')) },
+      { path: '/landing', lazy: lazyPage(() => import('@/pages/LandingPage')) },
+      { path: '/blog', lazy: lazyPage(() => import('@/pages/BlogPage')) },
+      { path: '/careers', lazy: lazyPage(() => import('@/pages/CareersPage')) },
+      { path: '/docs', lazy: lazyPage(() => import('@/pages/DocsPage')) },
+      { path: '/faq', lazy: lazyPage(() => import('@/pages/FAQPage')) },
+      { path: '/gallery', lazy: lazyPage(() => import('@/pages/GalleryPage')) },
+      { path: '/integrations', lazy: lazyPage(() => import('@/pages/IntegrationsPage')) },
+      { path: '/map', lazy: lazyPage(() => import('@/pages/MapPage')) },
+      { path: '/newsletter', lazy: lazyPage(() => import('@/pages/NewsletterPage')) },
+      { path: '/pricing', lazy: lazyPage(() => import('@/pages/PricingPage')) },
+      { path: '/security', lazy: lazyPage(() => import('@/pages/SecurityPage')) },
+      { path: '/status', lazy: lazyPage(() => import('@/pages/StatusPage')) },
+      { path: '/support', lazy: lazyPage(() => import('@/pages/SupportPage')) },
+      { path: '/events', lazy: lazyPage(() => import('@/pages/EventsPage')) },
+      { path: '/event/:slug', lazy: lazyPage(() => import('@/pages/EventDetailPage')) },
+      { path: '/categories', lazy: lazyPage(() => import('@/pages/CategoriesPage')) },
+      { path: '/category/:slug', lazy: lazyPage(() => import('@/pages/CategoryDetailPage')) },
+      { path: '/continents', lazy: lazyPage(() => import('@/pages/ContinentsPage')) },
+      { path: '/cities', lazy: lazyPage(() => import('@/pages/BigCitiesPage')) },
+      { path: '/countries', lazy: lazyPage(() => import('@/pages/CountriesPage')) },
+      { path: '/countries/:code', lazy: lazyPage(() => import('@/pages/CountryDetailPage')) },
+      { path: '/country/:code', lazy: lazyPage(() => import('@/pages/CountryDetailPage')) },
+      { path: '/cities/:slug', lazy: lazyPage(() => import('@/pages/CityDetailPage')) },
+      { path: '/city/:slug', lazy: lazyPage(() => import('@/pages/CityDetailPage')) },
+      { path: '/calendar', lazy: lazyPage(() => import('@/pages/CalendarPage')) },
+      { path: '/search', lazy: lazyPage(() => import('@/pages/SearchPage')) },
+      { path: '/golf-courses/:slug', lazy: lazyPage(() => import('@/pages/GolfCourseDetailPage')) },
+      { path: '/contact', lazy: lazyPage(() => import('@/pages/ContactPage')) },
+      { path: '/privacy-policy', lazy: lazyPage(() => import('@/pages/PrivacyPolicyPage')) },
+      { path: '/terms', lazy: lazyPage(() => import('@/pages/TermsPage')) },
+      { path: '/loading', lazy: lazyPage(() => import('@/pages/LoadingPage')) },
       { path: '/error', element: <ErrorPage /> },
-      { path: '/offline', element: <OfflinePage /> },
-      { path: '/unauthorized', element: <UnauthorizedPage /> },
-      { path: '/forbidden', element: <ForbiddenPage /> },
+      { path: '/offline', lazy: lazyPage(() => import('@/pages/OfflinePage')) },
+      { path: '/unauthorized', lazy: lazyPage(() => import('@/pages/UnauthorizedPage')) },
+      { path: '/forbidden', lazy: lazyPage(() => import('@/pages/ForbiddenPage')) },
     ],
   },
   {
+    HydrateFallback: RouteLoadingFallback,
     element: <ProtectedRoute />,
     children: [
       {
@@ -108,13 +71,13 @@ const routes: RouteObject[] = [
           {
             element: <AdminRoute />,
             children: [
-              { path: '/dashboard', element: <DashboardPage /> },
-              { path: '/dashboard/analytics', element: <AnalyticsPage /> },
+              { path: '/dashboard', lazy: lazyPage(() => import('@/pages/DashboardPage')) },
+              { path: '/dashboard/analytics', lazy: lazyPage(() => import('@/pages/AnalyticsPage')) },
             ],
           },
-          { path: '/notifications', element: <NotificationsPage /> },
-          { path: '/profile', element: <ProfilePage /> },
-          { path: '/settings', element: <SettingsPage /> },
+          { path: '/notifications', lazy: lazyPage(() => import('@/pages/NotificationsPage')) },
+          { path: '/profile', lazy: lazyPage(() => import('@/pages/ProfilePage')) },
+          { path: '/settings', lazy: lazyPage(() => import('@/pages/SettingsPage')) },
         ],
       },
       {
@@ -124,10 +87,10 @@ const routes: RouteObject[] = [
           {
             element: <AdminLayout />,
             children: [
-            { path: '/admin/analytics', element: <AdminAnalyticsPage /> },
-            { path: '/admin/calendar', element: <AdminCalendarPage /> },
-            { path: '/admin/settings', element: <AdminSettingsPage /> },
-            { path: '/admin/users', element: <AdminUsersPage /> },
+              { path: '/admin/analytics', lazy: lazyPage(() => import('@/pages/AdminAnalyticsPage')) },
+              { path: '/admin/calendar', lazy: lazyPage(() => import('@/pages/AdminCalendarPage')) },
+              { path: '/admin/settings', lazy: lazyPage(() => import('@/pages/AdminSettingsPage')) },
+              { path: '/admin/users', lazy: lazyPage(() => import('@/pages/AdminUsersPage')) },
             ],
           },
         ],
@@ -135,13 +98,14 @@ const routes: RouteObject[] = [
     ],
   },
   {
+    HydrateFallback: RouteLoadingFallback,
     element: <AuthLayout />,
     children: [
-      { path: '/login', element: <LoginPage /> },
-      { path: '/register', element: <RegisterPage /> },
-      { path: '/forgot-password', element: <ForgotPasswordPage /> },
-      { path: '/reset-password', element: <ResetPasswordPage /> },
-      { path: '/verify-email', element: <VerifyEmailPage /> },
+      { path: '/login', lazy: lazyPage(() => import('@/pages/LoginPage')) },
+      { path: '/register', lazy: lazyPage(() => import('@/pages/RegisterPage')) },
+      { path: '/forgot-password', lazy: lazyPage(() => import('@/pages/ForgotPasswordPage')) },
+      { path: '/reset-password', lazy: lazyPage(() => import('@/pages/ResetPasswordPage')) },
+      { path: '/verify-email', lazy: lazyPage(() => import('@/pages/VerifyEmailPage')) },
     ],
   },
   { path: '*', element: <NotFoundPage /> },

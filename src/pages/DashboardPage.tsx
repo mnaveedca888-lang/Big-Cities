@@ -1,5 +1,5 @@
 ﻿import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { SEO } from '@/components/seo/SEO';
@@ -331,7 +331,7 @@ export default function DashboardPage() {
     queryKey: ['dashboard-countries-search', countrySearch],
     queryFn: () => getCountries({ q: countrySearch.trim() || undefined, perPage: 500, sort: 'name' }),
     enabled: Boolean(countrySearch.trim()),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
   const countries = countrySearch.trim() ? searchCountriesQuery.data?.items ?? [] : countriesQuery.data?.items ?? [];
@@ -849,4 +849,3 @@ export default function DashboardPage() {
     </>
   );
 }
-

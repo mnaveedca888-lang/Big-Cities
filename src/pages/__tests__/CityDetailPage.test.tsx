@@ -47,10 +47,10 @@ describe('CityDetailPage', () => {
       </QueryClientProvider>,
     );
 
-    expect(await screen.findByRole('heading', { name: city.displayName, exact: true })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: city.displayName })).toBeInTheDocument();
     expect(document.title).toBe(`${city.displayName} details | Big Cities Event Monitor`);
     if (city.apiName !== city.displayName) {
-      expect(screen.queryByRole('heading', { name: city.apiName, exact: true })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: city.apiName })).not.toBeInTheDocument();
     }
   });
 
